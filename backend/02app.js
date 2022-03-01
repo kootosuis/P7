@@ -2,21 +2,29 @@ const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config();
 
+const logger = 'bob';
 // version 1
-// const Sequelize = require("sequelize");
-// const sequelize = new Sequelize(process.env.DBCONNECT);
-
-// version 2 
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize('groupomania', 'root', process.env.MYSQLPASSWORD, {
-    host: "localhost",
-    dialect: "mysql",
-    // pool: {
-    //   max: 5,
-    //   min: 0,
-    //   idle: 10000
-    // },
+const sequelize = new Sequelize(process.env.DBCONNECT, {
+          
+    logging: console.log, // Default, displays the first parameter of the log function call
+//     logging: (...msg) => console.log(msg), // Displays all log function call parameters
+//     logging: false, // Disables logging
+//     logging: (msg) => logger.debug(msg), // Use custom logger (e.g. Winston or Bunyan), displays the first parameter
+//     logging: logger.debug.bind(logger), // Alternative way to use custom logger, displays all messages
 });
+
+// version 2
+// const Sequelize = require("sequelize");
+// const sequelize = new Sequelize('groupomania', 'root', process.env.MYSQLPASSWORD, {
+//     host: "localhost",
+//     dialect: "mysql",
+//     // pool: {
+//     //   max: 5,
+//     //   min: 0,
+//     //   idle: 10000
+//     // },
+// });
 
 // version 3
 // const Sequelize = require('sequelize');
