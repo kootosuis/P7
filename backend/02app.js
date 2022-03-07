@@ -10,7 +10,7 @@ const helmet = require("helmet");
 //////---- accès au dossier Routes -----///
 
 const userRoutes = require("./03routes/user");
-// const sharesRoutes = require("./03routes/shares");
+const sharesRoutes = require("./03routes/shares");
 // const commentsRoutes = require("./03routes/comments");
 
 //////////--------- SEQUELIZE --------////////////
@@ -52,7 +52,7 @@ app.use("/07media", express.static(path.join(__dirname, "images")));
 ///////////////-----------ROUTES-------------------/////////
 
 app.use("/api/auth", userRoutes);
-// app.use("/api/shares", sharesRoutes);
+app.use("/api/shares", sharesRoutes);
 // app.use("/api/comments", commentsRoutes);
 
 ////////------- TESTS --------------------/////////////////

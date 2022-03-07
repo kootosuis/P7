@@ -11,6 +11,19 @@ Share.hasMany(Comment);
 Media.hasOne(Share);
 Comment.hasMany(Comment);
 
+
+////--------modification des colonnes
+// sequelize
+//     //     .sync()
+//     .sync({ alter: true })
+//     .then((result) => {
+//         console.log(result);
+//     })
+//     .catch((err) => {
+//         console.log(err);
+//     });
+
+////------------remise à zéro
 // sequelize
 //     //     .sync()
 //     .sync({ force: true })

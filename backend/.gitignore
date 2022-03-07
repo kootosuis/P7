@@ -4,3 +4,5 @@ node_modules
 
 
 01utils/DBconnectOLD.js
+01utils/verifyPassword.js
+05middleware/validator.js

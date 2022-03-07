@@ -1,16 +1,20 @@
 const express = require("express");
-// const checkPassword = require("../05middleware/checkPassword");
 const userCtrl = require("../04controllers/user");
+const auth = require("../05middleware/auth");
+
 
 const router = express.Router();
 
 router.post("/signup", userCtrl.signup);
-
 router.post("/login", userCtrl.login);
-router.put("/update", userCtrl.modifySignup);
-router.delete("/delete", userCtrl.delete);
 
+router.put("/modifySignup", auth, userCtrl.modifySignup);
+router.delete("/delete", auth, userCtrl.delete);
 
-//je me demande s'il ne faudrait pas ajouter des routes pour lister les users ou trouver un user
+router.get("/:id", auth, userCtrl.getOneUser);
+router.get("/", auth, userCtrl.getAllUsers);
 
 module.exports = router;
+
+
+// je mets des auth partout : c'est un reseau interne
