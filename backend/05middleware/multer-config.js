@@ -7,6 +7,9 @@ const MIME_TYPES = {
     "image/jpeg": "jpg",
     "image/png": "png",
     "image/gif": "gif",
+    //pdf
+    //video
+    //autres formats
 };
 
 const storage = multer.diskStorage({

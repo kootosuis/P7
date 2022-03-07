@@ -6,13 +6,21 @@ const Comment = require("../06models/comment");
 const Media = require("../06models/media");
 
 User.hasMany(Comment);
+Comment.belongsTo(User);
+
 User.hasMany(Share);
+Share.belongsTo(User);
+
 Share.hasMany(Comment);
-Media.hasOne(Share);
+Comment.belongsTo(Share);
+
 Comment.hasMany(Comment);
 
+Share.hasOne(Media);
+Media.belongsTo(Share);
+// Media.belongsTo(Share); à étudier
 
-////--------modification des colonnes
+//--------modification des colonnes
 // sequelize
 //     //     .sync()
 //     .sync({ alter: true })
@@ -23,7 +31,7 @@ Comment.hasMany(Comment);
 //         console.log(err);
 //     });
 
-////------------remise à zéro
+//------------remise à zéro
 // sequelize
 //     //     .sync()
 //     .sync({ force: true })
