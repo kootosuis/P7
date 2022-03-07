@@ -1,60 +1,97 @@
 const express = require("express");
-const dotenv = require("dotenv");
-dotenv.config();
+const app = express();
 
-// version 1
-// const Sequelize = require("sequelize");
-// const sequelize = new Sequelize(process.env.DBCONNECT);
+// const dotenv = require("dotenv");
+// dotenv.config();
 
-// version 2 
-const Sequelize = require("sequelize");
-const sequelize = new Sequelize('groupomania', 'root', process.env.MYSQLPASSWORD, {
-    host: "localhost",
-    dialect: "mysql",
-    // pool: {
-    //   max: 5,
-    //   min: 0,
-    //   idle: 10000
-    // },
+const path = require("path");
+const helmet = require("helmet");
+
+//////---- accès au dossier Routes -----///
+
+const userRoutes = require("./03routes/user");
+// const sharesRoutes = require("./03routes/shares");
+// const commentsRoutes = require("./03routes/comments");
+
+//////////--------- SEQUELIZE --------////////////
+// connection
+const sequelize = require("./01utils/DBconnect");
+
+// creation des tables
+const sync = require("./01utils/DBsync");
+
+
+
+////////--------- JSON ---------------------------------------------------------------------------------///
+//////// ---- Gestion de la requête POST venant de l'application front-end, extraction du corps JSON ---///
+
+app.use(express.json());
+
+
+
+////////--------- CORS ---------------------------///
+////////--------- éviter les erreurs de CORS -----///
+
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+    next();
 });
 
-// version 3
-// const Sequelize = require('sequelize');
-// const path = 'mysql://root:rootpasswordYESYES2000@localhost:3306/groupomania';
-// const sequelize = new Sequelize(path, { operatorsAliases: false });
+app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 
-sequelize
-    .authenticate()
-    .then(() => console.log("Connection to database has been established successfully."))
-    .catch(() => console.error("Unable to connect to the database."));
 
-// sequelize.authenticate()
-// .then(() => {
-//   console.log('Connection established successfully.');
-// }).catch(err => {
-//   console.error('Unable to connect to the database:', err);
-// }).finally(() => {
-//   sequelize.close();
+
+//////---------STOCKAGE DES MEDIAS ------------/////////
+
+app.use("/07media", express.static(path.join(__dirname, "images")));
+
+
+
+///////////////-----------ROUTES-------------------/////////
+
+app.use("/api/auth", userRoutes);
+// app.use("/api/shares", sharesRoutes);
+// app.use("/api/comments", commentsRoutes);
+
+////////------- TESTS --------------------/////////////////
+
+// app.use((req, res, next) => {
+//     console.log("Requête reçue !");
+//     next();
 // });
 
-const app = express();
-app.use((req, res, next) => {
-    console.log("Requête reçue !");
-    next();
-});
+// app.use((req, res, next) => {
+//     res.status(201);
+//     next();
+// });
 
-app.use((req, res, next) => {
-    res.status(201);
-    next();
-});
+// app.use((req, res, next) => {
+//     res.json({ message: "Votre requête a bien été reçue !" });
+//     next();
+// });
 
-app.use((req, res, next) => {
-    res.json({ message: "Votre requête a bien été reçue !" });
-    next();
-});
+// app.use((req, res, next) => {
+//     console.log("Réponse envoyée avec succès !");
+// });
 
-app.use((req, res, next) => {
-    console.log("Réponse envoyée avec succès !");
-});
+// app.put("/", (req, res) => {
+//     res.json({ message: "PUT test." });
+// });
+
+// app.post("/", (req, res) => {
+//     res.json({ message: "POST test." });
+// });
+
+// app.delete("/", (req, res) => {
+//     res.json({ message: "DELETE test." });
+// });
+
+// app.get("/", (req, res) => {
+//     res.json({ message: "GET test." });
+// });
+
+////////  ------------ retour vers serveur -------------   /////
 
 module.exports = app;
