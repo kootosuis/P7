@@ -5,7 +5,6 @@ const User = require("../06models/user");
 const Share = require("../06models/share");
 const validator = require("validator");
 
-///-------------- SIGN UP --------------//
 exports.signup = (req, res, next) => {
     const RBUP = req.body.USER_password;
     if (!validator.isStrongPassword(RBUP)) {
@@ -32,7 +31,6 @@ exports.signup = (req, res, next) => {
     }
 };
 
-// //-------------- LOGIN --------------//
 exports.login = (req, res, next) => {
     User.findOne({ where: { USER_email: req.body.USER_email } })
         .then((inlogger) => {
@@ -57,7 +55,6 @@ exports.login = (req, res, next) => {
         .catch((error) => res.status(500).json({ error }));
 };
 
-// //-------------- MODIFY --------------//
 exports.modifySignup = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
@@ -118,7 +115,6 @@ exports.modifySignup = (req, res, next) => {
     }
 };
 
-// //-------------- DELETE --------------//
 exports.delete = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
@@ -131,23 +127,20 @@ exports.delete = (req, res) => {
             })
             .catch((error) => res.status(400).json({ error }));
     });
-};
+}; // PENSER A VERIFIER L'EFFACEMENT DES SHARE ET DES COMMENT !!!!!!
 
-// PENSER A VERIFIER L'EFFACEMENT DES SHARE ET DES COMMENT !!!!!!
-
-
-//----- GET ONE USER
 
 exports.getOneUser = (req, res) => {
-    User.findOne({ where: { }}) // à définir : ce qui va être vu par les autres, et où on répond à cette requête...
+    const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
+
+    User.findOne({ where: { USER_id: paramsId}}) // à définir : ce qui va être vu par les autres, et où on répond à cette requête...
     .then((user) => res.status(200).json(user))
         .catch((error) => res.status(404).json({ error }));
 };
 
-//----- GET ALL USERS
-
+//----- GET ALL USERS //---- //----- GET A QUERY 
 exports.getAllUsers = (req, res) => {
-    User.findAll()
+    User.findAll({})
     .then((users) => res.status(200).json(users))
         .catch((error) => res.status(404).json({ error }));
 };
