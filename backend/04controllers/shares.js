@@ -1,103 +1,80 @@
+const jwt = require("jsonwebtoken");
 const User = require("../06models/user");
 const Share = require("../06models/share");
 const Media = require("../06models/media");
 const fs = require("fs");
 
-// D0NT'FORGET TO SET UP MULTER
-
 exports.createShare = (req, res) => {
-    // recevoir la requete
-    // identifier le user et récuperer son id (en termes de)
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
     const loggedUserId = decodedToken.UserId;
 
-    // reperer s'il y a un media ou non
-    // si non
-    if (!req.file) {
-        Share.create({
-            SHARE_text: req.body.SHARE_text,
-            userUSER_id: loggedUserId,
-        })
-            .then(() => res.status(201).json({ message: "Partage publié !" }))
-            .catch((error) => res.status(400).json({ error }));
-    } else if (req.file) {
-        Media.create({
-            MEDIA_name: req.file.filename,
-            MEDIA_type: req.file.type,
-            MEDIA_size: req.file.size,
-            MEDIA_description: req.file.description,
-            MEDIA_url: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`, // à vérifier, le filename est ici fabriqué par multer
-        }) //
-            .then(() => {
-                Media.findOne({ where: { MEDIA_name: req.file.filename } }) //
-                    .then((media) => {
-                        Share.create({
-                            SHARE_text: req.body.SHARE_text,
-                            userUSER_id: loggedUserId,
-                            mediumMEDIA_id: media.MEDIA_id,
-                        })
-                            .then(() => res.status(201).json({ message: "Partage publié !" }))
-                            .catch((error) => res.status(400).json({ error }));
+    Share.create({
+        SHARE_text: req.body.SHARE_text, // la taille du texte a été définie dans le model à 10 000 signes
+        userUSERId: loggedUserId,
+    })
+        .then(() => {
+            if (req.file) {
+                Share.findOne({ where: { SHARE_text: req.body.SHARE_text } && { userUSERId: loggedUserId } }) // on récupère le share qui vient juste d'être créé
+                    .then((share) => {
+                        console.log(share);
+                        Media.create({
+                            // et on ajoute le media
+                            MEDIA_name: req.file.filename,
+                            MEDIA_mimetype: req.file.mimetype,
+                            MEDIA_size: req.file.size,
+                            MEDIA_description: req.file.description,
+                            MEDIA_url: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`, // le filename est ici fabriqué par multer
+                            shareSHAREId: share.SHARE_id,
+                        });
                     })
-                    .catch((error) => res.status(401).json({ error }));
-            })
-            .catch((error) => res.status(402).json({ error }));
-    } else {
-        res.status(500).json({ error });
-    }
+                    .catch((error) => res.status(400).json({ error }));
+            }
+        })
+        .then(() => res.status(201).json({ message: "Partage publié !" }))
+        .catch((error) => res.status(500).json({ error }));
 };
 
 exports.updateShare = (req, res) => {
-    // recevoir la requete
-    // identifier le user et récuperer son id
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
     const loggedUserId = decodedToken.UserId;
-
-    const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
+    console.log(decodedToken.UserId);
+    const paramsId = req.params.id;
+    console.log("test" + req.params.id); // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
     Share.findOne({ where: { SHARE_id: paramsId } }) // identifier le share à modifier
         .then((share) => {
-            if (!share.userUSER_id == loggedUserId) {
+            if (!share.userUSERId == loggedUserId) {
                 // verifier que le user est bien le créateur du share
                 res.status(400).json({
                     error: "Vous n'avez pas les autorisations nécéssaires pour modifier ce partage.",
                 });
             } else {
-                if (!req.file) {
-                    Share.update({
-                        SHARE_text: req.body.SHARE_text,
-                        userUSER_id: loggedUserId,
-                    })
-                        .then(() => res.status(201).json({ message: "Partage modifié !" }))
-                        .catch((error) => res.status(400).json({ error }));
-                } else if (req.file) {
-                    // si changement image se débarrasser de l'ancienne image ? (pas sûr, ça rend les choses très compliquées, mieux vaut effacer le share)
-                    Media.update({
-                        MEDIA_name: req.file.filename,
-                        MEDIA_type: req.file.type,
-                        MEDIA_size: req.file.size,
-                        MEDIA_description: req.file.description,
-                        MEDIA_url: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`, // à vérifier, le filename est ici fabriqué par multer
-                    }) //
-                        .then(() => {
-                            Media.findOne({ where: { MEDIA_name: req.file.filename } }) //
-                                .then((media) => {
-                                    Share.create({
-                                        SHARE_text: req.body.SHARE_text,
-                                        userUSER_id: loggedUserId,
-                                        mediumMEDIA_id: media.MEDIA_id,
-                                    })
-                                        .then(() => res.status(201).json({ message: "Partage modifié !" }))
-                                        .catch((error) => res.status(400).json({ error }));
-                                })
-                                .catch((error) => res.status(401).json({ error }));
-                        })
-                        .catch((error) => res.status(402).json({ error }));
-                } else {
-                    res.status(500).json({ error });
-                }
+                Share.update({
+                    SHARE_text: req.body.SHARE_text, // la taille du texte a été définie dans le model à 10 000 signes
+                    userUSERId: loggedUserId,
+                })
+                    // .then(() => {
+                    //     if (req.file) {
+                    //         Share.findOne({ where: { SHARE_text: req.body.SHARE_text } && { userUSERId: loggedUserId } }) // on récupère le share qui vient juste d'être updaté
+                    //             //ici il faut effacer l'ancien media (à voir)
+                    //             .then((share) => {
+                    //                 Media.update({
+                    //                     // et on ajoute le media
+                    //                     MEDIA_name: req.file.filename,
+                    //                     MEDIA_mimetype: req.file.mimetype,
+                    //                     MEDIA_size: req.file.size,
+                    //                     MEDIA_description: req.file.description,
+                    //                     MEDIA_url: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`, // le filename est ici fabriqué par multer
+                    //                     shareSHAREId: share.SHARE_id,
+                    //                 });
+                    //             })
+                    //             .catch((error) => res.status(400).json({ error }));
+                    //     }
+                    // })
+                    .then(() => res.status(201).json({ message: "Partage mis à jour !" }))
+                    .catch((error) => res.status(500).json({ error }));
             }
         })
         .then((user) => res.status(200).json(user))
@@ -114,7 +91,7 @@ exports.deleteShare = (req, res) => {
     Share.findOne({ where: { SHARE_id: paramsId } }) // identifier le share à effacer
         .then((share) => {
             // verifier que le user est bien le créateur du share
-            if (!share.userUSER_id == loggedUserId) {
+            if (!share.userUSERId == loggedUserId) {
                 res.status(400).json({
                     error: "Vous n'avez pas les autorisations nécéssaires pour effacer ce partage.",
                 });
@@ -146,7 +123,6 @@ exports.getAllShare = (req, res) => {
         .then((users) => res.status(200).json(users))
         .catch((error) => res.status(404).json({ error }));
 };
-
 
 //----- LIKE DISLIKE (il faudrait ajouter une colonne dans la table commentaire ou dans la table share)
 

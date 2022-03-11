@@ -31,13 +31,16 @@ app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 
 //////---------STOCKAGE DES MEDIAS ------------/////////
 
-app.use("/07media", express.static(path.join(__dirname, "images")));
+app.use("/07media", express.static(path.join(__dirname, "07media")));
+
+
 
 //////-----------ROUTES-----------------------/////////
 
 app.use("/api/auth", userRoutes);
 app.use("/api/shares", sharesRoutes);
 app.use("/api/comments", commentsRoutes);
+
 
 //////-----------EXPORT ----------------------////////
 

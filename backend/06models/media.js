@@ -6,7 +6,7 @@ const Media = sequelize.define(
     {
         MEDIA_id: { type: Sequelize.INTEGER, autoIncrement: true, allowNull: false, primaryKey: true },
         MEDIA_name: { type: Sequelize.STRING(50), allowNull: false },
-        MEDIA_type: { type: Sequelize.STRING(50), allowNull: false },
+        MEDIA_mimetype: { type: Sequelize.STRING(50), allowNull: false },
         MEDIA_size: { type: Sequelize.INTEGER, allowNull: true },
         MEDIA_description: { type: Sequelize.TEXT, allowNull: true },
         MEDIA_url: { type: Sequelize.STRING, allowNull: true },
