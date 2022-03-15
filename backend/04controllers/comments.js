@@ -1,25 +1,24 @@
+const jwt = require("jsonwebtoken");
 const User = require("../06models/user");
 const Share = require("../06models/share");
 const Comment = require("../06models/comment");
-const fs = require("fs");
 
 exports.createComment = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
     const loggedUserId = decodedToken.UserId;
 
-    // si commentaire de commentaire?
-
-    // si commentaire
-    // récuperer id du share
-    const commentedShareId = req.params.id; // à vérifier
+    const totId = req.params.id;
+    const commentedShareId = totId.split("&")[0]; // à vérifier
+    const commentedCommentId = totId.split("&")[1];
 
     if (req.body) {
         Comment.create({
-            COMMENT_id: req.body.COMMENT_id,
-            COMMENT_texte: req.body.COMMENT_texte,
-            userUSER_id: loggedUserId,
-            shareSHARE_id: commentedShareId,
+            CommentId: req.body.CommentId,
+            CommentText: req.body.CommentText,
+            userUserId: loggedUserId,
+            shareShareId: commentedShareId,
+            commentCommentId: commentedCommentId,
         }) //
             .then(() => res.status(201).json({ message: "Commentaire publié !" }))
             .catch((error) => res.status(400).json({ error }));
@@ -29,17 +28,24 @@ exports.createComment = (req, res) => {
 };
 
 exports.updateComment = (req, res) => {
-    // recevoir la requete
-    // identifier le user et récuperer son id
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
     const loggedUserId = decodedToken.UserId;
+    const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
-    // identifier le comment à modifier
-
-    // verifier que le user est bien le créateur du comment
-
-    // puis idem que create comment
+    Comment.findOne({ where: { CommentId: paramsId } })
+        .then((comment) => {
+            if (!comment.userUserId == loggedUserId) {
+                res.status(400).json({
+                    error: "Vous n'avez pas les autorisations nécéssaires pour modifier ce commentaire.",
+                });
+            } else {
+                Comment.update({ CommentText: req.body.CommentText }, { where: { CommentId: paramsId } })
+                    .then(() => res.status(201).json({ message: "Commentaire mis à jour !" }))
+                    .catch((error) => res.status(404).json({ error }));
+            }
+        })
+        .catch((error) => res.status(500).json({ error }));
 };
 
 exports.deleteComment = (req, res) => {
@@ -49,18 +55,15 @@ exports.deleteComment = (req, res) => {
 
     const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
-    Comment.findOne({ where: { COMMENT_id: paramsId } }) // identifier le commentaire à effacer
+    Comment.findOne({ where: { CommentId: paramsId } }) // identifier le commentaire à effacer
         .then((comment) => {
             // verifier que le user est bien le créateur du commentaire
-            if (!comment.userUSER_id == loggedUserId) {
+            if (!comment.userUserId == loggedUserId) {
                 res.status(400).json({
                     error: "Vous n'avez pas les autorisations nécéssaires pour effacer ce commentaire.",
                 });
             } else {
-                // verifier que  tous les commentaires liés sont effacés
-
-                // puis effacer le commentaire
-                Comment.destroy({ where: { COMMENT_id: paramsId } })
+                Comment.destroy({ where: { CommentId: paramsId } })
                     .then(() => res.status(201).json({ message: "Commentaire effacé !" }))
                     .catch((error) => res.status(400).json({ error }));
             }
@@ -71,7 +74,7 @@ exports.deleteComment = (req, res) => {
 exports.getOneComment = (req, res) => {
     const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
-    Comment.findOne({ where: { COMMENT_id: paramsId } })
+    Comment.findOne({ where: { CommentId: paramsId } })
         .then((user) => res.status(200).json(user))
         .catch((error) => res.status(404).json({ error }));
 };

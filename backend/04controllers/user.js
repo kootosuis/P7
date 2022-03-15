@@ -4,9 +4,11 @@ const dotEnv = require("dotenv").config({ path: "../.env" });
 const User = require("../06models/user");
 const Share = require("../06models/share");
 const validator = require("validator");
+const Media = require("../06models/media");
+const fs = require("fs");
 
 exports.signup = (req, res, next) => {
-    const RBUP = req.body.USER_password;
+    const RBUP = req.body.UserPassword;
     if (!validator.isStrongPassword(RBUP)) {
         res.status(400).json({
             error: "Le mot de passe doit contenir au minimum 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial",
@@ -17,12 +19,8 @@ exports.signup = (req, res, next) => {
             .hash(RBUP, 10)
             .then((hash) => {
                 User.create({
-                    USER_name: req.body.USER_name,
-                    USER_firstname: req.body.USER_firstname,
-                    USER_email: req.body.USER_email,
-                    USER_departement: req.body.USER_departement,
-                    USER_role: req.body.USER_role,
-                    USER_password: hash,
+                    ...req.body,
+                    UserPassword: hash,
                 })
                     .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
                     .catch((error) => res.status(400).json({ error }));
@@ -32,21 +30,21 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-    User.findOne({ where: { USER_email: req.body.USER_email } })
+    User.findOne({ where: { UserEmail: req.body.UserEmail } })
         .then((inlogger) => {
             if (!inlogger) {
                 // si on ne trouve pas l'email dans la BDD
                 return res.status(401).json({ message: "Utilisateur non trouvé !" });
             }
             bcrypt // si l'e-mail correspond à un utilisateur existant, on compare le mdp entré par l'utilisateur avec le hash enregistré dans la BDD :
-                .compare(req.body.USER_password, inlogger.USER_password)
+                .compare(req.body.UserPassword, inlogger.UserPassword)
                 .then((valid) => {
                     if (!valid) {
                         return res.status(401).json({ error: "Mot de passe incorrect !" });
                     }
                     res.status(200).json({
-                        UserId: inlogger.USER_id,
-                        token: jwt.sign({ UserId: inlogger.USER_id }, process.env.SECRET_TOKEN, { expiresIn: "12h" }),
+                        UserId: inlogger.UserId,
+                        token: jwt.sign({ UserId: inlogger.UserId }, process.env.SECRET_TOKEN, { expiresIn: "12h" }),
                         message: "Login validé !",
                     });
                 })
@@ -59,20 +57,16 @@ exports.modifySignup = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
     const loggedUserId = decodedToken.UserId;
-    const RBUP = req.body.USER_password;
+    const RBUP = req.body.UserPassword;
 
     if (!RBUP) {
-        User.findOne({ where: { USER_id: loggedUserId } })
+        User.findOne({ where: { UserId: loggedUserId } })
             .then((oldInfo) => {
                 User.update(
                     {
-                        USER_name: req.body.USER_name,
-                        USER_firstname: req.body.USER_firstname,
-                        USER_email: req.body.USER_email,
-                        USER_departement: req.body.USER_departement,
-                        USER_role: req.body.USER_role,
+                        ...req.body,
                     },
-                    { where: { USER_id: loggedUserId } }
+                    { where: { UserId: loggedUserId } }
                 )
                     .then(() => res.status(201).json({ message: "Informations mises à jour" }))
                     .catch((err) => res.status(400).json(err));
@@ -83,9 +77,9 @@ exports.modifySignup = (req, res, next) => {
             error: "Le mot de passe doit contenir au minimum 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial",
         });
     } else if (RBUP && validator.isStrongPassword(RBUP)) {
-        User.findOne({ where: { USER_id: loggedUserId } })
+        User.findOne({ where: { UserId: loggedUserId } })
             .then((oldInfo) => {
-                bcrypt.compare(RBUP, oldInfo.USER_password).then((valid) => {
+                bcrypt.compare(RBUP, oldInfo.UserPassword).then((valid) => {
                     if (valid) {
                         res.status(400).json({ error: "Mot de passe identique" });
                     } else if (!valid) {
@@ -94,14 +88,10 @@ exports.modifySignup = (req, res, next) => {
                             .then((hash) => {
                                 User.update(
                                     {
-                                        USER_name: req.body.USER_name,
-                                        USER_firstname: req.body.USER_firstname,
-                                        USER_email: req.body.USER_email,
-                                        USER_departement: req.body.USER_departement,
-                                        USER_role: req.body.USER_role,
-                                        USER_password: hash,
+                                        ...req.body,
+                                        UserPassword: hash,
                                     },
-                                    { where: { USER_id: loggedUserId } }
+                                    { where: { UserId: loggedUserId } }
                                 )
                                     .then(() => res.status(201).json({ message: "Mot de passe modifié avec succès" }))
                                     .catch((err) => res.status(400).json(err));
@@ -114,33 +104,91 @@ exports.modifySignup = (req, res, next) => {
         res.status(502).json({ error });
     }
 };
+////---------------cette version fonctionne --------------//////
+// exports.delete = (req, res) => {
+//     const token = req.headers.authorization.split(" ")[1];
+//     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
+//     const loggedUserId = decodedToken.UserId;
+//     const adminId = process.env.ADMINID; // comment définir autrement le adminId ????
 
+//     const accountId = req.params.id;
+
+//     User.findOne({ where: { UserId: accountId } }).then((user) => {
+//         if (user.UserId == loggedUserId || loggedUserId == adminId) {
+//             User.destroy({ where: { UserId: accountId } })
+//                 .then(() => res.status(200).json({ message: "Utilisateur supprimé" }))
+//                 .catch((error) => res.status(400).json({ error }));
+//         } else {
+//             throw new Error(res.status(401).json({ error: "Vous n'avez pas les autorisations nécéssaires pour cette opération." }));
+//         }
+//     });
+// };
+
+/////---------------cette version fonctionne aussi et permet de se débarasser des média liés aux shares !!!!!!! --------------//////
 exports.delete = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
     const loggedUserId = decodedToken.UserId;
+    const adminId = process.env.ADMINID; // comment définir autrement le adminId ????
 
-    User.findOne({ where: { USER_id: loggedUserId } }).then(() => {
-        User.destroy({ where: { USER_id: loggedUserId } })
-            .then(() => {
-                console.log("Vos partages ont été supprimés");
-            })
-            .catch((error) => res.status(400).json({ error }));
+    const accountId = req.params.id;
+
+    User.findOne({ where: { UserId: accountId } }).then((user) => {
+        if (user == null) {
+            res.status(400).json({ message: " Cet utilisateur n'existe pas" });
+        } else if (!user.UserId == loggedUserId || !loggedUserId == adminId) {
+            //ceinture et bretelles
+            res.status(401).json({ message: "Vous n'avez pas les autorisations nécéssaires pour cette opération." });
+        } else if (user.UserId == loggedUserId || loggedUserId == adminId) {
+            Share.findAll({ raw: true, where: { userUserId: user.UserId } })
+                .then((shares) => {
+                    const shareX = shares;
+                    shareX.forEach((item, index) => {
+                        Media.findOne({ raw: true, where: { shareShareId: item.ShareId } }) //
+                            .then((media) => {
+                                const filename = media.MediaUrl.split("/07media/")[1];
+                                fs.unlink(`07media/${filename}`, () => {
+                                    try {
+                                        () => res.status(200).json({ message: "Fichier supprimé !" });
+                                    } catch {
+                                        (error) => res.status(400).json({ error });
+                                    }
+                                });
+                            })
+                            .catch((error) => res.status(500).json({ message: "Il y a un truc qui cloche" }));
+                    });
+                })
+                .then(() => {
+                    User.destroy({ where: { UserId: accountId } })
+                        .then(() => res.status(200).json({ message: "Utilisateur supprimé" }))
+                        .catch((error) => res.status(400).json({ error }));
+                });
+        } else {
+            () => res.status(500).json({ error });
+        }
     });
-}; // PENSER A VERIFIER L'EFFACEMENT DES SHARE ET DES COMMENT !!!!!!
-
+};
 
 exports.getOneUser = (req, res) => {
     const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
-    User.findOne({ where: { USER_id: paramsId}}) // à définir : ce qui va être vu par les autres, et où on répond à cette requête...
-    .then((user) => res.status(200).json(user))
+    User.findOne({ where: { UserId: paramsId } })
+        .then((user) => {
+            delete user.dataValues.UserPassword, // le password ne sera pas transmis au front
+                res.status(200).json(user);
+        })
         .catch((error) => res.status(404).json({ error }));
 };
 
-//----- GET ALL USERS //---- //----- GET A QUERY 
+//----- GET ALL USERS //---- //----- GET A QUERY
 exports.getAllUsers = (req, res) => {
-    User.findAll({})
-    .then((users) => res.status(200).json(users))
+    User.findAll()
+        .then((users) => {
+            users.forEach((item, index) => {
+                // le password ne sera pas transmis au front
+                delete item.dataValues.UserPassword;
+            }),
+                res.status(200).json(users);
+        })
         .catch((error) => res.status(404).json({ error }));
 };

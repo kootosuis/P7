@@ -2,20 +2,21 @@ const Sequelize = require("sequelize");
 const sequelize = require("../01utils/DBconnect");
 
 const User = sequelize.define("user", {
-    USER_id: { type: Sequelize.UUID, defaultValue: Sequelize.UUIDV4, allowNull: false, primaryKey: true },
-    USER_name: { type: Sequelize.STRING, allowNull: false },
-    USER_firstname: { type: Sequelize.STRING, allowNull: false },
-    USER_email: {
+    UserId: { type: Sequelize.UUID, defaultValue: Sequelize.UUIDV4, allowNull: false, primaryKey: true },
+    UserName: { type: Sequelize.STRING, allowNull: false },
+    UserFirstname: { type: Sequelize.STRING, allowNull: false },
+    UserEmail: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
+        unique: { args: true, msg: "Email déjà utilisé." },
         validate: {
-            isEmail: { args: true, msg: "Email invalide ou déjà utilisé." },
+            isEmail: { args: true, msg: "Email invalide." },
         },
     },
-    USER_departement: { type: Sequelize.STRING, allowNull: false },
-    USER_role: { type: Sequelize.STRING },
-    USER_password: {
+    UserPresentation: { type: Sequelize.STRING },
+    UserDepartement: { type: Sequelize.STRING, allowNull: false },
+    UserRole: { type: Sequelize.STRING },
+    UserPassword: {
         type: Sequelize.STRING,
         allowNull: false,
         // pas d'autres contraintes ici, cela limiterait le hash (cf /04controllers/user/signup)

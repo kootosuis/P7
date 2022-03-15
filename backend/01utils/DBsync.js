@@ -5,20 +5,39 @@ const Share = require("../06models/share");
 const Comment = require("../06models/comment");
 const Media = require("../06models/media");
 
-User.hasMany(Comment);
+User.hasMany(Comment, {
+    onDelete: "cascade",
+    foreignKey: {
+        allowNull: false,
+    },
+});
 Comment.belongsTo(User);
 
-User.hasMany(Share);
+User.hasMany(Share, {
+    onDelete: "cascade",
+    foreignKey: {
+        allowNull: false,
+    },
+});
 Share.belongsTo(User);
 
-Share.hasMany(Comment);
+Share.hasMany(Comment, {
+    onDelete: "cascade",
+    foreignKey: {
+        allowNull: false,
+    },
+});
 Comment.belongsTo(Share);
 
 Comment.hasMany(Comment);
 
-Share.hasOne(Media);
+Share.hasOne(Media, {
+    onDelete: "cascade",
+    foreignKey: {
+        allowNull: true,
+    },
+});
 Media.belongsTo(Share);
-// Media.belongsTo(Share); à étudier
 
 //--------modification des colonnes
 // sequelize

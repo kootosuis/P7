@@ -7,7 +7,7 @@ const sharesCrtl = require("../04controllers/shares");
 
 // D0NT'FORGET TO SET UP MULTER
 router.post("/", auth, multer, sharesCrtl.createShare);
-router.put("/?:id", auth, multer, sharesCrtl.updateShare);
+router.put("/:id", auth, multer, sharesCrtl.updateShare);
 
 router.delete("/:id", auth, sharesCrtl.deleteShare);
 // router.post("/:id/like", auth, sharesCrtl.likeOrDislikeShare);

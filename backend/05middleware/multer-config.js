@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
         const name = file.originalname.split(" ").join("_");
         const extension = MIME_TYPES[file.mimetype];
         callback(null, name + Date.now() + "." + extension);
-    }
+    },
 });
 
 // single("image") indique seuls les téléchargements de fichiers image sont gérés.
@@ -31,7 +31,6 @@ module.exports = multer({
     limits: { fileSize: 8000000 },
     fileFilter: function (req, file, callback) {
         const extension = MIME_TYPES[file.mimetype];
-        console.log(extension);
         if (
             extension !== "png" && //
             extension !== "jpg" && //
@@ -43,4 +42,4 @@ module.exports = multer({
         }
         callback(null, true);
     },
-}).single("image");
+}).single("file");
