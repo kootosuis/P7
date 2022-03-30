@@ -1,5 +1,4 @@
 <template>
-
     <section class = "container">
       <div class = "formSection">
 
@@ -12,7 +11,7 @@
                               method="POST" 
                               name="form" 
                               id="form" 
-                              @submit = "sendForm">
+                              @submit = "signUp">
                               
 
                               <!--Le Nom-->
@@ -167,7 +166,7 @@ export default {
       else document.getElementById("UserSignupBtn").disabled = true;
     },
 
-    sendForm(e) {
+    signUp(e) {
 
       e.preventDefault();
 
@@ -195,29 +194,66 @@ export default {
           headers: {"Content-Type": "application/json" },
           mode :"cors"
       })
-      .then ((res) => {
-            if (res.status == 201) {
-              this.success= true;
-              this.message = "Inscription validée.";
-              sessionStorage.setItem("UserEmail", JSON.stringify(User.UserEmail));
-              sessionStorage.setItem("UserPassword", JSON.stringify(User.UserPassword));
-              this.$router.push({ name: 'login' });
-            }
-            else {res.json ()
-              .then ((json) => {
-                this.success= false;
-                console.log(json);
-                this.message = json.error.errors[0].message;
-              }
-            )}
-          })
-    .catch (() => {
-            this.success= false;
-            this.message = `Le serveur ne répond pas ! Veuillez réessayer ultérieurement`;
-     })         
-    }               
+      .then((response) => {
+                    if (response.status == 201) { 
+                              response.json()
+                              .then(() => {
+                                    this.success= true;
+                                    this.message = "Inscription validée.";//setTimeout
+
+                                    const UserShortCutEmail = User.UserEmail
+                                    const UserShortCutPassword = User.UserPassword
+                                    const UserShortCut = { "UserEmail": UserShortCutEmail, 
+                                                          "UserPassword": UserShortCutPassword }
+
+                                    fetch("http://localhost:3000/api/auth/login", {
+                                              method: 'POST',
+                                              body: JSON.stringify(UserShortCut),
+                                              // headers: {'Accept': 'application/json, text/plain, */*'},
+                                              headers: {"Content-Type": "application/json" },
+                                              mode :"cors"
+                                    })
+                                    .then((response) => {
+                                              if (response.status == 200) { 
+                                                        response.json()
+                                                        .then((response) => {
+                                                            this.success= true;
+                                                            this.message = "Authentification effectuée.";
+                                                            sessionStorage.setItem("UserId", JSON.stringify(response.UserId));
+                                                            sessionStorage.setItem("Token", JSON.stringify(response.token));
+                                                            this.$router.push({ name: 'wall' });
+                                                        })
+                                              } else {
+                                                        response.json ()
+                                                        .then ((json) => {
+                                                        this.success= false;
+                                                        console.log(json);
+                                                        this.message = json.error;
+                                                        })
+                                              }
+                                    })
+                                    .catch (() => {
+                                              this.success= false;
+                                              this.message = `Le serveur ne répond pas ! Veuillez réessayer ultérieurement`;
+                                    })
+                              })
+                    } else {
+                              response.json ()
+                              .then ((json) => {
+                              this.success= false;
+                              console.log(json);
+                              this.message = json.error.errors[0].message;
+                              })
+                    }
+       })
+      .catch (() => {
+              this.success= false;
+              this.message = `Le serveur ne répond pas ! Veuillez réessayer ultérieurement`;
+      })         
+    }  
   }
-}
+}             
+  
 </script>
 
 <style lang="scss" scoped>

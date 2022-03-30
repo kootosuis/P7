@@ -10,7 +10,7 @@
           </div>
           <ul class="menu-items">
                <li><router-link to="/signup">S'inscrire</router-link></li>
-               <li><router-link to="/login">S'identifier</router-link></li>
+               <li><router-link to="/login">S'authentifier</router-link></li>
                <li><router-link to="/deconnect">Se déconnecter</router-link></li>
           </ul>
 

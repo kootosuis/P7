@@ -1,5 +1,4 @@
 <template>
-
     <section class = "container">
       <div class = "formSection">
 
@@ -12,7 +11,7 @@
                               method="POST" 
                               name="form" 
                               id="form" 
-                              @submit = "sendForm">
+                              @submit = "LogIn">
                               
                               <!--L'Email'-->
                                <div class="formLine">
@@ -46,7 +45,7 @@
                               <div class="btn-div">
                                         <!-- <a href="ici un message modal" class="btn">S'inscrire</a>
                                         <input type="submit" value="submit" class="u-form-control-hidden"> -->
-                                        <input type="submit"  class="btn" id="UserSignupBtn" value="S'identifier" disabled>
+                                        <input type="submit"  class="btn" id="UserSignupBtn" value="S'authentifier" disabled>
                                         
                               </div>
        
@@ -54,7 +53,7 @@
 
                     
                     <div class="add-div" v-show="success===false">
-                      <p id="erreur" > Echec de l'inscription : {{message}} </p>
+                      <p id="erreur"> Echec de l'authentification : {{message}} </p>
                     </div>
 
           </div>
@@ -67,7 +66,8 @@ export default {
   name: 'UserLogin',
   data() {
     return {
-    message :"", //message d'erreur
+          success: "",
+          message :"", //message d'erreur
     }
   },
   methods: {
@@ -80,44 +80,48 @@ export default {
       else document.getElementById("UserSignupBtn").disabled = true;
     },
 
-    sendForm(e) {
+    LogIn(e) {
 
-      e.preventDefault();
+          e.preventDefault();
 
-      const UserEmail = document.getElementById("UserEmail").value
-      const UserPassword = document.getElementById("UserPassword").value
-      
-      const User = { "UserEmail": UserEmail,
-                     "UserPassword": UserPassword
-      }
+          const UserEmail = document.getElementById("UserEmail").value
+          const UserPassword = document.getElementById("UserPassword").value
+          
+          const User = { "UserEmail": UserEmail,
+                         "UserPassword": UserPassword
+          }
 
-      fetch("http://localhost:3000/api/auth/login", {
-          method: 'POST',
-          body: JSON.stringify(User),
-          // headers: {'Accept': 'application/json, text/plain, */*'},
-          headers: {"Content-Type": "application/json" },
-          mode :"cors"
-      })
-      .then ((res) => {
-            if (res.status == 200) {
-              this.success= true;
-              this.message = "Inscription validée.";
-              sessionStorage.setItem("UserId", JSON.stringify(res.UserId));
-              sessionStorage.setItem("Token", JSON.stringify(res.token));
-              this.$router.push({ name: 'wall' });
-            }
-            else {res.json ()
-              .then ((json) => {
-                this.success= false;
-                console.log(json);
-                this.message = json.error.errors[0].message;
-              }
-            )}
+          fetch("http://localhost:3000/api/auth/login", {
+                    method: 'POST',
+                    body: JSON.stringify(User),
+                    // headers: {'Accept': 'application/json, text/plain, */*'},
+                    headers: {"Content-Type": "application/json" },
+                    mode :"cors"
           })
-    .catch (() => {
-            this.success= false;
-            this.message = `Le serveur ne répond pas ! Veuillez réessayer ultérieurement`;
-     })         
+          .then((response) => {
+                    if (response.status == 200) { 
+                              return response.json();
+                    } else {
+                              response.json ()
+                              .then ((json) => {
+                              this.success= false;
+                              console.log(json);
+                              this.message = json.error ||  json.message ;
+                              })
+                    }
+          })
+          .then((response) => {
+                    this.success= true;
+                    this.message = "Authentification effectuée.";
+                    sessionStorage.setItem("UserId", JSON.stringify(response.UserId));
+                    sessionStorage.setItem("Token", JSON.stringify(response.token));
+                    this.$router.push({ name: 'wall' });
+          })
+
+          .catch (() => {
+                    this.success= false;
+                    this.message = `Le serveur ne répond pas ! Veuillez réessayer ultérieurement`;
+          })         
     }               
   }
 }
