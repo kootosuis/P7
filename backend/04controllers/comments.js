@@ -52,13 +52,13 @@ exports.deleteComment = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
     const loggedUserId = decodedToken.UserId;
+    const adminId = process.env.ADMINID; // comment définir autrement le adminId
 
     const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
-    Comment.findOne({ where: { CommentId: paramsId } }) // identifier le commentaire à effacer
-        .then((comment) => {
-            // verifier que le user est bien le créateur du commentaire
-            if (!comment.userUserId == loggedUserId) {
+    Comment.findOne({ where: { CommentId: paramsId } })
+        .then((share) => {
+            if (!share.userUserId == loggedUserId || !loggedUserId == adminId) {
                 res.status(400).json({
                     error: "Vous n'avez pas les autorisations nécéssaires pour effacer ce commentaire.",
                 });
@@ -69,7 +69,7 @@ exports.deleteComment = (req, res) => {
             }
         })
         .catch((error) => res.status(500).json({ error }));
-}; // PENSER A VERIFIER L'EFFACEMENT DES COMMENT ASSOCIES !!!!!!
+};
 
 exports.getOneComment = (req, res) => {
     const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front

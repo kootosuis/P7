@@ -104,6 +104,7 @@ exports.modifySignup = (req, res, next) => {
         res.status(502).json({ error });
     }
 };
+
 ////---------------cette version fonctionne --------------//////
 // exports.delete = (req, res) => {
 //     const token = req.headers.authorization.split(" ")[1];

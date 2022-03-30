@@ -6,9 +6,13 @@ const commentsCrtl = require("../04controllers/comments");
 
 router.post("/:id", auth, commentsCrtl.createComment);
 router.put("/:id", auth, commentsCrtl.updateComment);
+
 router.delete("/:id", auth, commentsCrtl.deleteComment);
 // router.post("/:id/like", auth, commentsCrtl.likeOrDislikeComment);
+
 router.get("/:id", auth, commentsCrtl.getOneComment);
 router.get("/", auth, commentsCrtl.getAllComment);
 
 module.exports = router;
+
+// je mets des auth partout parce que cela doit rester un réseau interne à l'entreprise

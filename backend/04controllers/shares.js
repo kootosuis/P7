@@ -114,3 +114,7 @@ exports.getAllShare = (req, res) => {
 // exports.likeOrDislikeShare = (req, res) =>{
 // PROJET A COMPLETER
 // };
+
+
+
+//------créer la possibilité de reprendre un média et de créer une nouvelle chaine de share + commentaire??????????
