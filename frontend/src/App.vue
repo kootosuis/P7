@@ -28,9 +28,9 @@
 <style lang="scss">
     #app {
 
-    //   * {
-    //     border: solid 1px rgb(204, 121, 42)
-    //   }
+      * {
+        border: solid 1px rgb(204, 121, 42)
+      }
       header {
         height :120px;
       }

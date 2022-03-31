@@ -3,6 +3,8 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import EnterView from "../views/EnterView.vue";
 import UserSignUp from "../views/UserSignUp.vue";
 import UserLogin from "../views/UserLogin.vue";
+import UserModify from "../views/UserModify.vue";
+
 import UserDeconnect from "../views/UserDeconnect.vue";
 import PostedShares from "../views/PostedShares.vue";
 // import AboutView from "../views/AboutView.vue";
@@ -35,6 +37,12 @@ const routes = [
     },
 
     {
+        path: "/modify",
+        name: "modify",
+        component: UserModify,
+    },
+
+    {
         path: "/deconnect",
         name: "deconnect",
         component: UserDeconnect,
@@ -45,6 +53,7 @@ const routes = [
         name: "wall",
         component: PostedShares,
     }
+
 ];
 
 const router = createRouter({

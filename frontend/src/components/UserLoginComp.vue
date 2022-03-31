@@ -104,7 +104,7 @@ export default {
                     } else {
                               response.json ()
                               .then ((json) => {
-                              this.success= false;
+                              this.success = false;
                               console.log(json);
                               this.message = json.error ||  json.message ;
                               })
