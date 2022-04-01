@@ -1,50 +1,67 @@
 <template>
-          <div class="">
+          <section class="mainrestaurants">
+                <div id="restaurants" class="restaurants">
+                  <a id="link" href="OUVRIR" v-for="item in apiResponse"
+                            :key="item.ShareId">
+                    <div class="card"  >
+                                
+                                <div class="card__image">
+                                    <div class="card__image--img">
+                                            <img :src='item.medium.MediaUrl' :alt='item.medium.MediaDescription' class=""/>
+                                    </div>
+                                    <div class="card__image--img card__image--new">
+                                        <p>Nouveau</p>
+                                    </div>
+                                </div>
 
-                    <div v-for="item in apiResponse"
-                         :key="item.ShareId"
-                         class="" ><!--blog_post_header-->
-                              <div class="" >
-                                        <!-- date -->
-                                        <p>{{ item.createdAt}}</p>
-                                        <p>{{ item.updatedAt}}</p>
-                              </div>
+                                <div class="card__info">
 
-                              <!-- <div class="" >
-                                         auteur
-                              </div> -->
+                                  <div>
+                                    <p class="card__info--name">{{ item.ShareText }}</p>
+                                    <a href="" class="" >
+                                      Lire la suite...
+                                    </a>
+                                  </div>
+                                    
 
-                              <div href="" class="" >
-                                        <img src="" alt="" class=""/><!--/blog_post_image-->
-                              </div>
-                              <div class=""><!--blog_post_content_content-->
-                                        <p>{{ item.ShareText }}</p><!--/blog_post_content_content-->
-                              </div><!--/blog_post_content--><!--blog_post_readmore-->
-
-                              <a href="" class="" ><!--blog_post_readmore_content--><!--options_json--><!--{"content":"","defaultValue":"Lire la suite"}--><!--/options_json-->Lire la suite<!--/blog_post_readmore_content-->
-                              </a><!--/blog_post_readmore-->
-                    </div>
-          </div>
+                                  <div class=card__info--complement>
+                                        <div class="card__info--complement--adress">
+                                          <p>{{ item.createdAt }}</p>
+                                          <p>{{ item.updatedAt }}</p>
+                                          <p> {{item.user.UserFirstname}}</p>
+                                          <p> {{item.user.UserName}}</p>
+                                          <p> {{item.user.UserDepartement}}</p>
+                                          <p> {{item.user.UserRole}}</p>
+                                          <p hidden>{{ item.userUserId }}</p>
+                                          <p>Nombre de commentaires</p>
+                                          <p> {{}}</p>
+                                   </div>
+                                        <!-- <div class="card__info__heart2">
+                                            <img class="card__info__heart2--r" src="icons/heart-regular.svg" alt="icon">
+                                            <img class="card__info__heart2--s" src="icons/heart-solid.svg" alt="icon"> 
+                                        </div> -->
+                                </div>
+                         </div>  
+                     </div>          
+                  </a>
+               </div>
+          </section>
           
 </template>
 
 <script>
 export default {
           name : 'ShareAll',
+
           data(){
                     return{
-                            
                             apiResponse:""
-
-                            
                     }
           },
 
-           beforeMount () {
-
-//     const  UserId = JSON.parse(sessionStorage.getItem("UserId"));
-    const  Token = JSON.parse(sessionStorage.getItem("Token"));
-
+          beforeMount () {
+          //     const  UserId = JSON.parse(sessionStorage.getItem("UserId"));
+          const  Token = JSON.parse(sessionStorage.getItem("Token"));
           fetch(`http://localhost:3000/api/shares`, {
                 method: 'GET',
                 headers: {"Content-Type": "application/json", 
@@ -52,7 +69,7 @@ export default {
                 },
                 mode : "cors"
                 })
-                 .then((res) => {
+          .then((res) => {
             return res.json();
           })
           .then((resJson) => {
@@ -60,17 +77,15 @@ export default {
           })
           .then((res) =>{
             this.apiResponse=res
-           
           })
-         
-                
-                .catch( (error) => { alert(error);
+          .catch( (error) => { alert(error);
           });
-
-        },
+          },
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+
 
 </style>

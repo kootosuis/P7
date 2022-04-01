@@ -1,0 +1,59 @@
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+    //     box-sizing: border-box;
+}
+
+html {
+    // 10px div by def of 16px
+    font-size: 62.5%;
+    // en dessous de 320px je ne fais pas de design...
+    min-width: 320px;
+    color: $color-footer;
+}
+
+body {
+    display: flex;
+    @include flexcolumn;
+    min-height: 100vh;
+    box-sizing: border-box;
+    background-color: $color-bg;
+    scroll-behavior: smooth;
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    @include flexcolumn;
+}
+
+.container {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 89%;
+    max-width: 1200px;
+    margin: auto;
+
+    & h1 {
+        padding: 20vh 0;
+    }
+}
+
+a {
+    text-decoration: none;
+    color: $color-footer;
+    cursor: pointer;
+    // je ne comprends pas pourquoi cela ne marche pas
+    // cursor: url('icons/logoiconohmyfood.png') 2 2, auto;
+    // cursor: url('icons/utensils-solid.svg') 2 2, auto;
+}
+
+ul {
+    padding-left: 35px;
+}
+
+// la suite est pour les pages en construction

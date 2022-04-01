@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar">
         <div class="navbar-container container">
-            <input type="checkbox" name="">
+            <input type="checkbox" name="main-nav">
             
                 <div class="hamburger-lines">
                     <span class="line line1"></span>
@@ -9,7 +9,7 @@
                     <span class="line line3"></span>
                 </div>
 
-                <ul class="menu-items">
+                <ul class="navbar__items">
                     <li v-show="!token"><router-link to="/signup">S'inscrire</router-link></li>
                     <li v-show="!token"><router-link to="/login">S'authentifier</router-link></li>
                     <li v-show="token" ><router-link to="/modify">Gérér son compte</router-link></li>

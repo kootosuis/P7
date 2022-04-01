@@ -1,0 +1,201 @@
+// le challenge a été de créer une carte à la fois 
+// pour la présentation des restaurants (page accueil)
+// et des plats (pages restaurants) :
+// je ne le referai plus
+
+.card{
+
+    @include flexcolumn;
+    
+    border-radius:1.5rem;
+    background-image:$color-bg;
+    background-color: $color-bg;
+    @include box-shadow;
+    transition: all 100ms ease-in-out;
+    width:100%;
+
+    &:hover{
+        transform: scale(1.01);
+        @include box-shadow2;
+    }
+
+    &__image {
+
+        text-align: center;
+        position:relative;
+        height:174px;
+        width:335px;
+        overflow: hidden;
+        border-radius:1.5rem 1.5rem 0 0 ;
+        
+        &--img img{
+            width: 100%;
+            object-fit: cover;
+        }
+        
+
+        //je ne sais pas encore déterminer "new"" ou "NOnew"
+
+        &--new {
+            z-index: 1;}
+        &--new p{
+            display: inline-block;
+            position: absolute;
+            bottom: 11rem;
+            right:2rem;
+            padding:1rem 1.2rem;
+            background-color: $color-tertiary;
+            border-radius:3px ;
+            @include text-info;}
+        
+        &--NOnew{
+            display:none;
+        }
+    }
+
+    &__menu{
+
+        
+        display: flex;
+        flex-wrap:nowrap;
+        column-gap:0;
+        justify-content: flex-start;
+        overflow: hidden;
+        border-radius:1.5rem;
+        
+        &:hover &--choice {
+                width:6rem;
+                &--ok{
+                transform: translateX(0) rotate(-360deg)
+                }
+        }
+        
+        &--choice {
+            flex:none;
+            display: flex;
+            background-color: $color-tertiary;
+            position:relative;
+            width:0;
+            align-items: center;
+            justify-content:center;
+            transition: width 500ms ease 100ms;
+            
+            &--ok{
+                display: inline-block;
+                color: $color-tertiary;
+                background-color: $color-inverse;
+                border-radius:2rem;
+                padding:0.5rem;
+                transform: translateX(6rem);
+                transition: transform 500ms ease 100ms;
+            }
+        }
+    }
+
+    &__info{
+
+        flex:auto;
+        overflow: hidden;
+        
+        // agencement général des infos
+        
+        @include flexcolumn;
+        padding: 1.3rem 1.3rem 1.3rem 1.3rem;
+
+        //le titre le coeur les complements le prix
+    
+        &--name{
+            @include text-info($font-weight:500, $font-size:95%, $letter-spacing:0.01em);
+            padding-bottom: 1rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        
+        &--complement{
+            @include text-info($font-size:90%, $font-weight:300);
+            display: flex;
+            justify-content: space-between;
+            column-gap:0rem;
+            align-items: baseline;
+            
+            &--ingredients{
+                flex:auto;
+                @include text-info($font-weight:300, $font-size:1.5rem, $letter-spacing:0.01rem);
+                overflow: hidden;
+                & p {
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                max-width:54rem;
+                }
+            }
+            &--price{
+                flex: none;
+                @include text-info ($font-weight:500, $font-size:95%, $letter-spacing:0.01em);             
+            }
+        }
+
+//trois manières de faire la même chose:
+// ici j'utilise svg pur et image svg et
+// je me sers de la troisième (icon) pour les cartes menus
+  
+//svg pur
+        &__heart1{
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            position:relative;
+            bottom: 3rem;
+            width:2.4rem;
+            transform: scale(1);
+            transition: all 150ms;
+
+            &--r{
+                @include pseudo-pos;
+                opacity:1;
+            }
+            &--s{
+                @include pseudo-pos;
+                opacity:0;
+            }
+            &:hover &--r{
+                opacity:0;
+            }
+            &:hover &--s{
+                transform: scale(1.1);
+                opacity:1;
+            } 
+        }
+
+//image svg        
+        &__heart2{
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            position:relative;
+            bottom: 3rem;
+            width:2.4rem;
+            transform: scale(1);
+            transition: all 150ms;
+
+            &--r{
+                @include pseudo-pos;
+                opacity:1;
+            }
+            &--s{
+                @include pseudo-pos;
+                opacity:0;
+            }
+
+            &:hover &--r{
+                  opacity:0;
+            }
+            
+            &:hover  &--s{
+                transform: scale(1.1);
+                opacity:1;
+            }  
+        }
+    }
+}

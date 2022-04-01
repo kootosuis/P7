@@ -1,0 +1,52 @@
+@mixin mainbutton{
+    
+    display: block;
+    border-radius: 25px;
+    text-decoration: none;
+    background:$color-primary;
+    
+    padding: 1.5rem 2.5rem;
+    line-height: 2rem;
+    @include text-info($color:#FFF, $font-weight:500);
+    transform: scale(1);
+    background: $color-mainbtn;
+    height: 5rem;
+    @include box-shadow;
+    transition: all 150ms;
+    z-index: 1;
+    cursor: pointer;
+    &:hover {
+        opacity: 0.9;
+        box-shadow: 0.2rem 0.5rem 2rem rgba(0, 0, 0, 0.5);
+        transform: scale(1.01);
+        text-shadow: -0.01rem -0.01rem 0 $color-primary, 0.01rem -0.01rem 0 $color-primary, -0.01rem 0.01rem 0 $color-primary, 0.01rem 0.01rem 0 $color-primary;
+    }
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.5em 1.5em;
+    text-decoration: none;
+    border-radius: 50px;
+    cursor: pointer;
+    outline: none;
+    margin: 1em;
+    text-transform: uppercase;
+    font-weight: small;
+}
+.btn-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary {
+    color: #fff;
+    background: #16a083;
+}
+
+.btn-primary:hover {
+    background: #117964;
+    transition: background 0.3s ease-in-out;
+}
+

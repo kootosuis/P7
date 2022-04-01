@@ -37,6 +37,7 @@ Share.hasOne(Media, {
         allowNull: true,
     },
 });
+
 Media.belongsTo(Share);
 
 //--------modification des colonnes
@@ -50,7 +51,7 @@ Media.belongsTo(Share);
 //         console.log(err);
 //     });
 
-//------------remise à zéro
+// ------------remise à zéro
 // sequelize
 //     //     .sync()
 //     .sync({ force: true })

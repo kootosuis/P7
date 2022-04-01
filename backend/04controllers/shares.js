@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 const User = require("../06models/user");
 const Share = require("../06models/share");
 const Media = require("../06models/media");
+const Comment = require("../06models/comment");
+
 const fs = require("fs");
 
 exports.createShare = (req, res) => {
@@ -104,7 +106,7 @@ exports.getOneShare = (req, res) => {
 
 //----- GET ALL SHARES //---- //----- GET A QUERY // comment faire une recherche ?
 exports.getAllShare = (req, res) => {
-    Share.findAll({})
+    Share.findAll({include :[ User, Media, Comment]})
         .then((users) => res.status(200).json(users))
         .catch((error) => res.status(404).json({ error }));
 };

@@ -1,21 +1,34 @@
 <template>
-    <div class="entrée">
-        <EnterComp avertissement_titre= "Attention"
-        avertissement_texte= "L'usage de ce réseau est strictement réservé aux membres des équipes de Groupomania"
-        bienvenue="Bienvenue sur LeRezo, le réseau social de Groupomania" />
-    </div>
+    <section class="fond">
+                <div class="container">
+
+                        <div class="message__principal">
+                          <h2 > Bienvenue sur LeRezo, le réseau social de Groupomania"</h2>
+                        </div>
+
+                        <div class="message__secondaire">
+                          <h3>Attention</h3>
+                          <p >
+                            <br>L'usage de ce réseau est strictement réservé 
+                            <br>aux membres des équipes de Groupomania.
+                          </p>
+                </div>
+           </div>
+    </section>
+          
 </template>
 
 <script>
-    import EnterComp from "@/components/EnterComp.vue";
-
     export default {
         name: "EnterView",
-        components: {
-            EnterComp,
-        },
-    };
+    }
 </script>
+
+
+
+<style scoped>
+
+</style>
 
 
 

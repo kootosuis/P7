@@ -1,12 +1,32 @@
 <template>
-      <div id="footer" class="container">
-        <div id="footer-text">
-        <p> En cas de problème ou si vous constatez un usage innoportun de l'application,<br> contactez l'administrateur :&nbsp;<br><b>admin@groupomania.fr</b>
-          <br>
-          <br>© Copyright Groupomania 2022
-        </p>
+      <div class="container">
+            
+                    <div class="footer__titlebox">
+                        <div>
+                            <img class="footer__icon" src="../assets/images/icon.png" alt="Logo Groupomania">
+                        </div>
+                        <p class="footer__title">LeRezo</p>
+
+                        <div>
+                            <img class="footer__icon" src="../assets/images/icon.png" alt="Logo Groupomania">
+                        </div>
+                    </div>
+
+                    <div class="footer__text__box">
+                        <div>
+                          <p> En cas de problème ou si vous constatez un usage innoportun de l'application,
+                            <br> contactez l'administrateur :&nbsp;</p>
+                          <a href="mailto:admin@groupomania.fr?subject=Contact%20LeRezo">admin@groupomania.fr</a>
+                         
+                          <p>© Copyright Groupomania 2022</p>
+                        
+                        </div>
+                    </div>
+                    
+            
       </div>
-      </div>
+
+      
 </template>
 
 <script>
@@ -15,19 +35,7 @@
 
 
 <style scoped lang="scss">
-#footer  {
-  display : flex;
-  margin : auto;
-}
-#footer-text  {
-  display : flex;
-  padding : 20px;
-  margin : auto;
-}
 
-p {
-    text-align: center ;
-  }
 </style>
 
 

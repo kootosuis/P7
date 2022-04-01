@@ -9,7 +9,7 @@ const MIME_TYPES = {
     "image/png": "png",
     "image/gif": "gif",
     "image/tiff": "tiff",
-    "application/pdf": "pdf",
+    // "application/pdf": "pdf",
 };
 
 const storage = multer.diskStorage({
@@ -35,10 +35,11 @@ module.exports = multer({
             extension !== "png" && //
             extension !== "jpg" && //
             extension !== "gif" && //
-            extension !== "tiff" && //
-            extension !== "pdf"
+            extension !== "tiff" 
+            // && //
+            // extension !== "pdf"
         ) {
-            return callback(new Error(".png, .tiff, .gif, .jpg et .pdf seulement"));
+            return callback(new Error(".png, .tiff, .gif et .jpg seulement")); //.pdf 
         }
         callback(null, true);
     },

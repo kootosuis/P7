@@ -104,7 +104,7 @@ export default {
                     } else {
                               response.json ()
                               .then ((json) => {
-                              this.success = false;
+                              this.success= false;
                               console.log(json);
                               this.message = json.error ||  json.message ;
                               })
@@ -127,79 +127,12 @@ export default {
 }
 </script>
 
-
 <style lang="scss" scoped>
 
-.formSection{
-  min-height: 724px;
-}
-
 .formulaire{
-  color: white;
-  font-weight: 700;
-  display : flex;
-  flex-direction: column;
-  text-align: left;
+
    background-image: linear-gradient(#40cbc4, #fed7d7);
-//   background-image: linear-gradient(0deg, rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("../assets/images/129938653-0.png");
-//   background-position: 50% 6.72%;
-}
 
-.formLine{
-  width :100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  // text-align: center;
-  margin-left: 0;
-}
-.input{
-  flex : 2;
-  
-  
-}
-.label {
-flex :1;
-text-align: right;
-}
-
-
-.u-section-1 .u-sheet-1 {
-  min-height: 724px;
-}
-
-.formSection .formDiv {
-  width: 570px;
-  margin: 96px auto 39px;
-}
-
-.asterisque {
-  font-size : 10px;
-}
-.hint {
-  font-size : 12px;
-  font-weight: 400;
-}
-
-.please {
-  height: 100px;
-  padding : 25px;
-  font-size: 1.25rem;
-  h2 {
-    text-align: center;
-  }
-}
-
-@media (max-width: 767px) {
-  .formSection .formDiv {
-    width: 540px;
-  }
-}
-
-@media (max-width: 575px) {
-  .formSection .formDiv {
-    width: 340px;
-  }
 }
 
 </style>

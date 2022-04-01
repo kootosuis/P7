@@ -1,0 +1,164 @@
+@use "sass:math";
+
+@keyframes loader {
+  95% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    // pour rendre la page accessible en fin de chargement
+    z-index: -1;
+  }
+
+}
+
+@keyframes appear {
+  0%{
+    opacity: 0;
+    // transform: scale(0)
+  }
+  100% {
+    opacity: 1;
+    // transform: scale(1)
+  }
+}
+
+@keyframes up-down {
+  0% {
+    transform: translateY(1rem) scale(1);
+  }
+  100% {
+    transform: translateY(-1rem) scale(1.2);
+  }  
+}
+
+@keyframes right-left {
+    0% {
+      transform: translateX(3rem);
+    }
+    100% {
+      transform: translateX(-3rem);
+    }
+}
+
+$loader-anim-dur: 2000ms;
+$loader-anim-delay: math.div($loader-anim-dur, 6);
+
+$appear-beat: 300ms;
+
+  
+  .loader {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    background: #FFF;
+    opacity:1;
+    animation: loader ($loader-anim-dur * 3);
+    animation-fill-mode: both;
+    z-index: 10000;
+    
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  
+    &__letters{
+      @include logotype ($font-size: 2rem);
+
+      display:flex;
+      align-items:center;
+      animation: right-left $loader-anim-dur 
+                          both
+                          infinite 
+                          ease-in-out 
+                          alternate-reverse;
+    }
+
+
+    &__letter{
+      padding: 0.5rem;
+      
+      &--1, &--2{
+        color: $color-primary;
+      }
+    
+      &--5, &--6 {
+        color: $color-secondary;
+      }
+    
+      &--3, &--4{
+        color: $color-tertiary;
+      }
+
+      animation: up-down  math.div($loader-anim-dur, 3)
+                          both
+                          infinite 
+                          ease-in-out 
+                          alternate-reverse,
+                 letters  $loader-anim-delay
+                          both
+                          1
+                          ease-in;
+                          
+
+      @for $i from 1 through 6 {
+        &--#{$i} {
+           animation-delay: $loader-anim-delay * $i;
+        }    
+      }
+    }
+  }
+  
+  .smd__type{
+    animation: appear   $appear-beat*2
+                        // je me suis occupé du délai d'apparition plus bas
+                        both
+                        1
+                        ease-in-out;
+                        
+
+    @for $i from 1 through 3 {
+      &:nth-child(#{$i}) {
+        @if $i==1{
+          animation-delay: $appear-beat;
+        }
+        @else {
+          animation-delay: $appear-beat + ($appear-beat * ($i - 1) * 4);
+        }
+      }    
+    }
+  }
+
+  // je n'ai pas réussi à attribuer un selecteur unique genre "delai--1" 
+  // aux différents éléments que je voulais faire apparaitre
+
+  .card{
+    animation: appear  $appear-beat*2
+                        both
+                        1
+                        ease-in-out;
+                        // cubic-bezier(.5,1.58,.34,.82); seulement si j'emploie "scale" dans la keyframe
+
+    // j'aurais aimé pouvoir accorder aux items du html un numéro en fixant des règles
+    // genre ton numéro = nombre d'items de la section précédente (titre inclus) 
+    // + 1 (titre de ta section) + 1 
+                        
+    @for $y from 1 through 13 {
+      &--#{$y} {
+          animation-delay: $appear-beat * $y ;  
+      }    
+    }
+  }
+
+
+  
+
+
+
+
+
+  
+  
+
+  

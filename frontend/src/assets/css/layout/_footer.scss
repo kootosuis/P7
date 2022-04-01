@@ -1,0 +1,34 @@
+.footer {
+    width: 100%;
+    position: relative;
+    margin: auto;
+    background-color: $color-tertiary;
+    & * {
+        color: $color-footer;
+    }
+    padding: 20px 0 35px;
+
+    &__titlebox {
+        padding: 10px;
+        @include flexrow;
+        justify-content: space-between;
+    }
+
+    &__title {
+        @include logotype($font-weight: 500, $font-size: 2rem);
+        text-align: center;
+    }
+
+    &__text__box {
+        padding: 10px;
+        & p {
+            padding: 10px;
+            text-align: center;
+        }
+    }
+
+    &__icon {
+        width: 3rem;
+        text-align: center;
+    }
+}
