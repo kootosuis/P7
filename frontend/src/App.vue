@@ -1,20 +1,20 @@
 <script>
     import NavBar from "@/components/NavBar.vue"
-    import LoaderComp from "@/components/LoaderComp.vue"
+    // import LoaderComp from "@/components/LoaderComp.vue"
     import PageFooter from "@/components/PageFooter.vue"
 
     export default {
         name: 'App',
         components :{
             NavBar,
-            LoaderComp,
+            // LoaderComp,
             PageFooter
         }}
 </script>
 
 <template>
     <div>
-            <LoaderComp/>
+            <!-- <LoaderComp/> -->
 
             <header class="header">
                 <NavBar/>

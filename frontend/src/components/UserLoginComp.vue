@@ -129,10 +129,4 @@ export default {
 
 <style lang="scss" scoped>
 
-.formulaire{
-
-   background-image: linear-gradient(#40cbc4, #fed7d7);
-
-}
-
 </style>

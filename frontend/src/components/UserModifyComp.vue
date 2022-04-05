@@ -61,13 +61,13 @@
                                         <label 
                                                   for="UserPresentation" 
                                                   class="label">Présentation</label>
-                                        <input    class="input"
+                                        <textarea   class="smalltextarea input"
                                                   v-model="UserPresentation" 
-                                                  type="text" 
+                                                  type="textarea"
                                                   placeholder="Si vous le souhaitez, vous pouvez vous présenter..." 
                                                   id="UserPresentation" 
                                                   name="UserPresentation" 
-                                                  >
+                                                  ></textarea>
                               </div>
                               <!--Le Service-->
                               <div class="formLine">
@@ -100,12 +100,12 @@
                                         <label    
                                         for="UserRole" 
                                                   class="label">Rôle</label>
-                                        <input    class="input"
+                                        <textarea    class="smalltextarea input"
                                                   v-model="UserRole" 
-                                                  type="text" 
+                                                  type="textarea" 
                                                   placeholder="Quel est votre rôle dans l'entreprise ?" 
                                                   id="UserRole" 
-                                                  name="UserRole">
+                                                  name="UserRole"></textarea>
                               </div>
                               <!--Le Mot de passe -->
                               <!-- il serait utile de proposer un bouton pour faire apparaitre la possibilité de changer le mot de passe -->

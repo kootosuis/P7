@@ -4,37 +4,48 @@
 
 .formulaire {
     color: white;
+    padding: 1rem;
     font-weight: 700;
     display: flex;
     flex-direction: column;
     text-align: left;
-    background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("../../assets/images/129938653-0.png");
+    background-image: linear-gradient(#40cbc4, #fed7d7);
     background-position: 50% 6.72%;
+    border-radius: 2rem;
 }
 
 .formLine {
     width: 100%;
+    padding: 2rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     // text-align: center;
     margin-left: 0;
+    @media (max-width : 600px){
+        @include flexcolumn
+    }
 }
 .input {
+    font-family: "Poppins", "Roboto", sans-serif;
     flex: 2;
+    padding-left:0.5 rem;
+    display: inline-flex;
+    border-style: none;
+    padding : 0 0.5rem;
+    border  : none;
+    margin  : 0;
+ 
 }
 .label {
     flex: 1;
     text-align: right;
-}
-
-.u-section-1 .u-sheet-1 {
-    min-height: 724px;
+    padding-right: 1rem;
 }
 
 .formSection .formDiv {
-    width: 570px;
-    margin: 96px auto 39px;
+    max-width: 640px;
+    margin: 0 auto 5rem;
 }
 
 .add-div {
@@ -44,15 +55,43 @@
     justify-content: center;
 }
 
+textarea {
+    font-family: "Poppins", "Roboto", sans-serif;
+}
 
+.textarea {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    resize: both;
+    min-height: 40px;
+    line-height: 20px;
+
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    resize: none;
+  }
+
+.smalltextarea {
+    width: 100%;
+}
+
+.bigtextarea{
+    width: 100%;
+    height : 30rem;
+}
 
 
 .asterisque {
-    font-size: 10px;
+    font-size: 1rem;
+    font-weight: 400;
+    color: rgb(34, 30, 30);
 }
 .hint {
-    font-size: 12px;
+    font-size: 1.2rem;
     font-weight: 400;
+    color: rgb(34, 30, 30);
 }
 
 .please {
@@ -61,17 +100,5 @@
     font-size: 1.25rem;
     h2 {
         text-align: center;
-    }
-}
-
-@media (max-width: 767px) {
-    .formSection .formDiv {
-        width: 540px;
-    }
-}
-
-@media (max-width: 575px) {
-    .formSection .formDiv {
-        width: 340px;
     }
 }

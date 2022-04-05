@@ -3,6 +3,7 @@
 		<!-- <PostedSharesPopular />
                     <PostedSharesComp /> -->
                     <!-- <ShareAlone /> -->
+                    <PostAShare/>
                     <SharesAll/>
 
           </div>
@@ -14,6 +15,7 @@
           // import PostedSharesComp from "@/components/PostedSharesComp.vue"
           // import ShareAlone from "@/components/ShareAlone.vue"
           import SharesAll from "@/components/SharesAll.vue"
+          import PostAShare from "@/components/PostAShare.vue"
 
 	export default {
 		name: "PostedShares",
@@ -21,7 +23,8 @@
 			// PostedSharesPopular,
                               // PostedSharesComp,
                               // ShareAlone,
-                              SharesAll
+                              SharesAll,
+                              PostAShare
 		}
 	};
 </script>

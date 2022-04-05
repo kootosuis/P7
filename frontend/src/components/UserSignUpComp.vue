@@ -58,12 +58,12 @@
                                         <label 
                                                   for="UserPresentation" 
                                                   class="label">Présentation</label>
-                                        <input    class="input"
-                                                  type="text" 
+                                        <textarea class="smalltextarea input"
+                                                  type="textarea" 
                                                   placeholder="Si vous le souhaitez, vous pouvez vous présenter..." 
                                                   id="UserPresentation" 
                                                   name="UserPresentation" 
-                                                  >
+                                                  ></textarea>
                               </div>
                               <!--Le Service-->
                               <div class="formLine">
@@ -94,11 +94,11 @@
                                         <label    
                                         for="UserRole" 
                                                   class="label">Rôle</label>
-                                        <input    class="input"
-                                                  type="text" 
+                                        <textarea class="smalltextarea input"
+                                                  type="textarea" 
                                                   placeholder="Quel est votre rôle dans l'entreprise ?" 
                                                   id="UserRole" 
-                                                  name="UserRole">
+                                                  name="UserRole"></textarea>
                               </div>
                               <!--Le Mot de passe -->
                               <div class="formLine">
@@ -122,10 +122,10 @@
                               <div class="asterisque" style="text-align:right"> * Champs requis </div>
 
                               <div class="btn-div">
-                                        <!-- <a href="ici un message modal" class="btn">S'inscrire</a>
-                                        <input type="submit" value="submit" class="u-form-control-hidden"> -->
-                                        <input type="submit"  class="btn" id="UserSignupBtn" value="S'inscrire" disabled>
-                                        
+
+                                        <!-- ICI  --> 
+                                        <!-- lancer un modal? mettre le texte en lowercase ?-->
+                                        <input type="submit"  class="btn" id="UserSignupBtn" value="S'inscrire" disabled>        
                               </div>
        
                     </form>
@@ -135,7 +135,7 @@
                       <p id="erreur" > Echec de l'inscription : {{message}} </p>
                     </div>
                     <div id="no-account" class="add-div">
-                      <p> Déjà un compte ? <router-link to="../login">S'identifier</router-link> </p>
+                      <p> Déjà un compte ? <router-link class="no-account-link" to="../login">S'identifier</router-link> </p>
                     </div>
           </div>
        </div>
@@ -253,5 +253,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+#no-account {
+  padding: 1.5rem;
+  font-size : 1.5rem;
+}
+.no-account-link{
+  font-weight: 500;
+  font-size : 2rem;
+  
+}
 
 </style>

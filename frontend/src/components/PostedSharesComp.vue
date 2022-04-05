@@ -2,7 +2,6 @@
 <div>
           <ShareAlone/>
 </div>
-
 </template>
 
 <script>
