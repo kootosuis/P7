@@ -1,5 +1,10 @@
 <template>
-    <section class="fond">
+<div>
+  <header class="header">
+			<NavBar/>
+		</header>
+
+    <section class="fond2">
                 <div class="container">
 
                         <div class="message__principal">
@@ -15,12 +20,24 @@
                 </div>
            </div>
     </section>
+</div>
           
 </template>
 
 <script>
+    import NavBar from "@/components/NavBar.vue"
+
     export default {
         name: "UserDeconnect",
+        components:{
+          NavBar
+        },
+        methods: {
+        },
+        created()  {
+            setTimeout(() => this.$router.push({ name: 'enter' }), 5000)
+        }
+          
     }
 </script>
 

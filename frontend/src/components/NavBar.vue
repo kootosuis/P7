@@ -10,6 +10,7 @@
                 </div>
 
                 <ul class="navbar__items">
+                    <li v-show="token"><router-link to="/wall">Le Forum</router-link></li>
                     <li v-show="!token"><router-link to="/signup">S'inscrire</router-link></li>
                     <li v-show="!token"><router-link to="/login">S'authentifier</router-link></li>
                     <li v-show="token" ><router-link to="/modify">Gérér son compte</router-link></li>
@@ -42,14 +43,18 @@ export default {
         logout(){
             sessionStorage.removeItem("UserId");
             sessionStorage.removeItem("Token");
-        }
+        },
     },
     
     mounted(){
-      console.log('App Mounted');
+        
         if (sessionStorage.getItem("Token"))
-            this.token = JSON.parse(sessionStorage.getItem("Token"));
-    },
+            {this.token = JSON.parse(sessionStorage.getItem("Token"))       
+        } else {
+            this.token = null    // faire apparaitre un message genre "something went wrong"
+        }
+    }
+    
   }
 
 

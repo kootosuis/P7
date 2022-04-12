@@ -1,4 +1,4 @@
-const Sequelize = require("sequelize");
+ const Sequelize = require("sequelize");
 const sequelize = require("../01utils/DBconnect");
 
 const Media = sequelize.define(
@@ -9,7 +9,7 @@ const Media = sequelize.define(
         MediaMimetype: { type: Sequelize.STRING(50), allowNull: false },
         MediaSize: { type: Sequelize.INTEGER, allowNull: true },
         MediaDescription: { type: Sequelize.TEXT, allowNull: true },
-        MediaUrl: { type: Sequelize.STRING, allowNull: true },
+        MediaUrl: { type: Sequelize.STRING, allowNull: true},
     },
     {
         tableName: "media",

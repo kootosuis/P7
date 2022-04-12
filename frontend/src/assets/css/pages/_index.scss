@@ -43,7 +43,7 @@
                 padding: 1rem;
                 @include text-info;
                 @include pseudo-pos;
-                content:"à partir de 960px, il y aurait de la pub, le restaurant du mois par exemple, ou bien de petits articles, pour mettre l'eau à la bouche";
+                content:"à partir de 960px, il y aurait de la pub, le share du mois par exemple, ou bien de petits articles, pour mettre l'eau à la bouche";
             }
             &--droite{
                 background-color: #E7D8F9;
@@ -204,14 +204,14 @@
 
 // page accueil - section restos
 
-.mainrestaurants {
+.mainshares {
 
     @include flexcolumn;
     padding-top:2rem;
     padding-bottom:2rem;
 }
 
-.restaurants{
+.shares{
     
     @include wauto;
     @include flexrow;

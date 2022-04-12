@@ -1,12 +1,12 @@
 <script>
-    import NavBar from "@/components/NavBar.vue"
+    // import NavBar from "@/components/NavBar.vue"
     // import LoaderComp from "@/components/LoaderComp.vue"
     import PageFooter from "@/components/PageFooter.vue"
 
     export default {
         name: 'App',
         components :{
-            NavBar,
+            // NavBar,
             // LoaderComp,
             PageFooter
         }}
@@ -16,9 +16,9 @@
     <div>
             <!-- <LoaderComp/> -->
 
-            <header class="header">
+            <!-- <header class="header">
                 <NavBar/>
-            </header>
+            </header> -->
             <div class="main">
                 <router-view/> 
             </div>

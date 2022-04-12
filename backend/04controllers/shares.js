@@ -11,23 +11,41 @@ exports.createShare = (req, res) => {
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
     const loggedUserId = decodedToken.UserId;
 
+    const SharedText = req.body.ShareText ? req.body.ShareText : "Sans commentaire";
+
     Share.create({
-        ShareText: req.body.ShareText, // la taille du texte a été définie dans le model à 10 000 signes
+        ShareText: SharedText,
+        // la taille du texte a été définie dans le model à 10 000 signes
         userUserId: loggedUserId,
     })
         .then((share) => {
             if (req.file) {
+                const MediaDescription = req.file.description ? req.file.description != null : "Aucune description n'a été fournie pour cette image";
                 // Share.findOne({ where: { ShareText: req.body.ShareText } && { userUserId: loggedUserId } }) // on récupère le share qui vient juste d'être créé
                 //     .then((share) => {
-                        Media.create({
-                            // et on ajoute le media
-                            MediaName: req.file.filename,
-                            MediaMimetype: req.file.mimetype,
-                            MediaSize: req.file.size,
-                            MediaDescription: req.file.description,
-                            MediaUrl: `${req.protocol}://${req.get("host")}/07media/${req.file.filename}`, // le filename est ici fabriqué par multer
-                            shareShareId: share.ShareId,
-                        })
+                Media.create({
+                    // et on ajoute le media
+                    MediaName: req.file.filename,
+                    MediaMimetype: req.file.mimetype,
+                    MediaSize: req.file.size,
+                    MediaDescription: MediaDescription,
+                    MediaUrl: `${req.protocol}://${req.get("host")}/07media/${req.file.filename}`, // le filename est ici fabriqué par multer
+                    shareShareId: share.ShareId,
+                })
+                    // })
+                    .catch((error) => res.status(400).json({ error }));
+            } else {
+                // Share.findOne({ where: { ShareText: req.body.ShareText } && { userUserId: loggedUserId } }) // on récupère le share qui vient juste d'être créé
+                //     .then((share) => {
+                Media.create({
+                    // et on ajoute le media
+                    MediaName: "LOGO",
+                    MediaMimetype: "image/png",
+                    MediaSize: 29000,
+                    MediaDescription: "Le logo Groupomania",
+                    MediaUrl: `${req.protocol}://${req.get("host")}/07media/icon.png`, // le filename est ici fabriqué par multer
+                    shareShareId: share.ShareId,
+                })
                     // })
                     .catch((error) => res.status(400).json({ error }));
             }
@@ -44,7 +62,7 @@ exports.updateShare = (req, res) => {
     const loggedUserId = decodedToken.UserId;
     const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
-    Share.findOne({ where: { ShareId: paramsId } }) 
+    Share.findOne({ where: { ShareId: paramsId } })
         .then((share) => {
             if (!share.userUserId == loggedUserId) {
                 res.status(400).json({
@@ -67,7 +85,7 @@ exports.deleteShare = (req, res) => {
 
     const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
-    Share.findOne({ where: { ShareId: paramsId } }) 
+    Share.findOne({ where: { ShareId: paramsId } })
         .then((share) => {
             if (!share.userUserId == loggedUserId || !loggedUserId == adminId) {
                 res.status(400).json({
@@ -82,7 +100,7 @@ exports.deleteShare = (req, res) => {
                                 .catch((error) => res.status(400).json({ error }));
                         } else if (media) {
                             const filename = media.MediaUrl.split("/07media/")[1];
-                            const mediaId = media.MediaId;
+                            // const mediaId = media.MediaId;
                             fs.unlink(`07media/${filename}`, () => {
                                 // Media.destroy({ where: { MEDIA_id: mediaId } }),
                                 Share.destroy({ where: { ShareId: paramsId } })
@@ -99,14 +117,14 @@ exports.deleteShare = (req, res) => {
 exports.getOneShare = (req, res) => {
     const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
-    Share.findOne({ where: { ShareId: paramsId } })
+    Share.findOne({ where: { ShareId: paramsId }, include: [User, Media, Comment] })
         .then((user) => res.status(200).json(user))
         .catch((error) => res.status(404).json({ error }));
 };
 
 //----- GET ALL SHARES //---- //----- GET A QUERY // comment faire une recherche ?
 exports.getAllShare = (req, res) => {
-    Share.findAll({include :[ User, Media, Comment]})
+    Share.findAll({ include: [User, Media, Comment], order: [["updatedAt", "DESC"]] })
         .then((users) => res.status(200).json(users))
         .catch((error) => res.status(404).json({ error }));
 };
@@ -116,7 +134,5 @@ exports.getAllShare = (req, res) => {
 // exports.likeOrDislikeShare = (req, res) =>{
 // PROJET A COMPLETER
 // };
-
-
 
 //------créer la possibilité de reprendre un média et de créer une nouvelle chaine de share + commentaire??????????

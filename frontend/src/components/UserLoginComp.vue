@@ -43,8 +43,8 @@
                               </div>
                               
                               <div class="btn-div">
-                                        <!-- <a href="ici un message modal" class="btn">S'inscrire</a>
-                                        <input type="submit" value="submit" class="u-form-control-hidden"> -->
+                                        <!-- ICI  --> 
+                                        <!-- lancer un modal? mettre le texte en lowercase ? un bouton annuler ? -->
                                         <input type="submit"  class="btn" id="UserSignupBtn" value="S'authentifier" disabled>
                                         
                               </div>
@@ -94,7 +94,6 @@ export default {
           fetch("http://localhost:3000/api/auth/login", {
                     method: 'POST',
                     body: JSON.stringify(User),
-                    // headers: {'Accept': 'application/json, text/plain, */*'},
                     headers: {"Content-Type": "application/json" },
                     mode :"cors"
           })

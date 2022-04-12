@@ -1,5 +1,9 @@
 <template>
-    <section class="fond">
+	<div>
+    <header class="header">
+			<NavBar/>
+		</header>
+		<section class="fond">
                 <div class="container">
 
                         <div class="message__principal">
@@ -15,12 +19,19 @@
                 </div>
            </div>
     </section>
-          
+		
+	</div>
 </template>
 
+
 <script>
+import NavBar from "@/components/NavBar.vue"
+
     export default {
         name: "EnterView",
+        components:{
+          NavBar
+        }
     }
 </script>
 

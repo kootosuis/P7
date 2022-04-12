@@ -1,30 +1,38 @@
 <template>
-	<div>
-		<!-- <PostedSharesPopular />
-                    <PostedSharesComp /> -->
-                    <!-- <ShareAlone /> -->
-                    <PostAShare/>
-                    <SharesAll/>
-
-          </div>
+          <div>
+		<header class="header">
+			<NavBar/>
+		</header>
+		<div class="main">
+			<!-- <ShareAlone />  -->
+		<PostAShare/>
+		<!-- <PostedSharesPopular/> -->
+		<SharesAll/>
+		</div>
+		
+	</div>
 </template>
 
 
 <script>
-	// import PostedSharesPopular from "@/components/PostedSharesPopular.vue"
-          // import PostedSharesComp from "@/components/PostedSharesComp.vue"
+          import NavBar from "@/components/NavBar.vue"
           // import ShareAlone from "@/components/ShareAlone.vue"
-          import SharesAll from "@/components/SharesAll.vue"
           import PostAShare from "@/components/PostAShare.vue"
+          // import PostedSharesPopular from "@/components/PostedSharesPopular.vue"
+          import SharesAll from "@/components/SharesAll.vue"
+          
+          
 
 	export default {
 		name: "PostedShares",
 		components: {
-			// PostedSharesPopular,
-                              // PostedSharesComp,
+                              NavBar,
                               // ShareAlone,
+                              PostAShare,
+                              // PostedSharesPopular
                               SharesAll,
-                              PostAShare
+                    
+                              
 		}
 	};
 </script>

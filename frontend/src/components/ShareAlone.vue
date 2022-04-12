@@ -1,21 +1,64 @@
 <template>
-          <div class="">
+           <section class="mainshares">
+                <div id="shares" class="shares">
+                    <div class="card"  >
+                                
+                                <div class="card__image">
+                                    <div class="card__image--img">
+                                      <img :src='MediaUrl'  class=""/>            
+                                    </div>
+                                    <!-- <div class="card__image--img card__image--new">
+                                        <p>Nouveau</p>
+                                    </div> -->
+                                </div>
 
-                    <div class="" ><!--blog_post_header-->
-                              <h2 class="" >
-                                        <a href="" class="" >Share</a>
-                              </h2>
-                              <a href="" class="" >
-                                        <img src="" alt="" class=""><!--/blog_post_image-->
-                              </a><!--blog_post_content-->
-                              <div class=""><!--blog_post_content_content-->
-                                        <p  v-bind="ShareText"></p><!--/blog_post_content_content-->
-                              </div><!--/blog_post_content--><!--blog_post_readmore-->
-                              <a href="" class="" ><!--blog_post_readmore_content--><!--options_json--><!--{"content":"","defaultValue":"Lire la suite"}--><!--/options_json-->Lire la suite<!--/blog_post_readmore_content-->
-                              
-                              </a><!--/blog_post_readmore-->
-                    </div>
-          </div>
+                                <div class="card__info">
+
+                                  <div>
+                                    <p class="card__info--name">{{ ShareText }}</p>
+                                  </div>
+
+                                  <!-- LE SHARE -->
+                                    
+
+                                  <div class="card__info--complement">
+                                        <div class="card__info--complement--adress">
+                                          <p>{{ createdAt }}</p>
+                                          <p>{{ updatedAt }}</p>
+                                          <p> {{ UserFirstname}}</p>
+                                          <p> {{ UserName}}</p>
+                                          <p> {{ UserDepartement}}</p>
+                                          <p> {{ UserRole}}</p>
+                                          <p hidden>{{ userUserId }}</p>
+                                          <p>Nombre de commentaires : </p>
+                                          <p> {{ apiLength }}</p>
+                                        </div>
+                                        <!-- <div class="card__info__heart2">
+                                            <img class="card__info__heart2--r" src="icons/heart-regular.svg" alt="icon">
+                                            <img class="card__info__heart2--s" src="icons/heart-solid.svg" alt="icon"> 
+                                        </div> -->
+                                    
+                                  </div>
+
+                                  <!-- LES COMMENTAIRES -->
+                                  <div  id="commentDiv" 
+                                        v-for="item in apiCommentsResponse"
+                                        :key="item.shareShareId"
+                                        class="card__info--complement">
+                                        <div v-if="item.CommentId" class="card__info--complement--adress">
+                                          <p>{{ item.CommentText }}</p>
+                                          <p>{{ item.updatedAt }}</p>
+                                          <p> {{ item.user.UserFirstname }}</p> <!-- le commentateur du Share -->
+                                          <p> {{ item.user.UserName }}</p>
+                                         
+                                        </div>
+                                          
+
+                                  </div>
+                         </div>  
+                     </div>          
+               </div>
+          </section>
           
 </template>
 
@@ -24,123 +67,87 @@ export default {
           name : 'ShareAlone',
           data(){
                     return{
-                            ShareId: "",
+                            ShareId: "", // Le Share
                             ShareText:"",
                             createdAt: "",
                             updatedAt:"",
                             userUserId:"",
 
-                            UserName:"", // in users where UserId = userUserId
-                            UserFirstname:"", // in users where UserId = userUserId
-                            UserDepartement:"", // in users where UserId = userUserId
-                            UserRole:"", // in users where UserId = userUserId
-                            UserEmail:"", // in users where UserId = userUserId
+                            UserName:"", // le createur du Share
+                            UserFirstname:"", 
+                            UserDepartement:"", 
+                            UserRole:"",
+                            UserEmail:"",
 
-                            MediaUrl: "", // in media where  ShareId = shareShareId
-                            MediaDescription : "", // in media where  ShareId = shareShareId
+                            MediaUrl: "", // le Media du Share
+                            MediaDescription : "", 
+                            apiCommentsResponse : Array,
+                            apiLength : Number
 
-                            //CommentsArray:"" //in comments where  ShareId = shareShareId
                     }
           },
 
            beforeMount () {
 
-//     const  UserId = JSON.parse(sessionStorage.getItem("UserId"));
-    const  Token = JSON.parse(sessionStorage.getItem("Token"));
-    const ShareId = "06e5a3ca-ab63-4eea-83c5-8c7c09b555f8"
 
-          fetch(`http://localhost:3000/api/shares/${ShareId}`, {
-          method: 'GET',
-          headers: {"Content-Type": "application/json", 
-                    "Authorization": "Bearer " + Token
-           },
-           mode : "cors"
-          })
-          .then((res) => {
-            return res.json();
-          })
-          .then((resJson) => {
-            return resJson;
-          })
-          .then((res) =>{
-            this.ShareId = res.ShareId; //stocker cela qqpart
-            this.ShareText = res.ShareText;
-            this.createdAt = res.createdAt;
-            this.updatedAt = res.updatedAt;
-            this.userUserId = res.userUserId; //stocker cela qqpart
-          })
-          .catch( (error) => { alert(error);
-          });
+                            const  Token = JSON.parse(sessionStorage.getItem("Token"));
+                            const ShareId = new URL(window.location.href).hash.split("=")[1];
 
-           // get one in user where  userUserId = UserId
-          // fetch(`http://localhost:3000/api/auth/${UserId}`, {
-          // method: 'GET',
-          // headers: {"Content-Type": "application/json", 
-          //           "Authorization": "Bearer " + Token
-          //  },
-          //  mode : "cors"
-          // })
-          // .then((res) => {
-          //   return res.json();
-          // })
-          // .then((resJson) => {
-          //   return resJson;
-          // })
-          // .then((res) =>{
-          //   this.UserName = res.UserName;
-          //   this.UserFirstname = res.UserFirstname;
-          //   this.UserPresentation = res.UserPresentation;
-          //   this.UserDepartement = res.UserDepartement;
-          //   this.UserRole = res.UserRole;
-          // })
-          // .catch( (error) => { alert(error);
-          // });
+                            // LE SHARE       
+                            fetch(`http://localhost:3000/api/shares/${ShareId}`, {
+                            method: 'GET',
+                            headers: {"Content-Type": "application/json", 
+                                      "Authorization": "Bearer " + Token
+                            },
+                            mode : "cors"
+                            })
+                            .then((res) => {
+                              return res.json();
+                            })
+                            .then((resJson) => {
+                              return resJson;
+                            })
+                            .then((res) =>{
+                              this.ShareId = res.ShareId; //stocker cela qqpart
+                              this.ShareText = res.ShareText;
+                              this.createdAt = res.createdAt;
+                              this.updatedAt = res.updatedAt;
+                              this.userUserId = res.userUserId; //stocker cela qqpart
 
-           // get one in media where  shareShareId = ShareId
-          fetch(`http://localhost:3000/api/media/${ShareId}`, {
-          method: 'GET',
-          headers: {"Content-Type": "application/json", 
-                    "Authorization": "Bearer " + Token
-           },
-           mode : "cors"
-          })
-          .then((res) => {
-            return res.json();
-          })
-          .then((resJson) => {
-            return resJson;
-          })
-          .then((res) =>{
-             this.MediaUrl = res.MediaUrl;
-            this.MediaDescription = res.MediaDescription;
-          })
-          .catch( (error) => { alert(error);
-          });
+                              this.UserName = res.user.UserName
+                              this.UserFirstname = res.user.UserFirstname
+                              this.UserDepartement = res.user.UserDepartement
+                              this.UserRole = res.user.UserRole
+                              this.UserEmail = res.user.UserEmail
 
-         // get all comments where shareShareId = ShareId
-         fetch(`http://localhost:3000/api/comments/${ShareId}`, {
-          method: 'GET',
-          headers: {"Content-Type": "application/json", 
-                    "Authorization": "Bearer " + Token
-           },
-           mode : "cors"
-          })
-          .then((res) => {
-            return res.json();
-          })
-          .then((resJson) => {
-            return resJson;
-          })
-          .then((res) =>{
-            
-             
-              this.CommentsArray = res.CommentsArray;
-            
-            
-          })
-          .catch( (error) => { alert(error);
-          });
-        },
+                              this.MediaUrl = res.medium.MediaUrl
+                              this.MediaDescription= res.medium.MediaDescription
+                            })
+                            .catch( (error) => { alert(error);
+                            });
+                           
+                           // LES COMMENTAIRES    
+
+                            fetch(`http://localhost:3000/api/comments/${ShareId}`, {
+                            method: 'GET',
+                            headers: {"Content-Type": "application/json", 
+                                      "Authorization": "Bearer " + Token
+                            },
+                            mode : "cors"
+                            })
+                            .then((res) => {
+                              return res.json();
+                            })
+                            .then((resJson) => {
+                              return resJson;
+                            })
+                            .then((res) =>{
+                              this.apiCommentsResponse=res
+                              this.apiLength = res.length
+                            })
+                            .catch( (error) => { alert(error);
+                            });
+                            },
 }
 </script>
 

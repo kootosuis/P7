@@ -8,17 +8,13 @@ exports.createComment = (req, res) => {
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
     const loggedUserId = decodedToken.UserId;
 
-    const totId = req.params.id;
-    const commentedShareId = totId.split("&")[0]; // à vérifier
-    const commentedCommentId = totId.split("&")[1];
-
     if (req.body) {
         Comment.create({
-            CommentId: req.body.CommentId,
+
             CommentText: req.body.CommentText,
             userUserId: loggedUserId,
-            shareShareId: commentedShareId,
-            commentCommentId: commentedCommentId,
+            shareShareId: req.body.shareShareId,
+            commentCommentId: req.body.commentCommentId,
         }) //
             .then(() => res.status(201).json({ message: "Commentaire publié !" }))
             .catch((error) => res.status(400).json({ error }));
@@ -71,18 +67,12 @@ exports.deleteComment = (req, res) => {
         .catch((error) => res.status(500).json({ error }));
 };
 
-exports.getOneComment = (req, res) => {
+exports.getAllComments = (req, res) => {
+
     const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
-    Comment.findOne({ where: { CommentId: paramsId } })
+    Comment.findAll({ where: { shareShareId: paramsId }, include: [User], order: [["updatedAt", "DESC"]] })
         .then((user) => res.status(200).json(user))
-        .catch((error) => res.status(404).json({ error }));
-};
-
-//----- GET ALL COMMENTS //---- //----- GET A QUERY // comment faire une recherche ?
-exports.getAllComment = (req, res) => {
-    Comment.findAll({})
-        .then((users) => res.status(200).json(users))
         .catch((error) => res.status(404).json({ error }));
 };
 

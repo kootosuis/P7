@@ -11,8 +11,9 @@
                               method="POST" 
                               name="form" 
                               id="form" 
-                              @submit = "modifySignup">
                               
+                              @submit = "modifySignup">
+                             
 
                               <!--Le Nom-->
                               <div class="formLine">
@@ -107,8 +108,9 @@
                                                   id="UserRole" 
                                                   name="UserRole"></textarea>
                               </div>
+
                               <!--Le Mot de passe -->
-                              <!-- il serait utile de proposer un bouton pour faire apparaitre la possibilité de changer le mot de passe -->
+                              <!-- il serait vraisemblablement utile de proposer un bouton pour faire apparaitre la possibilité de changer le mot de passe -->
                               <!-- <div class="formLine">
                                         <label    
                                                   for="UserPassword" 
@@ -131,8 +133,8 @@
                               <div class="asterisque" style="text-align:right"> * Champs requis </div>
 
                               <div class="btn-div">
-                                        <!-- <a href="ici un message modal" class="btn">S'inscrire</a>
-                                        <input type="submit" value="submit" class="u-form-control-hidden"> -->
+                                        <!-- ICI  --> 
+                                        <!-- lancer un modal? mettre le texte en lowercase ? un bouton annuler ? -->
                                         <input type="submit"  class="btn" id="UserSignupBtn" value="Mettre à jour" disabled>
                                         
                               </div>
@@ -175,8 +177,11 @@ export default {
     UserPassword:"",     
     success:"",
     message :"", //message d'erreur
+
     }
   },
+
+
 
    beforeMount () {
 
@@ -212,15 +217,16 @@ export default {
   methods: {
 
     checkForm() {
+
       if (document.getElementById("UserName").checkValidity() 
       && document.getElementById("UserFirstname").checkValidity() 
       && document.getElementById("UserEmail").checkValidity()
       // && document.getElementById("UserPassword").checkValidity()
       ) {
-        document.getElementById("UserSignupBtn").disabled = false;
+        document.getElementById("UserSignupBtn").disabled = false
       }
-      else document.getElementById("UserSignupBtn").disabled = true;
-    },
+      else {document.getElementById("UserSignupBtn").disabled = true;
+    }},
 
     modifySignup(e) {
 

@@ -124,7 +124,7 @@
                               <div class="btn-div">
 
                                         <!-- ICI  --> 
-                                        <!-- lancer un modal? mettre le texte en lowercase ?-->
+                                        <!-- lancer un modal? mettre le texte en lowercase ? un bouton annuler ? -->
                                         <input type="submit"  class="btn" id="UserSignupBtn" value="S'inscrire" disabled>        
                               </div>
        
@@ -159,7 +159,7 @@ export default {
       && document.getElementById("UserPassword").checkValidity()) {
         document.getElementById("UserSignupBtn").disabled = false;
       }
-      else document.getElementById("UserSignupBtn").disabled = true;
+      else {document.getElementById("UserSignupBtn").disabled = true}
     },
 
     signUp(e) {
@@ -186,7 +186,6 @@ export default {
       fetch("http://localhost:3000/api/auth/signup", {
           method: 'POST',
           body: JSON.stringify(User),
-          // headers: {'Accept': 'application/json, text/plain, */*'},
           headers: {"Content-Type": "application/json" },
           mode :"cors"
       })
@@ -205,7 +204,6 @@ export default {
                                     fetch("http://localhost:3000/api/auth/login", {
                                               method: 'POST',
                                               body: JSON.stringify(UserShortCut),
-                                              // headers: {'Accept': 'application/json, text/plain, */*'},
                                               headers: {"Content-Type": "application/json" },
                                               mode :"cors"
                                     })
@@ -217,7 +215,7 @@ export default {
                                                             this.message = "Authentification effectuée.";
                                                             sessionStorage.setItem("UserId", JSON.stringify(response.UserId));
                                                             sessionStorage.setItem("Token", JSON.stringify(response.token));
-                                                            this.$router.push({ name: 'wall' });
+                                                            setTimeout(this.$router.push({ name: 'wall' }), 3000);
                                                         })
                                               } else {
                                                         response.json ()

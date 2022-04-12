@@ -7,6 +7,7 @@ import UserModify from "../views/UserModify.vue";
 
 import UserDeconnect from "../views/UserDeconnect.vue";
 import PostedShares from "../views/PostedShares.vue";
+import OnePostedShare from "../views/OnePostedShare.vue";
 
 const routes = [
     
@@ -48,7 +49,14 @@ const routes = [
         path: "/wall",
         name: "wall",
         component: PostedShares,
+    },
+
+    {
+        path: "/wall/?id=:id",
+        name: "wallAlone",
+        component: OnePostedShare,
     }
+    
 
 ];
 
