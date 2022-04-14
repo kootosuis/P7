@@ -40,8 +40,8 @@
                               <!-- https://www.skymac.org/Admin-Dev/article-5d6989e5-Astuce-HTML-Javascript-Creer-un-textarea-a-la-hauteur-auto-adaptative-1.htm -->
                               
                               <div class="btn-div">
-                                        <button type="submit" class="btn" @click="displayGoTo()" id="CancelBtn">Annuler</button>
-                                        <button type="submit" class="btn" @click="displayGoTo()" @submit="Comment(e)" id="CommentBtn" disabled>Commenter</button>
+                                        <button type="button" class="btn" @click="displayGoTo()" id="CancelBtn">Annuler</button>
+                                        <button type="button" class="btn" @click="Comment()" id="CommentBtn" disabled>Commenter</button>
                               </div>
        
                     </form>
@@ -79,19 +79,23 @@ export default {
                       document.getElementById("CommentBtn").disabled = false;
                     } else { document.getElementById("CommentBtn").disabled = true }
           },
-          Comment(e) {
+          Comment() {
 
-                    e.preventDefault();
+
+                    // e.preventDefault();
 
                     const Token = JSON.parse(sessionStorage.getItem("Token"));
                     const CommentText = document.getElementById("CommentText").value
                     const shareShareId = new URL(window.location.href).hash.split("=")[1]
 
-                    const commentCommentId = document.getElementById("CommentId").value
+                    // const commentCommentId = "" ? document.getElementById("CommentId") : document.getElementById("CommentId").value
 
                     const Comment = { "CommentText": CommentText,
                                       "shareShareId": shareShareId,
-                                      "commentCommentId": commentCommentId,}
+                                      // "commentCommentId": commentCommentId,
+                    }
+
+                    console.log(Comment)
 
                     fetch("http://localhost:3000/api/comments", {
                               method: 'POST',
@@ -100,15 +104,16 @@ export default {
                                   "Content-Type": "application/json",
                                   "Accept":"*/*",
                                   "Authorization": "Bearer " + Token,
-                                  "Host":""
+                                  // "Host":""
                               },
                               mode : "cors"})
 
                     .then((response) => {
-                              if (response.status == 200) { 
+                              if (response.status == 201) { 
                                         this.success= true;
                                         this.message = "Commentaire en ligne.";
                                         this.$router.push({ name: 'wall' });
+                                        this.ShareFormHidden = true;
                               } else {
                                         response.json ()
                                         .then ((json) => {

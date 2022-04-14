@@ -14,7 +14,7 @@
 
                                 <div class="card__info">
                                   <div>
-                                    <p class="card__info--name">{{ item.ShareText }}</p>
+                                    <p class="card__info--text">{{ item.ShareText }}</p>
                                     <a href="" class="" 
                                        @click="displayOneShare(item.ShareId)">
                                       Lire la suite...
@@ -23,17 +23,13 @@
                                     
                                   <div class=card__info--complement>
                                         <div class="card__info--complement--adress">
-                                          <p>{{ item.createdAt }}</p>
-                                          <p>{{ item.updatedAt }}</p>
-                                          <p> {{item.user.UserFirstname}}</p>
-                                          <p> {{item.user.UserName}}</p>
-                                          <p> {{item.user.UserDepartement}}</p>
-                                          <p> {{item.user.UserRole}}</p>
+                                          <p> {{item.user.UserFirstname}} {{item.user.UserName}}</p>
+                                          <p> Service : <span>{{item.user.UserDepartement}}</span> {{item.user.UserRole}}</p>
                                           <p hidden>{{ item.userUserId }}</p>
                                           <!-- ICI  --> 
                                         <!-- récuperer le nbre de comments ? -->
-                                          <p>Nombre de commentaires</p>
-                                          <p> {{}}</p>
+                                          <p> {{item.comments.length }} commentaire<x v-if="item.comments.length>1">s</x></p>
+                                          <p>{{ formatDate(item.updatedAt) }}</p>
                                    </div>
                                 </div>
                          </div>  
@@ -44,19 +40,31 @@
 </template>
 
 <script>
+
+          import dayjs from 'dayjs'
+          require('dayjs/locale/fr')
+          dayjs.locale('fr')
+
           export default {
                     name : 'ShareAll',
 
                     data(){
                               return {
-                                      apiResponse: Array
+                                      apiResponse: Array,
+                                      commentLength : Number
                               }
                     },
 
                     methods : {
                       displayOneShare(id) {
                       this.$router.push({name : 'wallAlone', params : {id : id}})
-                      }
+                      },
+
+                      formatDate(dateString) {
+                            const date = dayjs(dateString);
+                                // Then specify how you want your dates to be formatted
+                            return date.format('dddd D MMMM YYYY , HH:mm');
+                      },
                     },
 
                     beforeMount () {

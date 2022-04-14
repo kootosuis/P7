@@ -68,8 +68,8 @@
 
 
                               <div class="btn-div">
-                                        <button type="submit" class="btn" @click="displayGoTo()" id="CancelBtn">Annuler</button>
-                                        <button type="submit" class="btn" @click="displayGoTo()" @submit="Share(e)" id="ShareBtn" disabled>Partager</button>
+                                        <button type="button" class="btn" @click="displayGoTo()" id="CancelBtn">Annuler</button>
+                                        <button type="button" class="btn" @click="Share()" id="ShareBtn" disabled>Partager</button>
                               </div>
        
                     </form>
@@ -105,7 +105,8 @@
             this.ShareFormHidden = false
           },
           displayGoTo(){
-            this.ShareFormHidden = true
+            this.ShareFormHidden = true;
+            this.file = null
           },
 
           checkForm() {
@@ -120,9 +121,7 @@
                     this.file = URL.createObjectURL($event.target.files[0]);
           },
 
-          Share(e) {
-
-                    e.preventDefault();
+          Share() {
 
                     const ShareToBePosted = document.getElementById("ShareToBePosted");
                     const Token = JSON.parse(sessionStorage.getItem("Token"));
@@ -142,6 +141,7 @@
                               if (response.status == 201) { 
                                         this.success= true;
                                         this.message = "Partage en ligne.";
+                                        this.ShareFormHidden = true;
                                         this.$router.push({ name: 'wall' });
                               } else {
                                         response.json ()

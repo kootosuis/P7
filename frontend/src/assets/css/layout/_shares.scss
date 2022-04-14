@@ -104,7 +104,7 @@
 
         //le titre le coeur les complements le prix
     
-        &--name{
+        &--text{
             @include text-info($font-weight:500, $font-size:95%, $letter-spacing:0.01em);
             padding-bottom: 1rem;
             text-overflow: ellipsis;
