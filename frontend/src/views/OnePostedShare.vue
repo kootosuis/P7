@@ -6,7 +6,6 @@
 		<div class="main">
 			<PostAShare/>
                               <ShareAlone/>
-                              <PostAComment/>
 		</div>
 		
 	</div>
@@ -17,15 +16,13 @@
           import NavBar from "@/components/NavBar.vue"
           import PostAShare from "@/components/PostAShare.vue"
           import ShareAlone from "@/components/ShareAlone.vue"
-          import PostAComment from "@/components/PostAComment.vue"
          
 	export default {
 		name: "OnePostedShare",
 		components: {
                               NavBar,
                               PostAShare,
-                              ShareAlone,
-                              PostAComment
+                              ShareAlone
 		}
 	};
 </script>

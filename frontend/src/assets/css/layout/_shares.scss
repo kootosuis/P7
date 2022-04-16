@@ -23,13 +23,10 @@
 
         text-align: center;
         position:relative;
-        height:174px;
-        width:335px;
         overflow: hidden;
         border-radius:1.5rem 1.5rem 0 0 ;
         
         &--img img{
-            width: 100%;
             object-fit: cover;
         }
         
@@ -94,6 +91,11 @@
 
     &__info{
 
+        & p{
+            padding: .5rem;
+            white-space : normal;
+        }
+
         flex:auto;
         overflow: hidden;
         
@@ -101,6 +103,13 @@
         
         @include flexcolumn;
         padding: 1.3rem 1.3rem 1.3rem 1.3rem;
+
+        &--2{
+            width:100%;
+            padding: 1.3rem 1.3rem 1.3rem 1.3rem;
+        }
+
+
 
         //le titre le coeur les complements le prix
     

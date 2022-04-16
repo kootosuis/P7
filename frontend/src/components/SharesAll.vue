@@ -5,24 +5,23 @@
                                :key="item.ShareId"
                                @click="displayOneShare(item.ShareId)">
 
-                    <div class="card"  >
+                        <div class="card"  >
                                 <div class="card__image">
                                     <div class="card__image--img">
-                                      <img :src='item.medium.MediaUrl'  class=""/>            
+                                      <img v-if="item.medium.MediaUrl.split(`/07media/`)[1] != `icon.png`" :src='item.medium.MediaUrl'/>
+                                      <img else style="width : 30px" :src='item.medium.MediaUrl'/>             
                                     </div>
                                 </div>
 
                                 <div class="card__info">
-                                  <div>
-                                    <p class="card__info--text">{{ item.ShareText }}</p>
-                                    <a href="" class="" 
-                                       @click="displayOneShare(item.ShareId)">
-                                      Lire la suite...
-                                    </a>
+                                  <div >
+                                      <p class="card__info--text textLimited">{{ item.ShareText }}</p>
                                   </div>
-                                    
+                                  <div class="readMore" @click="displayOneShare(item.ShareId)">
+                                          Voir le share...
+                                  </div>
                                   <div class=card__info--complement>
-                                        <div class="card__info--complement--adress">
+                                      <div class="card__info--complement--adress ">
                                           <p> {{item.user.UserFirstname}} {{item.user.UserName}}</p>
                                           <p> Service : <span>{{item.user.UserDepartement}}</span> {{item.user.UserRole}}</p>
                                           <p hidden>{{ item.userUserId }}</p>
@@ -30,10 +29,10 @@
                                         <!-- récuperer le nbre de comments ? -->
                                           <p> {{item.comments.length }} commentaire<x v-if="item.comments.length>1">s</x></p>
                                           <p>{{ formatDate(item.updatedAt) }}</p>
-                                   </div>
-                                </div>
-                         </div>  
-                     </div>          
+                                      </div>
+                                  </div>
+                                </div>  
+                        </div>          
                   </a>
                </div>
           </section>  
@@ -67,7 +66,9 @@
                       },
                     },
 
-                    beforeMount () {
+                    beforeCreate () {
+
+                      
                     const  Token = JSON.parse(sessionStorage.getItem("Token"));
                     fetch(`http://localhost:3000/api/shares`, {
                           method: 'GET',
@@ -79,9 +80,6 @@
                     .then((res) => {
                       return res.json();
                     })
-                    .then((resJson) => {
-                      return resJson;
-                    })
                     .then((res) =>{
                       this.apiResponse=res
                     })
@@ -92,5 +90,20 @@
 </script>
 
 <style lang="scss" scoped>
+
+.readMore {
+  text-align: right;
+}
+.textLimited{
+  max-height:95px;
+  max-width:320px;
+  overflow: hidden;
+  text-overflow: ellipsis; // cela ne marche que si le texte n'est que sur une ligne : chercher une solution
+  margin: 0.5rem
+}
+
+.card__image img{
+  width:320px;
+}
 
 </style>

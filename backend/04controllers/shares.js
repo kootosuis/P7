@@ -83,7 +83,8 @@ exports.deleteShare = (req, res) => {
     const loggedUserId = decodedToken.UserId;
     const adminId = process.env.ADMINID; // comment définir autrement le adminId
 
-    const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
+   // const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
+    const paramsId = req.body.ShareId;
 
     Share.findOne({ where: { ShareId: paramsId } })
         .then((share) => {
@@ -94,7 +95,7 @@ exports.deleteShare = (req, res) => {
             } else {
                 Media.findOne({ where: { shareShareId: paramsId } }) //
                     .then((media) => {
-                        if (!media) {
+                        if (MediaUrl = `${req.protocol}://${req.get("host")}/07media/icon.png`) {
                             Share.destroy({ where: { ShareId: paramsId } })
                                 .then(() => res.status(201).json({ message: "Partage effacé !" }))
                                 .catch((error) => res.status(400).json({ error }));

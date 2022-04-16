@@ -17,8 +17,8 @@
                     <li v-show="token" ><router-link @click="logout()" to="/deconnect">Se déconnecter</router-link></li>
                 </ul>
 
-                <div class="logo">
-                    <img src="../assets/images/icon-above-font.svg" alt="Logo Groupomania">
+                <div class="logo" >
+                    <img src="../assets/images/icon-above-font.svg" alt="Logo Groupomania" id="lelogogroupomania">
                 </div>
         </div>
     </nav>

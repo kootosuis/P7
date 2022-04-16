@@ -125,6 +125,7 @@
 
                     const ShareToBePosted = document.getElementById("ShareToBePosted");
                     const Token = JSON.parse(sessionStorage.getItem("Token"));
+                    const Body = new FormData(ShareToBePosted);
                     
                     fetch("http://localhost:3000/api/shares", {
                               method: 'POST',
@@ -133,7 +134,7 @@
                                   // "Content-Type": "multipart/form-data", 
                                   "Authorization": "Bearer " + Token
                               },
-                              body: new FormData(ShareToBePosted),
+                              body: Body,
                               mode : "cors"})
 
                     .then((response) => {
@@ -143,6 +144,8 @@
                                         this.message = "Partage en ligne.";
                                         this.ShareFormHidden = true;
                                         this.$router.push({ name: 'wall' });
+                                        this.$router.go(0);
+                                        // history.go(0);
                               } else {
                                         response.json ()
                                         .then ((json) => {
