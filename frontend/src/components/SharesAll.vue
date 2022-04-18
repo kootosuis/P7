@@ -8,13 +8,16 @@
                         <div class="card"  >
                                 <div class="card__image">
                                     <div class="card__image--img">
-                                      <img v-if="item.medium.MediaUrl.split(`/07media/`)[1] != `icon.png`" :src='item.medium.MediaUrl'/>
-                                      <img else style="width : 30px" :src='item.medium.MediaUrl'/>             
+                                      <img v-if="item.medium.MediaUrl.split(`/07media/`)[1] != `feather.png`" :src='item.medium.MediaUrl'/>
+                                      <img v-else style="width : 30px" :src='item.medium.MediaUrl'/>             
                                     </div>
                                 </div>
 
                                 <div class="card__info">
-                                  <div >
+                                  <div v-if="item.medium.MediaUrl.split(`/07media/`)[1] == `feather.png`">
+                                      <p class="card__info--text textLimited" style="height : 150px">{{ item.ShareText }}</p>
+                                  </div>
+                                  <div v-else>
                                       <p class="card__info--text textLimited">{{ item.ShareText }}</p>
                                   </div>
                                   <div class="readMore" @click="displayOneShare(item.ShareId)">
@@ -23,7 +26,7 @@
                                   <div class=card__info--complement>
                                       <div class="card__info--complement--adress ">
                                           <p> {{item.user.UserFirstname}} {{item.user.UserName}}</p>
-                                          <p> Service : <span>{{item.user.UserDepartement}}</span> {{item.user.UserRole}}</p>
+                                          <p> Service : {{item.user.UserDepartement}} <br/> Role : {{item.user.UserRole}}</p>
                                           <p hidden>{{ item.userUserId }}</p>
                                           <!-- ICI  --> 
                                         <!-- récuperer le nbre de comments ? -->

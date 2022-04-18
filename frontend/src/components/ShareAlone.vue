@@ -5,10 +5,15 @@
                     <!-- LE SHARE -->
                     <div class="card" id="shareAlone" >
                                 
-                                <div class="card__image">
-                                    <div class="card__image--img">
+                                <div class="card__image" >
+                                    <div class="card__image--img" v-if="MediaUrl.split(`/07media/`)[1] == `feather.png`">
+                                      <img  :src='MediaUrl' style="width : 50px" />           
+                                    </div>
+
+                                    <div class="card__image--img" v-else >
                                       <img :src='MediaUrl'/>            
                                     </div>
+                                    
                                     <!-- <div class="card__image--img card__image--new">
                                         <p>Nouveau</p>
                                     </div> -->

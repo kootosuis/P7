@@ -43,7 +43,7 @@ exports.createShare = (req, res) => {
                     MediaMimetype: "image/png",
                     MediaSize: 29000,
                     MediaDescription: "Le logo Groupomania",
-                    MediaUrl: `${req.protocol}://${req.get("host")}/07media/icon.png`, // le filename est ici fabriqué par multer
+                    MediaUrl: `${req.protocol}://${req.get("host")}/07media/feather.png`, // le filename est ici fabriqué par multer
                     shareShareId: share.ShareId,
                 })
                     // })
@@ -83,7 +83,7 @@ exports.deleteShare = (req, res) => {
     const loggedUserId = decodedToken.UserId;
     const adminId = process.env.ADMINID; // comment définir autrement le adminId
 
-   // const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
+    // const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
     const paramsId = req.body.ShareId;
 
     Share.findOne({ where: { ShareId: paramsId } })
@@ -95,7 +95,7 @@ exports.deleteShare = (req, res) => {
             } else {
                 Media.findOne({ where: { shareShareId: paramsId } }) //
                     .then((media) => {
-                        if (MediaUrl = `${req.protocol}://${req.get("host")}/07media/icon.png`) {
+                        if ((MediaUrl = `${req.protocol}://${req.get("host")}/07media/feather.png`)) {
                             Share.destroy({ where: { ShareId: paramsId } })
                                 .then(() => res.status(201).json({ message: "Partage effacé !" }))
                                 .catch((error) => res.status(400).json({ error }));
