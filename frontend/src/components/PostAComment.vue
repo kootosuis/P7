@@ -112,8 +112,11 @@ export default {
                               if (response.status == 201) { 
                                         this.success= true;
                                         this.message = "Commentaire en ligne.";
-                                        this.$router.push({ name: 'wall' });
                                         this.ShareFormHidden = true;
+                                        this.$router.push({ name: 'wall' });
+                                        this.$router.go(0);
+                                        // history.go(0);
+                                        
                               } else {
                                         response.json ()
                                         .then ((json) => {

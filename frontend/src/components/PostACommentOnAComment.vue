@@ -33,12 +33,7 @@
                                                   id="CommentText"
                                                   name="CommentText"></textarea>
                               </div>
-                              
-                              <!-- A ÉTUDIER -->
-                              <!-- https://css-tricks.com/auto-growing-inputs-textareas/ -->
-                              <!-- https://stackoverflow.com/questions/2803880/is-there-a-way-to-get-a-textarea-to-stretch-to-fit-its-content-without-using-php -->
-                              <!-- https://www.skymac.org/Admin-Dev/article-5d6989e5-Astuce-HTML-Javascript-Creer-un-textarea-a-la-hauteur-auto-adaptative-1.htm -->
-                              
+                                                         
                               <div class="btn-div">
                                         <button type="button" class="btn" @click="displayGoTo()" id="CancelBtn">Annuler</button>
                                         <button type="button" class="btn" @click="Comment()" id="CommentBtn" disabled>Commenter</button>

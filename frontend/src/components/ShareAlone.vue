@@ -4,7 +4,7 @@
 
                     <!-- LE SHARE -->
                     <div class="card" id="shareAlone" >
-                                
+
                                 <div class="card__image" >
                                     <div class="card__image--img" v-if="MediaUrl.split(`/07media/`)[1] == `feather.png`">
                                       <img  :src='MediaUrl' style="width : 50px" />           
@@ -13,19 +13,70 @@
                                     <div class="card__image--img" v-else >
                                       <img :src='MediaUrl'/>            
                                     </div>
-                                    
-                                    <!-- <div class="card__image--img card__image--new">
-                                        <p>Nouveau</p>
-                                    </div> -->
                                 </div>
                     
                                 <div class="card__info">
 
-                                    <div>
+                                    <!-- le texte du share -->
+                                    <div id="oldShareText" v-show="modifyForm">
                                       <p class="card__info--text card__info--sharetext">{{ ShareText }}</p>
                                     </div>
-                                
-                                    
+
+                                    <!-- la fenêtre qui s'ouvre pour modifier le texte du share -->
+                                    <div id="newShareText" v-show="!modifyForm">
+                                       <form     
+                                          type="multipart/form-data"
+                                          method="PUT" 
+                                          name="form" 
+                                          id="ShareToBeCorrected"
+                                          
+                                          @submit = "correctShare"
+                                          class="formulaire">
+
+                                                <!--Le Media -->
+                                                <!-- <div class="formLine">
+                                                          <label    
+                                                                    for="Media" 
+                                                                    class="label">Votre image, votre GIF</label>
+                                                          <input    class="input"
+                                                                    form="ShareToBeCorrected" 
+                                                                    @input="checkForm"
+                                                                    @change="uploadImage($event)"
+                                                                    type="file"
+                                                                    accept="image/png, image/jpg, image/jpeg, image/png, image/gif"
+                                                                    multiple
+                                                                    id="Media" 
+                                                                    name="file" 
+                                                                  >
+                                                </div> -->
+
+                                                <!-- <div id="formImagePreview">
+                                                          <img v-if="file" :src="file" />
+                                                </div> -->
+                                                
+                                                <!--Le Share-->
+                                                <div class="formLine">
+                                                          <label    
+                                                                    for="ShareText" 
+                                                                    class="label">Votre nouveau texte</label>
+                                                          <textarea class="bigtextarea textarea input"
+                                                                    form="ShareToBeCorrected" 
+                                                                    type="textarea"
+                                                                    
+                                                                    autofocus
+                                                                    id="ShareText"
+                                                                    name="ShareText"
+                                                                    v-model="ShareText"
+                                                                    ></textarea>
+                                                </div>
+
+                                                <div class="btn-div">
+                                                          <button type="button" class="btn" @click="doNotModify()" id="CancelBtn">Annuler</button>
+                                                          <button type="button" class="btn" @click="correctShare()" id="ShareBtn">Mettre à jour</button>
+                                                </div>
+                        
+                                      </form>
+                                    </div>
 
                                     <div class="card__info--complement">
 
@@ -39,7 +90,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="btn-div">
+                                    <div id="modifyOrDelete" class="btn-div">
                                           <button v-if="userUserId==loggedUserId" type="button" class="btn" @click="modifyShare()" id="modifyShareBtn">Corriger</button>
                                           <button v-if="userUserId==loggedUserId" type="button" class="btn" @click="deleteShare()" id="deleteShareBtn">Effacer</button>
                                     </div>    
@@ -125,7 +176,11 @@ export default {
                             MediaUrl: "", // le Media du Share
                             MediaDescription : "", 
                             apiCommentsResponse : Array,
-                            apiLength : Number
+                            apiLength : Number,
+
+                            modifyForm :{
+                              type: Boolean,
+                              default: true }
 
                     }
           },
@@ -139,11 +194,60 @@ export default {
                       },
 
             modifyShare() {
-                          // 
+                  this.modifyForm = false;
             },
+            doNotModify(){
+                    this.modifyForm = true;
+            },
+            correctShare(){
+                    const ShareToBeCorrected = document.getElementById("ShareToBeCorrected");
+                    const ShareId = new URL(window.location.href).hash.split("=")[1];
+                    const Token = JSON.parse(sessionStorage.getItem("Token"));
+                    const Modify = new FormData(ShareToBeCorrected);
 
-            // confirm(alert)
+                    Modify.append('ShareId',ShareId)
 
+
+                    //--- TEST ---- ///
+                    // for(var pair of Modify.entries()) {
+                    //   console.log(pair[0]+ ', '+ pair[1]);
+                    // }
+
+                    fetch(`http://localhost:3000/api/shares/${ShareId}`, {
+                              method: 'PUT',
+                              headers: {
+                                  "Accept":"*/*",
+                                  // "Content-Type": "multipart/form-data", 
+                                  "Authorization": "Bearer " + Token
+                              },
+                              body: Modify,
+                              mode : "cors"})
+
+                    .then((response) => {
+
+                              if (response.status == 201) { 
+                                        this.success= true;
+                                        this.message = "Mise à jour effectuée.";
+                                        this.modifyForm = true;
+                                        this.$router.push({ name: 'wall' });
+                                        this.$router.go(0);
+                                        // history.go(0);
+                              } else {
+                                        response.json ()
+                                        .then ((json) => {
+                                        this.success= false;
+                                        console.log(json);
+                                        this.message = json.error ||  json.message ;
+                                        return this.message
+                                        })
+                              }
+                    })
+                    .catch (() => {
+                              this.success= false;
+                              this.message = `Le serveur ne répond pas ! Veuillez réessayer ultérieurement`;
+                    })         
+
+            },
             deleteShare() {
 
                           const  Token = JSON.parse(sessionStorage.getItem("Token"));
@@ -174,11 +278,7 @@ export default {
                              this.$router.push({ name: 'wall' });
                           }
             },
-
-
           },
-
-
 
           beforeMount () {
 

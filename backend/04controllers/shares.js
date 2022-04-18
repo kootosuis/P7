@@ -60,7 +60,7 @@ exports.updateShare = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
     const loggedUserId = decodedToken.UserId;
-    const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
+    const paramsId = req.body.ShareId; // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
     Share.findOne({ where: { ShareId: paramsId } })
         .then((share) => {
@@ -113,8 +113,9 @@ exports.deleteShare = (req, res) => {
             }
         })
         .catch((error) => res.status(500).json({ error }));
-}; // PENSER A VERIFIER L'EFFACEMENT DES COMMENT !!!!!!
+};
 
+//----- GET  A SPECIFIC SHARE //
 exports.getOneShare = (req, res) => {
     const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
@@ -123,17 +124,17 @@ exports.getOneShare = (req, res) => {
         .catch((error) => res.status(404).json({ error }));
 };
 
-//----- GET ALL SHARES //---- //----- GET A QUERY // comment faire une recherche ?
+//----- GET ALL SHARES //
 exports.getAllShare = (req, res) => {
     Share.findAll({ include: [User, Media, Comment], order: [["updatedAt", "DESC"]] })
         .then((users) => res.status(200).json(users))
         .catch((error) => res.status(404).json({ error }));
 };
 
+
+
+
+//---------------------- PROJET A COMPLETER--------------------------//
 //----- LIKE DISLIKE (il faudrait ajouter une colonne dans la table commentaire ou dans la table share)
-
 // exports.likeOrDislikeShare = (req, res) =>{
-// PROJET A COMPLETER
 // };
-
-//------créer la possibilité de reprendre un média et de créer une nouvelle chaine de share + commentaire??????????

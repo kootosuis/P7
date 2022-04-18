@@ -7,6 +7,7 @@ const validator = require("validator");
 const Media = require("../06models/media");
 const fs = require("fs");
 
+////----- SIGNUP-----//
 exports.signup = (req, res, next) => {
     const RBUP = req.body.UserPassword;
     if (!validator.isStrongPassword(RBUP)) {
@@ -28,7 +29,7 @@ exports.signup = (req, res, next) => {
             .catch((error) => res.status(500).json({ error }));
     }
 };
-
+////----- LOGIN-----//
 exports.login = (req, res, next) => {
     User.findOne({ where: { UserEmail: req.body.UserEmail } })
         .then((inlogger) => {
@@ -52,7 +53,7 @@ exports.login = (req, res, next) => {
         })
         .catch((error) => res.status(500).json({ error }));
 };
-
+////----- MODIFY-----//
 exports.modifySignup = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
@@ -105,6 +106,8 @@ exports.modifySignup = (req, res, next) => {
     }
 };
 
+
+////----- DELETE-----//
 ////---------------cette version fonctionne --------------//////
 // exports.delete = (req, res) => {
 //     const token = req.headers.authorization.split(" ")[1];
@@ -170,6 +173,7 @@ exports.delete = (req, res) => {
     });
 };
 
+//-------GET ONE ------//
 exports.getOneUser = (req, res) => {
     const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
@@ -181,7 +185,7 @@ exports.getOneUser = (req, res) => {
         .catch((error) => res.status(404).json({ error }));
 };
 
-//----- GET ALL USERS //---- //----- GET A QUERY
+//----- GET ALL USERS //
 exports.getAllUsers = (req, res) => {
     User.findAll()
         .then((users) => {
