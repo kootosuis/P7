@@ -53,7 +53,7 @@
 
                     </div>
 
-                    <PostAComment v-if="!userUserId==loggedUserId"/>
+                    <PostAComment v-if="loggedUserId!=userUserId"/>
 
                    <!-- LES COMMENTAIRES -->
                     <div  id="commentDiv" 
@@ -81,7 +81,7 @@
                                         <button v-if="userUserId==loggedUserId" type="button" class="btn" @click="deleteShare()" id="deleteShareBtn">Effacer</button>
                                 </div>
 
-                                <PostACommentOnAComment v-if="!userUserId==loggedUserId"/>
+                                <PostACommentOnAComment v-if="loggedUserId!=userUserId"/>
                                           
 
                     </div>
@@ -138,7 +138,9 @@ export default {
                             return date.format('dddd D MMMM YYYY , HH:mm');
                       },
 
-            modifyShare() {},
+            modifyShare() {
+                          // 
+            },
 
             // confirm(alert)
 
@@ -151,9 +153,10 @@ export default {
                             "ShareId" : ShareId
                           }
 
-                          confirm("Le share et tous les commentaires associés vont être effacés")
+                          const deleteShare = confirm("Le share et tous les commentaires associés vont être effacés")
 
-                          fetch(`http://localhost:3000/api/shares/${ShareId}`, {
+                          if (deleteShare){
+                            fetch(`http://localhost:3000/api/shares/${ShareId}`, {
                               method: 'DELETE',
                               headers: {"Content-Type": "application/json", 
                                         "Authorization": "Bearer " + Token
@@ -167,6 +170,9 @@ export default {
                             })
                             .catch( (error) => { alert(error);
                             })
+                          }else{
+                             this.$router.push({ name: 'wall' });
+                          }
             },
 
 
