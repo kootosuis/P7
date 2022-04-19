@@ -1,48 +1,48 @@
 <template>
           <section class="mainshares">
                 <div id="shares" class="shares">
-                  <a id="link" v-for="item in apiResponse"
-                               :key="item.ShareId"
-                               @click="displayOneShare(item.ShareId)">
+                      <a id="link" v-for="item in apiResponse"
+                        :key="item.ShareId"
+                        @click="displayOneShare(item.ShareId)">
 
-                        <div class="card"  >
-                                <div class="card__image">
-                                    <div class="card__image--img">
-                                      <img v-if="item.medium.MediaUrl.split(`/07media/`)[1] != `feather.png`" :src='item.medium.MediaUrl'/>
-                                      <img v-else style="width : 30px" :src='item.medium.MediaUrl'/>             
+                            <div class="card">
+                                    <div class="card__image">
+                                            <div class="card__image--img">
+                                              <img v-if="item.medium.MediaUrl.split(`/07media/`)[1] != `feather.png`" :src='item.medium.MediaUrl'/>
+                                              <img v-else style="width : 30px" :src='item.medium.MediaUrl'/>             
+                                            </div>
                                     </div>
-                                </div>
 
-                                <div class="card__info">
-                                  <div v-if="item.medium.MediaUrl.split(`/07media/`)[1] == `feather.png`">
-                                      <p class="card__info--text textLimited" style="height : 150px">{{ item.ShareText }}</p>
-                                  </div>
-                                  <div v-else>
-                                      <p class="card__info--text textLimited">{{ item.ShareText }}</p>
-                                  </div>
-                                  <div class="readMore" @click="displayOneShare(item.ShareId)">
-                                          Voir le share...
-                                  </div>
-                                  <div class=card__info--complement>
-                                      <div class="card__info--complement--adress ">
-                                          <p> {{item.user.UserFirstname}} {{item.user.UserName}}</p>
-                                          <p> Service : {{item.user.UserDepartement}} <br/> Role : {{item.user.UserRole}}</p>
-                                          <p hidden>{{ item.userUserId }}</p>
-                                          <!-- ICI  --> 
-                                        <!-- récuperer le nbre de comments ? -->
-                                          <p> {{item.comments.length }} commentaire<x v-if="item.comments.length>1">s</x></p>
-                                          <p>{{ formatDate(item.updatedAt) }}</p>
-                                      </div>
-                                  </div>
-                                </div>  
-                        </div>          
-                  </a>
-               </div>
+                                    <div class="card__info">
+                                            <div v-if="item.medium.MediaUrl.split(`/07media/`)[1] == `feather.png`">
+                                                <p class="card__info--text textLimited" style="height : 150px">{{ item.ShareText }}</p>
+                                            </div>
+                                            <div v-else>
+                                                <p class="card__info--text textLimited">{{ item.ShareText }}</p>
+                                            </div>
+                                            <div class="readMore" @click="displayOneShare(item.ShareId)">
+                                                    En savoir plus...
+                                            </div>
+
+                                            <div class="separator"></div>
+                                            
+                                            <div class=card__info--complement>
+                                                <div class="card__info--complement--adress ">
+                                                    <p> {{item.user.UserFirstname}} {{item.user.UserName}}</p>
+                                                    <p> Service : {{item.user.UserDepartement}} <br/> Role : {{item.user.UserRole}}</p>
+                                                    <p hidden>{{ item.userUserId }}</p>
+                                                    <p> {{item.comments.length }} commentaire<x v-if="item.comments.length>1">s</x></p>
+                                                    <p>{{ formatDate(item.updatedAt) }}</p>
+                                                </div>
+                                            </div>
+                                    </div>  
+                            </div>          
+                      </a>
+                </div>
           </section>  
 </template>
 
 <script>
-
           import dayjs from 'dayjs'
           require('dayjs/locale/fr')
           dayjs.locale('fr')
@@ -96,6 +96,8 @@
 
 .readMore {
   text-align: right;
+  font-style:italic;
+  font-size:13px;
 }
 .textLimited{
   max-height:95px;
@@ -107,6 +109,13 @@
 
 .card__image img{
   width:320px;
+}
+
+#line {
+  margin:2rem 0;
+  display: flex;
+  height: 2px;
+  border: solid 1px  #40cbc4;
 }
 
 </style>

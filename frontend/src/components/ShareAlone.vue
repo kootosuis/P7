@@ -78,11 +78,13 @@
                                       </form>
                                     </div>
 
+                                    <!-- les infos sur le share (auteur, date, commentaires) -->
+
                                     <div class="card__info--complement">
 
-                                        <div class="card__info--complement--adress">
+                                        <div class="card__info--complement--firstline">
                                           
-                                          <p> {{ UserFirstname}} {{ UserName}} / {{ UserDepartement}} / {{ UserRole}} </p>
+                                          <p > {{ UserFirstname}} {{ UserName}} / {{ UserDepartement}} / {{ UserRole}} </p>
                                           <p hidden>{{ userUserId }}</p>
                                           <p>{{ formatDate(updatedAt) }}</p>
                                           <p>{{ apiLength }} commentaires</p>
@@ -90,37 +92,37 @@
                                         </div>
                                     </div>
 
+                                    <!-- le bouton pour modifier le texte du share  ou l'effacer quand on en est l'auteur-->
                                     <div id="modifyOrDelete" class="btn-div">
-                                          <button v-if="userUserId==loggedUserId" type="button" class="btn" @click="modifyShare()" id="modifyShareBtn">Corriger</button>
-                                          <button v-if="userUserId==loggedUserId" type="button" class="btn" @click="deleteShare()" id="deleteShareBtn">Effacer</button>
+                                          <button v-show="userUserId==loggedUserId" type="button" class="btn" @click="modifyShare()" id="modifyShareBtn">Corriger</button>
+                                          <button v-show="userUserId==loggedUserId" type="button" class="btn" @click="deleteShare()" id="deleteShareBtn">Effacer</button>
                                     </div>    
-
-                                        <!-- <div class="card__info__heart2">
-                                            <img class="card__info__heart2--r" src="icons/heart-regular.svg" alt="icon">
-                                            <img class="card__info__heart2--s" src="icons/heart-solid.svg" alt="icon"> 
-                                        </div> -->
                                     
                                 </div>
 
                     </div>
 
+
+                    <!-- LE BOUTON (et la section) POUR COMMENTER -->
+                    <!-- n'apparait que si l'auteur du share n'est pas le user loggé -->
                     <PostAComment v-if="loggedUserId!=userUserId"/>
 
                    <!-- LES COMMENTAIRES -->
                     <div  id="commentDiv" 
                           v-for="item in apiCommentsResponse"
                           :key="item.shareShareId"
-                          class="card__info card__info--2">
-                                <div v-if="item.CommentId">
+                          class="card card__info card__info--2">
+                                <div v-if="item.CommentId" >
                                   <div>
                                     <p class="card__info--text card__info--sharetext">{{ item.CommentText }}</p>
                                   </div>
+                                  <div class="separator"></div>
                                   <div class="card__info--complement">
-                                    <div class="card__info--complement--adress">
+                                    <div>
                                        <p> {{ item.user.UserFirstname }} {{ item.user.UserName }} / {{ item.user.UserDepartement }} / {{ item.user.UserRole }}</p>
                                        <p>{{ formatDate(item.updatedAt) }}</p> <!-- le commentateur du Share -->
                                        <p hidden>{{ item.commentCommentId }} </p>
-                                       <p hidden>{{ item.CommentId }} </p>
+                                       <p hidden id="CommentOnACommentId">{{ item.CommentId }}</p>
                                     </div>
                                    
                                   </div>
@@ -128,14 +130,14 @@
                                 </div>
 
                                 <div class="btn-div">
-                                        <button v-if="userUserId==loggedUserId" type="button" class="btn" @click="modifyShare()" id="modifyShareBtn">Corriger</button>
-                                        <button v-if="userUserId==loggedUserId" type="button" class="btn" @click="deleteShare()" id="deleteShareBtn">Effacer</button>
+                                        <button v-show="item.userUserId==loggedUserId" type="button" class="btn" @click="modifyComment()" id="modifyCommentBtn">Corriger</button>
+                                        <button v-show="item.userUserId==loggedUserId" type="button" class="btn" @click="deleteComment()" id="deleteCommentBtn">Effacer</button>
                                 </div>
 
-                                <PostACommentOnAComment v-if="loggedUserId!=userUserId"/>
+                                <PostACommentOnAComment v-show="item.userUserId!=loggedUserId"/>
                                           
 
-                    </div>
+                    </div> 
                 </div>
           </section>
           
@@ -178,9 +180,20 @@ export default {
                             apiCommentsResponse : Array,
                             apiLength : Number,
 
+                            CommentId : "",
+                            CommentText : "",
+                            CommentcreatedAt : "",
+                            CommentupdatedAt : "",
+                            CommentuserUserId : "", 
+
                             modifyForm :{
                               type: Boolean,
-                              default: true }
+                              default: true },
+
+                            author: {
+                              type : Boolean,
+                              default : false
+                            }
 
                     }
           },
@@ -278,10 +291,88 @@ export default {
                              this.$router.push({ name: 'wall' });
                           }
             },
+            correctComment(){
+                    const ShareToBeCorrected = document.getElementById("ShareToBeCorrected");
+                    const ShareId = new URL(window.location.href).hash.split("=")[1];
+                    const Token = JSON.parse(sessionStorage.getItem("Token"));
+                    const Modify = new FormData(ShareToBeCorrected);
+
+                    Modify.append('ShareId',ShareId)
+
+
+                    //--- TEST ---- ///
+                    // for(var pair of Modify.entries()) {
+                    //   console.log(pair[0]+ ', '+ pair[1]);
+                    // }
+
+                    fetch(`http://localhost:3000/api/shares/${ShareId}`, {
+                              method: 'PUT',
+                              headers: {
+                                  "Accept":"*/*",
+                                  // "Content-Type": "multipart/form-data", 
+                                  "Authorization": "Bearer " + Token
+                              },
+                              body: Modify,
+                              mode : "cors"})
+
+                    .then((response) => {
+
+                              if (response.status == 201) { 
+                                        this.success= true;
+                                        this.message = "Mise à jour effectuée.";
+                                        this.modifyForm = true;
+                                        this.$router.push({ name: 'wall' });
+                                        this.$router.go(0);
+                                        // history.go(0);
+                              } else {
+                                        response.json ()
+                                        .then ((json) => {
+                                        this.success= false;
+                                        console.log(json);
+                                        this.message = json.error ||  json.message ;
+                                        return this.message
+                                        })
+                              }
+                    })
+                    .catch (() => {
+                              this.success= false;
+                              this.message = `Le serveur ne répond pas ! Veuillez réessayer ultérieurement`;
+                    })         
+
+            },
+            deleteComment() {
+
+                          const  Token = JSON.parse(sessionStorage.getItem("Token"));
+                          // const loggedUserId=JSON.parse(sessionStorage.getItem("UserId"))
+                          const ShareId = new URL(window.location.href).hash.split("=")[1];
+                          const Share = {
+                            "ShareId" : ShareId
+                          }
+
+                          const deleteShare = confirm("Le share et tous les commentaires associés vont être effacés")
+
+                          if (deleteShare){
+                            fetch(`http://localhost:3000/api/shares/${ShareId}`, {
+                              method: 'DELETE',
+                              headers: {"Content-Type": "application/json", 
+                                        "Authorization": "Bearer " + Token
+                              },
+                              body: JSON.stringify(Share),
+                              mode : "cors"
+                            })
+                            .then(() => {
+                              alert("Share effacé !");
+                              setTimeout(this.$router.push({ name: 'wall' }), 3000);
+                            })
+                            .catch( (error) => { alert(error);
+                            })
+                          }else{
+                             this.$router.push({ name: 'wall' });
+                          }
+            },
           },
 
           beforeMount () {
-
                             const  Token = JSON.parse(sessionStorage.getItem("Token"));
                             const loggedUserId=JSON.parse(sessionStorage.getItem("UserId"))
                             const ShareId = new URL(window.location.href).hash.split("=")[1];
@@ -341,23 +432,6 @@ export default {
 
 <style lang="scss" scoped>
 
-#shareAlone {
-  background-color: rgb(64, 203, 196, .25);
-}
-.card__info--sharetext{
-  background-color: white;
-  padding: 2rem;
-}
-.card__image img{
-  width:100%;
-  max-width: 600px;
-  max-height:600px;
-}
 
-// @media (max-width: 500px) {
-// .card__image img{
-//   width:100%;
-// }
-// }
 
 </style>

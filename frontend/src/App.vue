@@ -1,24 +1,21 @@
 <script>
-    // import NavBar from "@/components/NavBar.vue"
-    // import LoaderComp from "@/components/LoaderComp.vue"
+    import LoaderComp from "@/components/LoaderComp.vue"
     import PageFooter from "@/components/PageFooter.vue"
+    console.log("TEST" + process.env.ADMINID)
 
     export default {
         name: 'App',
         components :{
-            // NavBar,
-            // LoaderComp,
+
+            LoaderComp,
             PageFooter
         }}
 </script>
 
 <template>
     <div>
-            <!-- <LoaderComp/> -->
+            <LoaderComp/>
 
-            <!-- <header class="header">
-                <NavBar/>
-            </header> -->
             <div class="main">
                 <router-view/> 
             </div>
@@ -33,12 +30,10 @@
 <style lang="scss">
     #app {
 
-      * {
-        border: solid 1px rgb(204, 121, 42)
-      }
-      header {
-        height :120px;
-      }
+    //   * {
+    //     border: solid 1px rgb(204, 121, 42)
+    //   }
+
  }
  
 

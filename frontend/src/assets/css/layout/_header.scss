@@ -1,6 +1,6 @@
 .header {
     background: #fff;
-    height: 6.4rem;
+    height: 120px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,7 +26,7 @@
     width: 100%;
     background: #fff;
     color: #000;
-    opacity: 0.85;
+    opacity: 1;
     z-index: 12;
 
     &__items {
@@ -162,6 +162,7 @@
     .navbar-container input[type="checkbox"]:checked ~ .hamburger-lines .line3 {
         transform: rotate(-35deg);
     }
+
 }
 
 @media (max-width: 500px) {

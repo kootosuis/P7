@@ -123,8 +123,9 @@
 
           Share() {
 
-                    const ShareToBePosted = document.getElementById("ShareToBePosted");
                     const Token = JSON.parse(sessionStorage.getItem("Token"));
+                    const ShareToBePosted = document.getElementById("ShareToBePosted");
+                    
                     const Body = new FormData(ShareToBePosted);
                     
                     fetch("http://localhost:3000/api/shares", {
@@ -166,6 +167,10 @@
 </script>
 
 <style lang="scss" scoped>
+
+    #ShareAccess{
+      margin-top: 10px
+    }
 
     #formImagePreview {
       display: flex;

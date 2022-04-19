@@ -9,7 +9,10 @@
                     <span class="line line3"></span>
                 </div>
 
+                
+
                 <ul class="navbar__items">
+                    
                     <li v-show="token"><router-link to="/wall">Le Forum</router-link></li>
                     <li v-show="!token"><router-link to="/signup">S'inscrire</router-link></li>
                     <li v-show="!token"><router-link to="/login">S'authentifier</router-link></li>
@@ -21,10 +24,21 @@
                     <img src="../assets/images/icon-above-font.svg" alt="Logo Groupomania" id="lelogogroupomania">
                 </div>
         </div>
+        <div>
+                  <p v-show="token" id="authentification"> Vous êtes authentifié en tant que {{  UserFirstname }} {{  UserName  }}</p>
+        </div>
     </nav>
+    
 </template>
 
 <style lang="scss" scoped>
+
+#authentification {
+    font-size : 12px;
+    font-style : italic;
+    text-align: center;
+    background-color: #fed7d7;
+}
 
 
 </style>
@@ -38,24 +52,52 @@ export default {
     return {
           token: "",
           message :"", //message d'erreur
+          UserFirstname: "",
+          UserName:"",
     }},
     methods : {
         logout(){
             sessionStorage.removeItem("UserId");
             sessionStorage.removeItem("Token");
         },
+
+        loggedIn () {
+
+    
+        },
     },
     
     mounted(){
         
-        if (sessionStorage.getItem("Token"))
-            {this.token = JSON.parse(sessionStorage.getItem("Token"))       
+        if (sessionStorage.getItem("Token")){
+            
+            this.token = JSON.parse(sessionStorage.getItem("Token"));
+            
+            const  UserId = JSON.parse(sessionStorage.getItem("UserId"));
+            const  Token = JSON.parse(sessionStorage.getItem("Token"));
+
+            fetch(`http://localhost:3000/api/auth/${UserId}`, {
+            method: 'GET',
+            headers: {"Content-Type": "application/json", 
+                        "Authorization": "Bearer " + Token
+            },
+            mode : "cors"
+            })
+            .then((res) => {
+                return res.json();
+            })
+            .then((res) =>{
+                this.UserName = res.UserName;
+                this.UserFirstname = res.UserFirstname;
+            })
+            .catch( (error) => { alert(error);
+            });
         } else {
             this.token = null    // faire apparaitre un message genre "something went wrong"
         }
     }
     
-  }
+}
 
 
 </script>

@@ -1,161 +1,26 @@
-.mainmenu{
-    margin:0 0 -4.5rem 0;
-    padding:-4.5rem;
+.mainshares {
+
+    @include flexcolumn;
+    padding-top:2rem;
+    padding-bottom:2rem;
 }
 
-.banner{
-    width:100%;
-    position: relative;
-    //je n'aime pas du tout la ligne suivante
-    margin: auto;
-    &__img {
-        width: 100%;
-        max-width:100%;
-        max-height:34rem;
-        margin: auto;
-        object-fit: cover; 
-    }
-}
-
-.plate-list{
-
-    position:relative;
-    top:-4.5rem;
-    width:100%;
-    max-width: 1200px;
-    margin: auto;
-    background-color:$color-bg;
-    border-radius: 5rem 5rem 0 0 ;
-    padding-top:3.5rem;
-    padding-bottom: 5.5rem;
-    @include box-shadow;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-
-    &__top{
-        @include wauto;
-        display: flex;
-        justify-content: space-between;
-        padding: 2rem 0 1rem 0;
-    }
-}
-
-.share{
-
-    &__name{
-        @include logotype($font-size: 2.6rem);
-    }
-
-    &__heart {
-
-        display:flex;
-        text-justify: center;
-        text-align: center;
-        align-items:center;
-        justify-content:center;
-        cursor: pointer;
-        position: relative;
-        right: 1rem;
-        width:3rem;
-        
-        background-color: black;
-        font-size:2.2rem;
-        &--s {
-            font-size:2.4rem;
-        }
-        
-        &::before {
-          opacity: 0;
-          content: "";
-          @include pseudo-pos;
-          height: 100%;
-          width: 100%;
-          background:linear-gradient(180deg, $color-primary 20%,$color-secondary 100%);
-          transition: all 150ms;
-        }
-
-        &:hover::before {
-            opacity: 1;
-          }
-      
-        & .fa-heart {
+.shares{
     
-            background-color: $color-bg;
-            @include pseudo-pos;
-            height: 100%;
-            width: 100%;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            mix-blend-mode: lighten;  
-        }
-    
-        &:hover > .share__heart--r{
-            opacity: 0;  
-        }
-    }
-}
-
-.smd{
     @include wauto;
     @include flexrow;
+    column-gap: 3rem;
+    row-gap: 3rem;
+    justify-content: center;
+    align-items:flex-end;
 
-    justify-content: space-between;
-    column-gap: 20px;
-    row-gap: 20px;
-   
-    &__type{
-        flex: 1;
-        display: flex;
-        @include flexcolumn;
-        row-gap: 20px;
-        
-        /*ce qui suit n'est que pour la mise en page*/
-
-        @media (max-width:768px){
-            width: 90%;
-        }
-        @media (min-width:768px){
-            width: 45%;
-        }
-        @media (min-width:1175px){
-            width: 30%;
-        }
-        &--empty{
-            display: none;
-            @media (min-width:768px) and (max-width:1175px){display: flex;}
-        }
-    }
-
-    &__title{
-        flex:none;
-        width:33rem;
-        position:relative;
-        text-transform:uppercase;
-        padding: 2rem 0 1rem 0;
-        font-weight: 300;
-        font-size:100%;   
-    }
+    //je choisis d'imposer une largeur max pour ne pas avoir de rangées trop large
+    //je pense qu'il vaut mieux scroller!
+    max-width: 140rem;
     
-    &__line{
-        flex:none;
-        height: 4px;
-        background-color: $color-tertiary;
-        width: 50px;
-        }
-    }
-
-.choice{
-    &__btn{
-        display:flex;
-        justify-content: center;
-        align-items: center;
-        margin: 45px auto 0;
-        height: 5rem;
-    }
-
-    &__button{
-        @include mainbutton 
+    &__title{
+        @include title;
+        padding-bottom: 25px;
     }
 }
+

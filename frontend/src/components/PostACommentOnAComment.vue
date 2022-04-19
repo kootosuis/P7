@@ -15,34 +15,30 @@
                               type="multipart/form-data"
                               method="POST" 
                               name="form" 
-                              id="CommentToBePosted"
+                              id="CommentOnAComment"
                               class="formulaire">
                               
                               <!--Le Comment-->
                                <div class="formLine">
                                         <label    
-                                                  for="CommentText" 
+                                                  for="CommentOnACommentText" 
                                                   class="label">Votre réaction</label>
                                         <textarea class="bigtextarea textarea input"
-                                                  form="CommentToBePosted" 
+                                                  form="CommentOnACommentText" 
                                                   type="textarea"
                                                   @input="checkForm"
                                                  
                                                   placeholder= "..."
                                                   autofocus
-                                                  id="CommentText"
-                                                  name="CommentText"></textarea>
+                                                  id="CommentOnACommentText"
+                                                  name="CommentOnACommentText"></textarea>
                               </div>
                                                          
                               <div class="btn-div">
                                         <button type="button" class="btn" @click="displayGoTo()" id="CancelBtn">Annuler</button>
-                                        <button type="button" class="btn" @click="Comment()" id="CommentBtn" disabled>Commenter</button>
+                                        <button type="button" class="btn" @click="CommentOnAComment()" id="CommentOnACommentBtn" disabled>Réagir</button>
                               </div>
-       
                     </form>
-                    <div class="add-div" v-show="success===false">
-                      <p id="erreur"> Echec du partage : {{message}} </p>
-                    </div>
           </div>
       </div>
     </section>
@@ -70,36 +66,31 @@ export default {
             this.ShareFormHidden = true
           },
           checkForm() {
-                    if (document.getElementById("CommentText").textContent != null) {
-                      document.getElementById("CommentBtn").disabled = false;
-                    } else { document.getElementById("CommentBtn").disabled = true }
+                    if (document.getElementById("CommentOnACommentText").textContent != null) {
+                      document.getElementById("CommentOnACommentBtn").disabled = false;
+                    } else { document.getElementById("CommentOnACommentBtn").disabled = true }
           },
-          Comment() {
-
-
-                    // e.preventDefault();
+          CommentOnAComment() {
 
                     const Token = JSON.parse(sessionStorage.getItem("Token"));
-                    const CommentText = document.getElementById("CommentText").value
-                    const shareShareId = new URL(window.location.href).hash.split("=")[1]
+                    const commentOnACommentText = document.getElementById("CommentOnACommentText").value;
+                    const shareShareId = new URL(window.location.href).hash.split("=")[1];
 
-                    const commentCommentId = document.getElementById("CommentId").value
+                    const commentCommentId = document.getElementById("CommentOnACommentId").textContent;
 
-                    const Comment = { "CommentText": CommentText,
-                                      "shareShareId": shareShareId,
-                                      "commentCommentId": commentCommentId,
+                    const commentOnAComment = { "CommentText": commentOnACommentText,
+                                                "shareShareId": shareShareId,
+                                                "commentCommentId": commentCommentId,
                     }
-
-                    console.log(Comment)
+                    console.log(commentOnAComment);
 
                     fetch("http://localhost:3000/api/comments", {
                               method: 'POST',
-                              body: JSON.stringify(Comment),
+                              body: JSON.stringify(commentOnAComment),
                               headers: {
                                   "Content-Type": "application/json",
                                   "Accept":"*/*",
                                   "Authorization": "Bearer " + Token,
-                                  // "Host":""
                               },
                               mode : "cors"})
 
@@ -107,8 +98,10 @@ export default {
                               if (response.status == 201) { 
                                         this.success= true;
                                         this.message = "Commentaire en ligne.";
-                                        this.$router.push({ name: 'wall' });
                                         this.ShareFormHidden = true;
+                                        this.$router.push({ name: 'wall' });
+                                        this.$router.go(0);
+                                        
                               } else {
                                         response.json ()
                                         .then ((json) => {

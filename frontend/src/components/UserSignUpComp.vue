@@ -135,7 +135,7 @@
                       <p id="erreur" > Echec de l'inscription : {{message}} </p>
                     </div>
                     <div id="no-account" class="add-div">
-                      <p> Déjà un compte ? <router-link class="no-account-link" to="../login">S'identifier</router-link> </p>
+                      <p> Déjà un compte ? <router-link class="no-account-link" to="../login">S'authentifier</router-link> </p>
                     </div>
           </div>
        </div>

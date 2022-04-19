@@ -110,25 +110,6 @@ $appear-beat: 300ms;
     }
   }
   
-  .smd__type{
-    animation: appear   $appear-beat*2
-                        // je me suis occupé du délai d'apparition plus bas
-                        both
-                        1
-                        ease-in-out;
-                        
-
-    @for $i from 1 through 3 {
-      &:nth-child(#{$i}) {
-        @if $i==1{
-          animation-delay: $appear-beat;
-        }
-        @else {
-          animation-delay: $appear-beat + ($appear-beat * ($i - 1) * 4);
-        }
-      }    
-    }
-  }
 
   // je n'ai pas réussi à attribuer un selecteur unique genre "delai--1" 
   // aux différents éléments que je voulais faire apparaitre
