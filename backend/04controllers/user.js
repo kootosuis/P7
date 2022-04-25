@@ -45,6 +45,7 @@ exports.login = (req, res, next) => {
                     }
                     res.status(200).json({
                         UserId: inlogger.UserId,
+                        UserHabilitation: inlogger.UserHabilitation,
                         token: jwt.sign({ UserId: inlogger.UserId }, process.env.SECRET_TOKEN, { expiresIn: "12h" }),
                         message: "Login validé !",
                     });
@@ -179,7 +180,9 @@ exports.getOneUser = (req, res) => {
 
     User.findOne({ where: { UserId: paramsId } })
         .then((user) => {
-            delete user.dataValues.UserPassword, // le password ne sera pas transmis au front
+           // delete user.dataValues.UserPassword, // le password ne sera pas transmis au front
+            
+
                 res.status(200).json(user);
         })
         .catch((error) => res.status(404).json({ error }));
@@ -188,6 +191,21 @@ exports.getOneUser = (req, res) => {
 //----- GET ALL USERS //
 exports.getAllUsers = (req, res) => {
     User.findAll()
+        .then((users) => {
+            users.forEach((item, index) => {
+                // le password ne sera pas transmis au front
+                delete item.dataValues.UserPassword;
+            }),
+                res.status(200).json(users);
+        })
+        .catch((error) => res.status(404).json({ error }));
+};
+
+
+// //----- GET ALL ADMINs//
+
+exports.getAdmins = (req, res) => {
+    User.findAll({where : { UserHabilitation : 1} })
         .then((users) => {
             users.forEach((item, index) => {
                 // le password ne sera pas transmis au front

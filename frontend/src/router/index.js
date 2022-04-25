@@ -4,6 +4,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import UserSignUp from "../views/UserSignUp.vue";
 import UserLogin from "../views/UserLogin.vue";
 import UserModify from "../views/UserModify.vue";
+import UserModifyByAdmin from "../views/UserModifyByAdmin.vue";
 
 import UserDeconnect from "../views/UserDeconnect.vue";
 import PostedShares from "../views/PostedShares.vue";
@@ -37,6 +38,12 @@ const routes = [
         path: "/modify",
         name: "modify",
         component: UserModify,
+    },
+
+    {
+        path: "/modifyByAdmin/:id",
+        name: "modifyByAdmin",
+        component: UserModifyByAdmin,
     },
 
     {

@@ -30,6 +30,11 @@ const User = sequelize.define("user", {
         //     this.setDataValue('USER_password', hash(value,10));
         //   }
     },
+    UserHabilitation: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        default: false,
+    },
 });
 
 module.exports = User;

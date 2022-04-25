@@ -7,7 +7,7 @@
                 <div class="container">
 
                         <div class="message__principal">
-                          <h2 > Bienvenue sur LeRezo, le réseau social de Groupomania"</h2>
+                          <h2 > Bienvenue sur LeRezo,<br/>le réseau social de Groupomania</h2>
                         </div>
 
                         <div class="message__secondaire">

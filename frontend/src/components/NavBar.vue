@@ -9,8 +9,6 @@
                     <span class="line line3"></span>
                 </div>
 
-                
-
                 <ul class="navbar__items">
                     
                     <li v-show="token"><router-link to="/wall">Le Forum</router-link></li>
@@ -25,7 +23,9 @@
                 </div>
         </div>
         <div>
-                  <p v-show="token" id="authentification"> Vous êtes authentifié en tant que {{  UserFirstname }} {{  UserName  }}</p>
+                  <p v-show="token" id="authentification"> 
+                      Vous êtes authentifié en tant que {{  UserFirstname }} {{  UserName  }}
+                  </p>
         </div>
     </nav>
     
@@ -40,7 +40,6 @@
     background-color: #fed7d7;
 }
 
-
 </style>
 
 <script>    
@@ -51,28 +50,24 @@ export default {
     data() {
     return {
           token: "",
-          message :"", //message d'erreur
           UserFirstname: "",
           UserName:"",
     }},
     methods : {
+
+        //-------- le logout efface toutes les données du sessionStorage -------///
         logout(){
-            sessionStorage.removeItem("UserId");
-            sessionStorage.removeItem("Token");
-        },
-
-        loggedIn () {
-
-    
+            sessionStorage.clear();
+            this.$router.push({ name: 'enter'});
         },
     },
     
+    //-------- la NavBar change en fonction de l'existence ou pas d'un Token d'authentification -------///
     mounted(){
         
         if (sessionStorage.getItem("Token")){
             
             this.token = JSON.parse(sessionStorage.getItem("Token"));
-            
             const  UserId = JSON.parse(sessionStorage.getItem("UserId"));
             const  Token = JSON.parse(sessionStorage.getItem("Token"));
 
@@ -93,11 +88,9 @@ export default {
             .catch( (error) => { alert(error);
             });
         } else {
-            this.token = null    // faire apparaitre un message genre "something went wrong"
+            this.token = null
         }
     }
-    
 }
-
 
 </script>

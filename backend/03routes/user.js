@@ -10,6 +10,8 @@ router.post("/login", userCtrl.login);
 router.put("/modifySignup", auth, userCtrl.modifySignup);
 router.delete("/delete/:id", auth, userCtrl.delete);
 
+
+router.get("/safeAdmin", auth, userCtrl.getAdmins);
 router.get("/:id", auth, userCtrl.getOneUser);
 router.get("/", auth, userCtrl.getAllUsers);
 

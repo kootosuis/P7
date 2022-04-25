@@ -11,6 +11,7 @@
                               method="PUT" 
                               name="form" 
                               id="form" 
+
                               @submit = "modifySignup">
                              
                               <!--Le Nom-->
@@ -99,7 +100,7 @@
                                         <label    
                                         for="UserRole" 
                                                   class="label">Rôle</label>
-                                        <textarea class="smalltextarea input"
+                                        <textarea    class="smalltextarea input"
                                                   v-model="UserRole" 
                                                   type="textarea" 
                                                   placeholder="Quel est votre rôle dans l'entreprise ?" 
@@ -115,7 +116,7 @@
                                         <input    class="input"
                                                   v-model="UserPassword" 
                                                   @input = "checkForm"    
-                                                  type="password"
+                                                  type="password" 
                                                   id="UserPassword" 
                                                   name="UserPassword" 
                                                   maxlength="30">
@@ -131,18 +132,14 @@
                                         <label    
                                                   for="UserHabilitation" 
                                                   class="label">Habilitation</label>
-                                        <div      v-if="isAdmin && AdminLength"
+                                        <div     
                                                   class="input">
-                                                  <select   
-                                                            id="UserHabilitation" 
+                                                  <select     id="UserHabilitation" 
                                                             name="UserHabilitation" 
                                                             required="required">
                                                                       <option value=1>avec habilitation à administrer</option>
                                                                       <option value=0>sans habilitation à administrer</option>                  
-                                                  </select>
-                                        </div>
-                                        <div      v-if="isAdmin && AdminLength">
-                                            <p>Assurez vous de l'existence de deux autres animateurs avant de modifier votre habilitation</p>
+                                                  </select>                                                         
                                         </div>
                               </div>
 
@@ -150,8 +147,7 @@
 
                               <div class="btn-div">
                                         <button type="button" class="btn" @click="goBacKToForum()" id="CancelBtn">Annuler</button>
-                                        <input  type="submit"  class="btn" id="UserSignupBtn" value="Mettre à jour" disabled>
-                                        
+                                        <input type="submit"  class="btn" id="UserSignupBtn" value="Mettre à jour" disabled>           
                               </div>
        
                     </form>
@@ -165,8 +161,6 @@
                       <p id="erreur" > Echec de la mise à jour : {{message}} </p>
                     </div>
 
-
-
                     <div id="no-account" class="add-div">
                       <p> Vous pouvez si vous le souhaitez, effacer votre compte ainsi que tous les partages et commentaires qui y sont liés</p>
                       <div class="btn-div"><router-link @click="deleteAccount()" class="btn" to="../deconnect">Effacer</router-link> </div>
@@ -179,7 +173,7 @@
 
 <script>
 export default {
-  name: 'UserModifyComp',
+  name: 'UserModifyCompByAdmin',
   
   data() {
     return {
@@ -197,16 +191,19 @@ export default {
     AdminLength : {
       type: Boolean,
       default : false
+    },
+
+    isAdmin: {
+      type: Boolean,
+      default : false
     }
 
     }
   },
 
-
-
    beforeMount () {
-
-    const  UserId = JSON.parse(sessionStorage.getItem("UserId"));
+    this.isAdmin = sessionStorage.getItem("isAdmin");
+    const  UserId = new URL(window.location.href).hash.split("/modifyByAdmin/")[1];
     const  Token = JSON.parse(sessionStorage.getItem("Token"));
 
           ///----- on vérifie d'abord qu'il y a au minimum deux administrateurs ----///
@@ -242,9 +239,6 @@ export default {
           .then((res) => {
             return res.json();
           })
-          .then((resJson) => {
-            return resJson;
-          })
           .then((res) =>{
             this.UserName = res.UserName;
             this.UserFirstname = res.UserFirstname;
@@ -253,7 +247,7 @@ export default {
             this.UserDepartement = res.UserDepartement;
             this.UserRole = res.UserRole;
             this.UserPassword = res.UserPassword;
-            this.UserHabilitation=res.UserHabilitation
+            // this.UserHabilitation=res.UserHabilitation
           })
           .catch( (error) => { alert(error);
           });
@@ -272,7 +266,7 @@ export default {
       }
       else {document.getElementById("UserSignupBtn").disabled = true;
     }},
-
+    
     goBacKToForum(){
       this.$router.push({ name: 'wall' })
     },
@@ -317,7 +311,7 @@ export default {
 
                                 console.log(res);
                                     this.success= true;
-                                    this.message =  "mise à jour effectuée"
+                                    this.message =  "Mise à jour effectuée"
                                     sessionStorage.setItem("isAdmin", JSON.stringify(response.UserHabilitation));
                                     setTimeout(() => this.$router.push({ name: 'wall' }), 4000)
                               })

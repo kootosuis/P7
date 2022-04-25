@@ -1,20 +1,23 @@
 <script>
-    import LoaderComp from "@/components/LoaderComp.vue"
+    // import LoaderComp from "@/components/LoaderComp.vue"
     import PageFooter from "@/components/PageFooter.vue"
-    console.log("TEST" + process.env.ADMINID)
+
+
+    // je ne comprends pas pourquo cela ne marche pas
+    // console.log("TEST" + process.env.VUE_APP_ADMINID)
 
     export default {
         name: 'App',
         components :{
 
-            LoaderComp,
+            // LoaderComp,
             PageFooter
         }}
 </script>
 
 <template>
     <div>
-            <LoaderComp/>
+            <!-- <LoaderComp/> -->
 
             <div class="main">
                 <router-view/> 

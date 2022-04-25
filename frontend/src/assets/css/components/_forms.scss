@@ -26,6 +26,12 @@
         @include flexcolumn
     }
 }
+
+.formLineTop{
+    margin-top: 0;
+    padding-top: 0
+}
+
 .input {
     font-family: "Poppins", "Roboto", sans-serif;
     flex: 2;
@@ -44,6 +50,7 @@
 }
 
 .formSection .formDiv {
+    min-width: 375px;
     max-width: 640px;
     margin: 0 auto 5rem;
 }

@@ -11,13 +11,13 @@
                               method="POST" 
                               name="form" 
                               id="form" 
-                              @submit = "LogIn">
+                              @submit = "LogIn"> 
                               
                               <!--L'Email'-->
                                <div class="formLine">
                                         <label    
                                                   for="UserEmail" 
-                                                  class="label">Email <span class="asterisque">*</span></label>
+                                                  class="label">Email</label>
                                         <input    class="input"
                                                   @input = "checkForm"    
                                                   type="email" 
@@ -31,7 +31,7 @@
                               <div class="formLine">
                                         <label    
                                                   for="UserPassword" 
-                                                  class="label">Mot de passe <span class="asterisque">*</span></label>
+                                                  class="label">Mot de passe</label>
                                         <input    class="input"
                                                   @input = "checkForm"    
                                                   type="text" 
@@ -43,17 +43,17 @@
                               </div>
                               
                               <div class="btn-div">
-                                        <!-- ICI  --> 
-                                        <!-- lancer un modal? mettre le texte en lowercase ? un bouton annuler ? -->
                                         <input type="submit"  class="btn" id="UserSignupBtn" value="S'authentifier" disabled>
-                                        
+                                        <!-- rajouter un bouton "mot de passe oublié"-->
                               </div>
-       
                     </form>
 
-                    
                     <div class="add-div" v-show="success===false">
                       <p id="erreur"> Echec de l'authentification : {{message}} </p>
+                    </div>
+
+                    <div class="add-div" v-show="success===true">
+                      <p id="erreur"> Succès de l'authentification : {{message}} </p>
                     </div>
 
           </div>
@@ -67,7 +67,7 @@ export default {
   data() {
     return {
           success: "",
-          message :"", //message d'erreur
+          message :"", //message d'erreur ou pas
     }
   },
   methods: {
@@ -82,7 +82,7 @@ export default {
 
     LogIn(e) {
 
-          e.preventDefault();
+      e.preventDefault()
 
           const UserEmail = document.getElementById("UserEmail").value
           const UserPassword = document.getElementById("UserPassword").value
@@ -104,16 +104,16 @@ export default {
                               response.json ()
                               .then ((json) => {
                               this.success= false;
-                              console.log(json);
                               this.message = json.error ||  json.message ;
                               })
                     }
           })
           .then((response) => {
                     this.success= true;
-                    this.message = "Authentification effectuée.";
+                    this.message = response.message;
                     sessionStorage.setItem("UserId", JSON.stringify(response.UserId));
                     sessionStorage.setItem("Token", JSON.stringify(response.token));
+                    sessionStorage.setItem("isAdmin", JSON.stringify(response.UserHabilitation));
                     this.$router.push({ name: 'wall' });
           })
 
