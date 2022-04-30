@@ -84,7 +84,7 @@
                                         <div class="card__info--complement--firstline">
                                           
                                           <p> {{ UserFirstname}} {{ UserName}} / {{ UserDepartement}} / {{ UserRole}} </p>
-                                          <p v-if="isAdmin" > <router-link :to="`/modifyByAdmin/${ userUserId }`">Accéder aux données utilisateur</router-link></p>
+                                          <p v-if="isAdmin == 1"><router-link :to="`/modifyByAdmin/${ userUserId }`">Accéder aux données utilisateur</router-link></p>
                                           <p hidden>{{ userUserId }}</p>
                                           <p>{{ formatDate(updatedAt) }}</p>
                                           <p>{{ apiLength }} commentaires</p>
@@ -94,8 +94,8 @@
 
                                     <!-- le bouton pour modifier le texte du share  ou l'effacer quand on en est l'auteur-->
                                     <div id="modifyOrDelete" class="btn-div">
-                                          <button v-show="userUserId===loggedUserId || isAdmin" type="button" class="btn" @click="GoToCorrectShare()" id="modifyShareBtn">Corriger</button>
-                                          <button v-show="userUserId===loggedUserId || isAdmin" type="button" class="btn" @click="deleteShare()" id="deleteShareBtn">Effacer</button>
+                                          <button v-show="userUserId===loggedUserId || isAdmin == 1" type="button" class="btn" @click="GoToCorrectShare()" id="modifyShareBtn">Corriger</button>
+                                          <button v-show="userUserId===loggedUserId || isAdmin == 1" type="button" class="btn" @click="deleteShare()" id="deleteShareBtn">Effacer</button>
                                     </div>    
                                 </div>
 
@@ -167,16 +167,14 @@ export default {
                             
                             isAdmin :{
                               type: Boolean,
-                              default: true },
+                              default: false },
 
                     }
           },
 
           methods : {
 
-            checkAdmin(){    
-              this.isAdmin = sessionStorage.getItem("isAdmin");
-            },
+            
 
             formatDate(dateString) {
                             // import de la donnée
@@ -276,6 +274,9 @@ export default {
                             const  Token = JSON.parse(sessionStorage.getItem("Token"));
                             const loggedUserId=JSON.parse(sessionStorage.getItem("UserId"))
                             const ShareId = new URL(window.location.href).hash.split("=")[1];
+
+                             
+                              this.isAdmin = sessionStorage.getItem("isAdmin");
 
                             // LE SHARE       
                             fetch(`http://localhost:3000/api/shares/${ShareId}`, {

@@ -39,10 +39,10 @@ exports.createShare = (req, res) => {
                 //     .then((share) => {
                 Media.create({
                     // et on ajoute le media
-                    MediaName: "LOGO",
+                    MediaName: "Une icône",
                     MediaMimetype: "image/png",
                     MediaSize: 29000,
-                    MediaDescription: "Le logo Groupomania",
+                    MediaDescription: "La plume de l'écrivain",
                     MediaUrl: `${req.protocol}://${req.get("host")}/07media/feather.png`, // le filename est ici fabriqué par multer
                     shareShareId: share.ShareId,
                 })

@@ -35,7 +35,7 @@
         methods: {
         },
         created()  {
-            setTimeout(() => this.$router.push({ name: 'enter' }), 5000)
+            setTimeout(() => this.$router.push({ name: 'enter' }), 3000)
         }
           
     }

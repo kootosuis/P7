@@ -2,43 +2,80 @@
 
                     <section class="mainshares shares">
 
-                       <div class="card" id="shareAloneComments" >
-                         <div  id="commentDiv" 
-                          v-for="item in apiCommentsResponse"
-                          :key="item.shareShareId"
-                          class="card card__info card__info--2">
-                                <div v-if="item.CommentId" >
-                                  <div>
-                                    <p class="card__info--text card__info--sharetext">{{ item.CommentText }}</p>
-                                  </div>
-                                  <div class="separator"></div>
-                                  <div class="card__info--complement">
-                                    <div>
-                                       <p> {{ item.user.UserFirstname }} {{ item.user.UserName }} / {{ item.user.UserDepartement }} / {{ item.user.UserRole }}</p>
-                                       <p>{{ formatDate(item.updatedAt) }}</p> <!-- le commentateur du Share -->
-                                       <p hidden>{{ item.commentCommentId }} </p>
-                                       <p hidden id="CommentOnACommentId">{{ item.CommentId }}</p>
-                                    </div>
-                                   
-                                  </div>
- 
-                                </div>
+                          <div class="card" id="shareAloneComments" >
+                              <div  id="commentDiv" 
+                                v-for="item in apiCommentsResponse"
+                                :key="item.shareShareId"
+                                class="card card__info card__info--2">
+                                      <div v-if="item.CommentId" >
 
-                                <div class="btn-div">
-                                        <button v-show="item.userUserId==loggedUserId" type="button" class="btn" @click="modifyComment()" id="modifyCommentBtn">Corriger</button>
-                                        <button v-show="item.userUserId==loggedUserId" type="button" class="btn" @click="deleteComment()" id="deleteCommentBtn">Effacer</button>
-                                </div>
+                                        <!--- le commentaire original -->
+                                        <div v-if="modifyCommentBox">
+                                          <p class="card__info--text card__info--sharetext">{{ item.CommentText }}</p>
+                                        </div>
+                                        
+                                        <!--- le commentaire tel qu'il va être modifié -->
+                                        <div v-else class="formSection" id="ShareForm" >
+                                            <div class = "formDiv">
+                                                      <form     
+                                                                type="multipart/form-data"
+                                                                method="PUT" 
+                                                                name="form" 
+                                                                id="CommentToBeCorrected"
+                                                                class="formulaire">
+                                                                
+                                                                <!--Le Comment-->
+                                                                <div class="formLine">
+                                                                          <label    
+                                                                                    for="CommentText" 
+                                                                                    class="label">Votre commentaire</label>
+                                                                          <textarea class="bigtextarea textarea input"
+                                                                                    form="CommentToBePosted" 
+                                                                                    type="textarea"
+                                                                                    @input="checkForm"
+                                                                                  
+                                                                                    placeholder= "..."
+                                                                                    autofocus
+                                                                                    id="CommentText"
+                                                                                    name="CommentText"></textarea>
+                                                                </div>
+                                                                
+                                                                <div class="btn-div">
+                                                                          <button type="button" class="btn" @click="doNotModify()" id="CancelBtn">Annuler</button>
+                                                                          <button type="button" class="btn" @click="Comment()" id="CommentBtn" disabled>Commenter</button>
+                                                                </div>
+                                                      </form>
+                                            </div>
+                                        </div>
 
-                                <PostACommentOnAComment v-show="item.userUserId!=loggedUserId"/>
-                                          
+                                        <div class="separator"></div>
 
-                       </div>
-                       
-                       </div>
+                                        <div class="card__info--complement">
+                                          <div>
+                                            <p> {{ item.user.UserFirstname }} {{ item.user.UserName }} / {{ item.user.UserDepartement }} / {{ item.user.UserRole }}</p>
+                                            <p>{{ formatDate(item.updatedAt) }}</p> <!-- le commentateur du Share -->
+                                            <p hidden>{{ item.commentCommentId }} </p>
+                                            <p hidden id="CommentOnACommentId">{{ item.CommentId }}</p>
+                                          </div>
+                                        </div>
+      
+                                      </div>
 
-                     
+                                      <div class="btn-div">
+                                              <button v-show="item.userUserId==loggedUserId  || isAdmin" type="button" class="btn" @click="modifyComment()" id="modifyCommentBtn">Corriger</button>
+                                              <button v-show="item.userUserId==loggedUserId  || isAdmin" type="button" class="btn" @click="deleteComment()" id="deleteCommentBtn">Effacer</button>
+                                      </div>
+
+                                      <PostACommentOnAComment v-if="item.userUserId!=loggedUserId || isAdmin == 1"/>
+                            </div>
+                        </div>
+
                       
+                        
+    
                     </section>
+
+                    
                     
 
           
@@ -71,9 +108,13 @@ export default {
                             CommentupdatedAt : "",
                             CommentuserUserId : "", 
 
-                            modifyForm :{
+                            modifyCommentBox :{
                               type: Boolean,
                               default: true },
+
+                            isAdmin :{
+                              type: Boolean,
+                              default: false },
 
                     }
           },
@@ -86,11 +127,11 @@ export default {
                             return date.format('dddd D MMMM YYYY , HH:mm');
                       },
 
-            modifyShare() {
-                  this.modifyForm = false;
+            modifyComment() {
+                  this.modifyCommentBox = false;
             },
             doNotModify(){
-                  this.modifyForm = true;
+                  this.modifyCommentBox = true;
             },
 
             correctComment(){
@@ -180,6 +221,8 @@ export default {
                             const  Token = JSON.parse(sessionStorage.getItem("Token"));
                             const loggedUserId=JSON.parse(sessionStorage.getItem("UserId"))
                             const ShareId = new URL(window.location.href).hash.split("=")[1];
+
+                            this.isAdmin = sessionStorage.getItem("isAdmin");
                            
                            // LES COMMENTAIRES    
 

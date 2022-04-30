@@ -134,12 +134,20 @@
                                                   class="label">Habilitation</label>
                                         <div     
                                                   class="input">
-                                                  <select     id="UserHabilitation" 
+                                                  <select   v-if="!UserHabilitation"
+                                                            id="UserHabilitation" 
+                                                            name="UserHabilitation" 
+                                                            required="required">
+                                                                      <option value=0>sans habilitation à administrer</option>  
+                                                                      <option value=1>avec habilitation à administrer</option>
+                                                  </select>  
+                                                  <select   v-if="UserHabilitation"
+                                                            id="UserHabilitation" 
                                                             name="UserHabilitation" 
                                                             required="required">
                                                                       <option value=1>avec habilitation à administrer</option>
-                                                                      <option value=0>sans habilitation à administrer</option>                  
-                                                  </select>                                                         
+                                                                      <option v-if="AdminLength" value=0>sans habilitation à administrer</option>  
+                                                  </select>                                                       
                                         </div>
                               </div>
 
@@ -247,7 +255,7 @@ export default {
             this.UserDepartement = res.UserDepartement;
             this.UserRole = res.UserRole;
             this.UserPassword = res.UserPassword;
-            // this.UserHabilitation=res.UserHabilitation
+            this.UserHabilitation=res.UserHabilitation
           })
           .catch( (error) => { alert(error);
           });
