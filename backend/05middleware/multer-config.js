@@ -36,11 +36,11 @@ module.exports = multer({
             extension !== "png" && //
             extension !== "jpg" && //
             extension !== "gif" && //
-            extension !== "tiff" 
+            extension !== "tiff"
             // && //
             // extension !== "pdf"
         ) {
-            return callback(new Error(".png, .tiff, .gif et .jpg seulement")); //.pdf 
+            return callback(new Error(".png, .tiff, .gif et .jpg seulement")); //.pdf
         }
         callback(null, true);
     },
