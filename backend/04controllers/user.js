@@ -152,13 +152,16 @@ exports.delete = (req, res) => {
                         Media.findOne({ raw: true, where: { shareShareId: item.ShareId } }) //
                             .then((media) => {
                                 const filename = media.MediaUrl.split("/07media/")[1];
-                                fs.unlink(`07media/${filename}`, () => {
+                                if (filename != 'feather.png')
+                                {fs.unlink(`07media/${filename}`, () => {
                                     try {
                                         () => res.status(200).json({ message: "Fichier supprimé !" });
                                     } catch {
                                         (error) => res.status(400).json({ error });
                                     }
-                                });
+                                })}else{
+                                 // do i have to write something...
+                                };
                             })
                             .catch((error) => res.status(500).json({ message: "Il y a un truc qui cloche" }));
                     });

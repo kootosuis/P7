@@ -43,7 +43,7 @@ exports.createShare = (req, res) => {
                     MediaMimetype: "image/png",
                     MediaSize: 29000,
                     MediaDescription: "La plume de l'écrivain",
-                    MediaUrl: `${req.protocol}://${req.get("host")}/07media/feather.png`, // le filename est ici fabriqué par multer
+                    MediaUrl: `${req.protocol}://${req.get("host")}/07media/feather.png`, // name + Date.now() + "." + extension
                     shareShareId: share.ShareId,
                 })
                     // })

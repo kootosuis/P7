@@ -1,5 +1,5 @@
-const Sequelize = require("sequelize");
 const sequelize = require("../01utils/DBconnect");
+const Sequelize = require("sequelize");
 
 const Share = sequelize.define("share", {
     // attributes
