@@ -30,7 +30,7 @@
                                                   class="label">Votre image, votre GIF</label>
                                         <input    class="input"
                                                   form="ShareToBePosted" 
-                                                  @input="checkForm"
+                                                  @input="checkForm()"
                                                   @change="uploadImage($event)"
                                                   type="file"
                                                   accept="image/png, image/jpg, image/jpeg, image/png, image/gif"
@@ -49,14 +49,15 @@
                                         <label    
                                                   for="ShareText" 
                                                   class="label">Votre texte</label>
-                                        <textarea class="bigtextarea textarea input"
+                                        <textarea id="ShareText"
+                                                  class="bigtextarea textarea input"
                                                   form="ShareToBePosted" 
-                                                  type="textarea"
-                                                  @input="checkForm"
-                                                 
+                                                  type="input"
+                                                  @keydown="checkForm()"
+                                                  @input="checkForm()"
                                                   placeholder= "..."
                                                   autofocus
-                                                  id="ShareText"
+                                                  
                                                   name="ShareText"
                                                   ></textarea>
                               </div>
@@ -110,11 +111,11 @@
           },
 
           checkForm() {
-                    if (document.getElementById("ShareText") || document.getElementById("Media")
+                    if (!document.getElementById("ShareText").value || !document.getElementById("Media")
                     ) {
-                    document.getElementById("ShareBtn").disabled = false;
+                    document.getElementById("ShareBtn").disabled = true;
                     }
-                    else document.getElementById("ShareBtn").disabled = true;
+                    else document.getElementById("ShareBtn").disabled = false;
           },
 
           uploadImage($event) {
