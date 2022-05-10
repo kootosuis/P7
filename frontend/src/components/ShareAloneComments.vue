@@ -30,19 +30,17 @@
                                                                                     for="CommentText" 
                                                                                     class="label">Votre commentaire</label>
                                                                           <textarea class="bigtextarea textarea input"
-                                                                                    form="CommentToBePosted" 
+                                                                                    form="CommentToBeCorrected" 
                                                                                     type="textarea"
-                                                                                    @input="checkForm"
-                                                                                  
+                                                                                    v-model="item.CommentText" 
                                                                                     placeholder= "..."
-                                                                                    autofocus
                                                                                     id="CommentText"
                                                                                     name="CommentText"></textarea>
                                                                 </div>
                                                                 
                                                                 <div class="btn-div">
                                                                           <button type="button" class="btn" @click="doNotModify()" id="CancelBtn">Annuler</button>
-                                                                          <button type="button" class="btn" @click="Comment()" id="CommentBtn" disabled>Commenter</button>
+                                                                          <button type="button" class="btn" @click="correctComment()" id="CommentBtn"   >Confirmer</button>
                                                                 </div>
                                                       </form>
                                             </div>
@@ -55,18 +53,18 @@
                                             <p> {{ item.user.UserFirstname }} {{ item.user.UserName }} / {{ item.user.UserDepartement }} / {{ item.user.UserRole }}</p>
                                             <p>{{ formatDate(item.updatedAt) }}</p> <!-- le commentateur du Share -->
                                             <p hidden>{{ item.commentCommentId }} </p>
-                                            <p hidden id="CommentOnACommentId">{{ item.CommentId }}</p>
+                                            <p  id="CommentOnACommentId">{{ item.CommentId }}</p>
                                           </div>
                                         </div>
       
                                       </div>
 
                                       <div class="btn-div">
-                                              <button v-show="item.userUserId==loggedUserId  || isAdmin" type="button" class="btn" @click="modifyComment()" id="modifyCommentBtn">Corriger</button>
-                                              <button v-show="item.userUserId==loggedUserId  || isAdmin" type="button" class="btn" @click="deleteComment()" id="deleteCommentBtn">Effacer</button>
+                                              <button v-show="item.userUserId==loggedUserId  || isAdmin===1" type="button" class="btn" @click="modifyComment()" id="modifyCommentBtn">Corriger</button>
+                                              <button v-show="item.userUserId==loggedUserId  || isAdmin===1" type="button" class="btn" @click="deleteComment()" id="deleteCommentBtn">Effacer</button>
                                       </div>
 
-                                      <PostACommentOnAComment v-if="item.userUserId!=loggedUserId || isAdmin == 1"/>
+                                      <PostACommentOnAComment v-if="item.userUserId!=loggedUserId || isAdmin===1"/>
                             </div>
                         </div>
 
@@ -135,20 +133,23 @@ export default {
             },
 
             correctComment(){
-                    const ShareToBeCorrected = document.getElementById("ShareToBeCorrected");
-                    const ShareId = new URL(window.location.href).hash.split("=")[1];
+                    
+                    const CommentToBeCorrected = document.getElementById("CommentToBeCorrected");
+                    console.log(CommentToBeCorrected)
+                    const CommentId = document.getElementById("CommentOnACommentId").textContent;
+                    
                     const Token = JSON.parse(sessionStorage.getItem("Token"));
-                    const Modify = new FormData(ShareToBeCorrected);
+                    const Modify = new FormData(CommentToBeCorrected);
 
-                    Modify.append('ShareId',ShareId)
+                    Modify.append('CommentId',CommentId)
 
 
                     //--- TEST ---- ///
-                    // for(var pair of Modify.entries()) {
-                    //   console.log(pair[0]+ ', '+ pair[1]);
-                    // }
+                    for(var pair of Modify.entries()) {
+                      console.log(pair[0]+ ', '+ pair[1]);
+                    }
 
-                    fetch(`http://localhost:3000/api/shares/${ShareId}`, {
+                    fetch(`http://localhost:3000/api/comments/${CommentId}`, {
                               method: 'PUT',
                               headers: {
                                   "Accept":"*/*",
@@ -159,10 +160,12 @@ export default {
                               mode : "cors"})
 
                     .then((response) => {
+                              
+                              console.log(Modify)
 
                               if (response.status == 201) { 
                                         this.success= true;
-                                        this.message = "Mise à jour effectuée.";
+                                        this.message = "Correction effectuée.";
                                         this.modifyForm = true;
                                         this.$router.push({ name: 'wall' });
                                         this.$router.go(0);
@@ -187,24 +190,24 @@ export default {
 
                           const  Token = JSON.parse(sessionStorage.getItem("Token"));
                           // const loggedUserId=JSON.parse(sessionStorage.getItem("UserId"))
-                          const ShareId = new URL(window.location.href).hash.split("=")[1];
-                          const Share = {
-                            "ShareId" : ShareId
+                          const CommentId = document.getElementById("CommentOnACommentId").textContent;
+                          const Comment = {
+                            "CommentId" : CommentId
                           }
 
-                          const deleteShare = confirm("Le commentaire et tous les commentaires associés vont être effacés")
+                          const deleteComment = confirm("Le commentaire et tous les commentaires associés vont être effacés")
 
-                          if (deleteShare){
-                            fetch(`http://localhost:3000/api/comments/${ShareId}`, {
+                          if (deleteComment){
+                            fetch(`http://localhost:3000/api/comments/${CommentId}`, {
                               method: 'DELETE',
                               headers: {"Content-Type": "application/json", 
                                         "Authorization": "Bearer " + Token
                               },
-                              body: JSON.stringify(Share),
+                              body: JSON.stringify(Comment),
                               mode : "cors"
                             })
                             .then(() => {
-                              alert("Share effacé !");
+                              alert("Commentaire effacé !");
                               setTimeout(this.$router.push({ name: 'wall' }), 3000);
                               this.$router.go(0);
                             })

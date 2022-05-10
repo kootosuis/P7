@@ -29,7 +29,6 @@
                                                   @input="checkForm"
                                                  
                                                   placeholder= "..."
-                                                  autofocus
                                                   id="CommentText"
                                                   name="CommentText"></textarea>
                               </div>

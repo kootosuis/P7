@@ -3,7 +3,7 @@
     import PageFooter from "@/components/PageFooter.vue"
 
 
-    // je ne comprends pas pourquo cela ne marche pas
+    // je ne comprends pas pourquoi cela ne marche pas
     // console.log("TEST" + process.env.VUE_APP_ADMINID)
 
     export default {

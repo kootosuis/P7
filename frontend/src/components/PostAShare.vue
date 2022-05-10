@@ -56,8 +56,6 @@
                                                   @keydown="checkForm()"
                                                   @input="checkForm()"
                                                   placeholder= "..."
-                                                  autofocus
-                                                  
                                                   name="ShareText"
                                                   ></textarea>
                               </div>

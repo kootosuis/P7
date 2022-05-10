@@ -130,7 +130,7 @@
                               </div>
 
                               <!--L'habilitation -->
-                              <div class="formLine" v-if="isAdmin">
+                              <div class="formLine" v-if="isAdmin===1">
                                         <label    
                                                   for="UserHabilitation" 
                                                   class="label">Habilitation</label>

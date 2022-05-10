@@ -61,8 +61,6 @@
                                                           <textarea class="bigtextarea textarea input"
                                                                     form="ShareToBeCorrected" 
                                                                     type="textarea"
-                                                                    
-                                                                    autofocus
                                                                     id="ShareText"
                                                                     name="ShareText"
                                                                     v-model="ShareText"
@@ -84,7 +82,7 @@
                                         <div class="card__info--complement--firstline">
                                           
                                           <p> {{ UserFirstname}} {{ UserName}} / {{ UserDepartement}} / {{ UserRole}} </p>
-                                          <p v-if="isAdmin"><router-link :to="`/modifyByAdmin/${ userUserId }`">Accéder aux données utilisateur.</router-link></p>
+                                          <p v-if="isAdmin===1"><router-link :to="`/modifyByAdmin/${ userUserId }`">Accéder aux données utilisateur.</router-link></p>
                                           <p hidden>{{ userUserId }}</p>
                                           <p>{{ formatDate(updatedAt) }}</p>
                                           <p>{{ apiLength }} commentaires</p>
@@ -94,8 +92,8 @@
 
                                     <!-- le bouton pour modifier le texte du share  ou l'effacer quand on en est l'auteur-->
                                     <div id="modifyOrDelete" class="btn-div">
-                                          <button v-show="userUserId===loggedUserId || isAdmin" type="button" class="btn" @click="GoToCorrectShare()" id="modifyShareBtn">Corriger</button>
-                                          <button v-show="userUserId===loggedUserId || isAdmin" type="button" class="btn" @click="deleteShare()" id="deleteShareBtn">Effacer</button>
+                                          <button v-if="userUserId===loggedUserId || isAdmin===1" type="button" class="btn" @click="GoToCorrectShare()" id="modifyShareBtn">Corriger</button>
+                                          <button v-if="userUserId===loggedUserId || isAdmin===1" type="button" class="btn" @click="deleteShare()" id="deleteShareBtn">Effacer</button>
                                     </div>    
                                 </div>
 
