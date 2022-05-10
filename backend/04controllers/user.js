@@ -61,14 +61,16 @@ exports.modifySignup = (req, res, next) => {
     const loggedUserId = decodedToken.UserId;
     const RBUP = req.body.UserPassword;
 
+    const accountId = req.params.id;
+
     if (!RBUP) {
-        User.findOne({ where: { UserId: loggedUserId } })
+        User.findOne({ where: { UserId: accountId } })
             .then((oldInfo) => {
                 User.update(
                     {
                         ...req.body,
                     },
-                    { where: { UserId: loggedUserId } }
+                    { where: { UserId: accountId } }
                 )
                     .then(() => res.status(201).json({ message: "Informations mises à jour" }))
                     .catch((err) => res.status(400).json(err));
@@ -79,7 +81,7 @@ exports.modifySignup = (req, res, next) => {
             error: "Le mot de passe doit contenir au minimum 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial",
         });
     } else if (RBUP && validator.isStrongPassword(RBUP)) {
-        User.findOne({ where: { UserId: loggedUserId } })
+        User.findOne({ where: { UserId: accountId } })
             .then((oldInfo) => {
                 bcrypt.compare(RBUP, oldInfo.UserPassword).then((valid) => {
                     if (valid) {
@@ -93,7 +95,7 @@ exports.modifySignup = (req, res, next) => {
                                         ...req.body,
                                         UserPassword: hash,
                                     },
-                                    { where: { UserId: loggedUserId } }
+                                    { where: { UserId: accountId } }
                                 )
                                     .then(() => res.status(201).json({ message: "Mot de passe modifié avec succès" }))
                                     .catch((err) => res.status(400).json(err));
@@ -106,7 +108,6 @@ exports.modifySignup = (req, res, next) => {
         res.status(502).json({ error });
     }
 };
-
 
 ////----- DELETE-----//
 ////---------------cette version fonctionne --------------//////
@@ -152,16 +153,17 @@ exports.delete = (req, res) => {
                         Media.findOne({ raw: true, where: { shareShareId: item.ShareId } }) //
                             .then((media) => {
                                 const filename = media.MediaUrl.split("/07media/")[1];
-                                if (filename != 'feather.png')
-                                {fs.unlink(`07media/${filename}`, () => {
-                                    try {
-                                        () => res.status(200).json({ message: "Fichier supprimé !" });
-                                    } catch {
-                                        (error) => res.status(400).json({ error });
-                                    }
-                                })}else{
-                                 // do i have to write something...
-                                };
+                                if (filename != "feather.png") {
+                                    fs.unlink(`07media/${filename}`, () => {
+                                        try {
+                                            () => res.status(200).json({ message: "Fichier supprimé !" });
+                                        } catch {
+                                            (error) => res.status(400).json({ error });
+                                        }
+                                    });
+                                } else {
+                                    // do i have to write something...
+                                }
                             })
                             .catch((error) => res.status(500).json({ message: "Il y a un truc qui cloche" }));
                     });
@@ -183,10 +185,9 @@ exports.getOneUser = (req, res) => {
 
     User.findOne({ where: { UserId: paramsId } })
         .then((user) => {
-           // delete user.dataValues.UserPassword, // le password ne sera pas transmis au front
-            
+            // delete user.dataValues.UserPassword, // le password ne sera pas transmis au front
 
-                res.status(200).json(user);
+            res.status(200).json(user);
         })
         .catch((error) => res.status(404).json({ error }));
 };
@@ -204,11 +205,10 @@ exports.getAllUsers = (req, res) => {
         .catch((error) => res.status(404).json({ error }));
 };
 
-
 // //----- GET ALL ADMINs//
 
 exports.getAdmins = (req, res) => {
-    User.findAll({where : { UserHabilitation : 1} })
+    User.findAll({ where: { UserHabilitation: 1 } })
         .then((users) => {
             users.forEach((item, index) => {
                 // le password ne sera pas transmis au front

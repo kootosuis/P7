@@ -76,7 +76,7 @@
                     </form>
 
                     <div class="add-div" v-show="success===false">
-                      <p id="erreur"> Echec du partage : {{message}} </p>
+                      <p id="erreur"> Echec du partage : {{ message }} </p>
                     </div>
 
           </div>

@@ -3,7 +3,7 @@
       <div class = "formSection">
 
           <div class="please" >
-            <h2> Vous pouvez mettre à jour les données de votre compte </h2>
+            <h2> Vous pouvez mettre à jour les données de {{UserFirstname}} {{UserName}} </h2>
           </div>
 
           <div class = "formDiv">
@@ -11,6 +11,8 @@
                               method="PUT" 
                               name="form" 
                               id="form" 
+                              @keydown = "checkForm"
+                              @input="checkform"
 
                               @submit = "modifySignup">
                              
@@ -21,7 +23,7 @@
                                                   class="label">Nom <span class="asterisque">*</span></label>
                                         <input    class="input"
                                                   v-model="UserName" 
-                                                  @input = "checkForm"    
+                                                    
                                                   type="text" 
                                                   placeholder="Entrez votre nom." 
                                                   id="UserName" 
@@ -36,7 +38,7 @@
                                                   class="label">Prénom <span class="asterisque">*</span></label>
                                         <input    class="input"
                                                   v-model="UserFirstname" 
-                                                  @input = "checkForm"  
+                                                  
                                                   type="text" 
                                                   placeholder="Entrez votre prénom." 
                                                   id="UserFirstname" 
@@ -51,7 +53,7 @@
                                                   class="label">Email <span class="asterisque">*</span></label>
                                         <input    class="input"
                                                   v-model="UserEmail" 
-                                                  @input = "checkForm"    
+                                                     
                                                   type="email" 
                                                   placeholder="Entrez une adresse mail valide." 
                                                   id="UserEmail"
@@ -115,7 +117,7 @@
                                                   class="label">Mot de passe <span class="asterisque">*</span></label>
                                         <input    class="input"
                                                   v-model="UserPassword" 
-                                                  @input = "checkForm"    
+                                                     
                                                   type="password" 
                                                   id="UserPassword" 
                                                   name="UserPassword" 
@@ -163,14 +165,14 @@
                     <!-- A FAIRE : implementer des components modaux -->
 
                     <div class="add-div" v-show="success===true">
-                      <p id="erreur" > Tout va bien : {{message}} </p>
+                      <p id="erreur" > Tout va bien : {{ message }} </p>
                     </div>
                     <div class="add-div" v-show="success===false">
-                      <p id="erreur" > Echec de la mise à jour : {{message}} </p>
+                      <p id="erreur" > Echec de la mise à jour : {{ message }} </p>
                     </div>
 
                     <div id="no-account" class="add-div">
-                      <p> Vous pouvez si vous le souhaitez, effacer votre compte ainsi que tous les partages et commentaires qui y sont liés</p>
+                      <p> Vous pouvez si vous le souhaitez, effacer ce compte ainsi que tous les partages et commentaires qui y sont liés</p>
                       <div class="btn-div"><router-link @click="deleteAccount()" class="btn" to="../deconnect">Effacer</router-link> </div>
                     </div>
 
@@ -257,7 +259,8 @@ export default {
             this.UserPassword = res.UserPassword;
             this.UserHabilitation=res.UserHabilitation
           })
-          .catch( (error) => { alert(error);
+          .catch( (error) => { alert(error)
+           this.message = error;
           });
         },
 
@@ -285,9 +288,13 @@ export default {
 
       const Token = JSON.parse(sessionStorage.getItem("Token"));
 
+      const  UserId = new URL(window.location.href).hash.split("/modifyByAdmin/")[1];
+
       const UserName = document.getElementById("UserName").value
       const UserFirstname = document.getElementById("UserFirstname").value
+      alert('tata')
       const UserEmail = document.getElementById("UserEmail").value
+      alert('toto')
       const UserPresentation = document.getElementById("UserPresentation").value
       const UserDepartement= document.getElementById("UserDepartement").value
       const UserRole = document.getElementById("UserRole").value;
@@ -304,7 +311,7 @@ export default {
                      "UserHabilitation" : UserHabilitation,
       }
 
-      fetch("http://localhost:3000/api/auth/modifySignup", {
+      fetch(`http://localhost:3000/api/auth/modifySignup/${UserId}`, {
           method: 'PUT',
           body: JSON.stringify(User),
           headers: {"Content-Type": "application/json", 
@@ -340,7 +347,7 @@ export default {
     
     deleteAccount(){
 
-      const  UserId = JSON.parse(sessionStorage.getItem("UserId"));
+      const  UserId = new URL(window.location.href).hash.split("/modifyByAdmin/")[1];
       const  Token = JSON.parse(sessionStorage.getItem("Token"));
 
       fetch(`http://localhost:3000/api/auth/delete/${UserId}`, {
@@ -350,9 +357,7 @@ export default {
            },
           mode :"cors"
       }).then(
-        sessionStorage.removeItem("UserId"),
-        sessionStorage.removeItem("Token"),
-        sessionStorage.removeItem("isAdmin")
+        //à faire ? retour vers le forum
       )
     }
   }

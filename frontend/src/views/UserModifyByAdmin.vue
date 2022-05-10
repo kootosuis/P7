@@ -15,7 +15,7 @@
 	import NavBar from "@/components/NavBar.vue"
 
 	export default {
-		name: "UserModify",
+		name: "UserModifyByAdmin",
 		components: {
 			NavBar,
 			UserModifyCompByAdmin, 	

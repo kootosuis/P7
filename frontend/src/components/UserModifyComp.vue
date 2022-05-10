@@ -131,7 +131,7 @@
                                         <label    
                                                   for="UserHabilitation" 
                                                   class="label">Habilitation</label>
-                                        <div      v-if="isAdmin && AdminLength"
+                                        <div      v-if="AdminLength"
                                                   class="input">
                                                   <select   
                                                             id="UserHabilitation" 
@@ -141,8 +141,8 @@
                                                                       <option value=0>sans habilitation à administrer</option>                  
                                                   </select>
                                         </div>
-                                        <div      v-if="isAdmin && AdminLength">
-                                            <p>Assurez vous de l'existence de deux autres animateurs avant de modifier votre habilitation</p>
+                                        <div      v-if="AdminLength">
+                                            <p>Assurez-vous de l'existence de deux autres administrateurs avant de modifier votre propre habilitation.</p>
                                         </div>
                               </div>
 
@@ -168,7 +168,7 @@
 
 
                     <div id="no-account" class="add-div">
-                      <p> Vous pouvez si vous le souhaitez, effacer votre compte ainsi que tous les partages et commentaires qui y sont liés</p>
+                      <p> Vous pouvez si vous le souhaitez, effacer votre compte ainsi que tous les partages et commentaires qui lui sont liés.</p>
                       <div class="btn-div"><router-link @click="deleteAccount()" class="btn" to="../deconnect">Effacer</router-link> </div>
                     </div>
 
@@ -317,7 +317,7 @@ export default {
 
                                 console.log(res);
                                     this.success= true;
-                                    this.message =  "mise à jour effectuée"
+                                    this.message =  "mise à jour effectuée";
                                     sessionStorage.setItem("isAdmin", JSON.stringify(response.UserHabilitation));
                                     setTimeout(() => this.$router.push({ name: 'wall' }), 4000)
                               })

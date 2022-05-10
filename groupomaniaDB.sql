@@ -68,6 +68,6 @@ CREATE TABLE `comments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO users (UserId, UserEmail, UserName, UserFirstname, UserDepartement, UserHabilitation, createdAt, updatedAt, UserPassword)
-VALUES ('0b1720d9-aaaa-4bd9-8db7-1fe6a25da328' , 'admin@admin.ad', 'admin', 'admin', 'administration', true, '2022-02-02 02:02:02', '2022-02-02 02:02:02', '$2b$10$GnWcYg7yjxLXIoPXh0/tZOWPmKqZjxyWjBmxRw.T2A3Y2l2CuFfMW');
+VALUES ('0b1720d9-aaaa-4bd9-8db7-1fe6a25da328' , 'admin@admin.ad', 'adminONE', 'admin', 'administration', true, '2022-02-02 02:02:02', '2022-02-02 02:02:02', '$2b$10$SpxKSxnol4NM/oPZ/zu5O.N8IITbR5nqYnxZPFz5QeptQRnkVMcoK');
 INSERT INTO users (UserId, UserEmail, UserName, UserFirstname, UserDepartement, UserHabilitation, createdAt, updatedAt, UserPassword)
-VALUES ('0b1720d9-bbbb-4bd9-8db7-1fe6a25da328' , 'admin2@admin.ad', 'admin', 'admin', 'administration', true, '2022-02-02 01:01:01', '2022-02-02 01:01:01','$2b$10$GnWcYg7yjxLXIoPXh0/tZOWPmKqZjxyWjBmxRw.T2A3Y2l2CuFfMW');
+VALUES ('0b1720d9-bbbb-4bd9-8db7-1fe6a25da328' , 'admin2@admin.ad', 'adminTWO', 'admin', 'administration', true, '2022-02-02 01:01:01', '2022-02-02 01:01:01','$2b$10$SpxKSxnol4NM/oPZ/zu5O.N8IITbR5nqYnxZPFz5QeptQRnkVMcoK');
