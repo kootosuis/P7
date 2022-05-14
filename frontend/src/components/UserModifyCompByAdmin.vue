@@ -12,20 +12,21 @@
                               name="form" 
                               id="form" 
                               @keydown = "checkForm"
-                              @input="checkform"
+                              @input="checkForm"
 
                               @submit = "modifySignup">
                              
                               <!--Le Nom-->
-                              <div class="formLine">
+                             <div class="formLine">
                                         <label
                                                   for="UserName" 
                                                   class="label">Nom <span class="asterisque">*</span></label>
                                         <input    class="input"
-                                                  v-model="UserName" 
-                                                    
+                                                  v-model="UserName"
+                                                  @keydown="checkForm"
+                                                  @input = "checkForm"    
                                                   type="text" 
-                                                  placeholder="Entrez votre nom." 
+                                                  placeholder="Entrez le nom de l'utilisateur." 
                                                   id="UserName" 
                                                   name="UserName" 
                                                   required="required">
@@ -37,8 +38,9 @@
                                                   for="UserFirstname" 
                                                   class="label">Prénom <span class="asterisque">*</span></label>
                                         <input    class="input"
-                                                  v-model="UserFirstname" 
-                                                  
+                                                  v-model="UserFirstname"
+                                                  @keydown="checkForm"
+                                                  @input = "checkForm"  
                                                   type="text" 
                                                   placeholder="Entrez votre prénom." 
                                                   id="UserFirstname" 
@@ -52,8 +54,9 @@
                                                   for="UserEmail" 
                                                   class="label">Email <span class="asterisque">*</span></label>
                                         <input    class="input"
-                                                  v-model="UserEmail" 
-                                                     
+                                                  v-model="UserEmail"
+                                                  @keydown="checkForm"
+                                                  @input = "checkForm"    
                                                   type="email" 
                                                   placeholder="Entrez une adresse mail valide." 
                                                   id="UserEmail"
@@ -67,7 +70,9 @@
                                                   for="UserPresentation" 
                                                   class="label">Présentation</label>
                                         <textarea   class="smalltextarea input"
-                                                  v-model="UserPresentation" 
+                                                  v-model="UserPresentation"
+                                                  @keydown="checkForm"
+                                                  @input = "checkForm"  
                                                   type="textarea"
                                                   placeholder="Si vous le souhaitez, vous pouvez vous présenter..." 
                                                   id="UserPresentation" 
@@ -84,7 +89,8 @@
                                           <select class="input"
                                                   id="UserDepartement" 
                                                   name="UserDepartement"
-                                                  v-model="UserDepartement"  
+                                                  v-model="UserDepartement"
+                                                  @input = "checkForm" 
                                                   required="required">
                                                     <option value="...">...</option>
                                                     <option value="communication">communication</option>
@@ -97,13 +103,15 @@
                                           </select>
                               </div>
 
-                              <!--Le Role-->
+                              <!--Le Rôle-->
                               <div class="formLine">
                                         <label    
                                         for="UserRole" 
                                                   class="label">Rôle</label>
-                                        <textarea    class="smalltextarea input"
-                                                  v-model="UserRole" 
+                                        <textarea class="smalltextarea input"
+                                                  v-model="UserRole"
+                                                  @keydown="checkForm"
+                                                  @input = "checkForm"  
                                                   type="textarea" 
                                                   placeholder="Quel est votre rôle dans l'entreprise ?" 
                                                   id="UserRole" 
@@ -116,41 +124,50 @@
                                                   for="UserPassword" 
                                                   class="label">Mot de passe <span class="asterisque">*</span></label>
                                         <input    class="input"
-                                                  v-model="UserPassword" 
-                                                     
-                                                  type="password" 
+                                                  placeholder=""
+                                                  @keydown="checkForm"
+                                                  @input = "checkForm"    
+                                                  type="password"
                                                   id="UserPassword" 
                                                   name="UserPassword" 
-                                                  maxlength="30">
+                                                  pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$">
                               </div>
+                              
                               <div class="formLine formLineTop">
                                 <div class="label"></div>
-                                <p class="hint input"> Vous pouvez changer de mot de passe.<br/><br/>
+                                <p class="hint input"> N'oubliez pas de transmettre le mot de passe à l'utilisateur<br/><br/>
                                                        Le mot de passe doit contenir au minimum 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial.</p>
                               </div>
 
                               <!--L'habilitation -->
-                              <div class="formLine" v-if="isAdmin===1">
+                              <div hidden>
+                                <p id="UserHabilitation"  >{{ UserHabilitation }} </p>
+                              </div>
+
+                              <div class="formLine">
                                         <label    
                                                   for="UserHabilitation" 
                                                   class="label">Habilitation</label>
-                                        <div     
-                                                  class="input">
-                                                  <select   v-if="!UserHabilitation"
-                                                            id="UserHabilitation" 
-                                                            name="UserHabilitation" 
+                                        <select   v-if="UserHabilitation==0"
+                                                            class="input"
+                                                            id="changedUserHabilitation" 
+                                                            name="UserHabilitation"
+                                                            @input = "checkForm"  
                                                             required="required">
                                                                       <option value=0>sans habilitation à administrer</option>  
                                                                       <option value=1>avec habilitation à administrer</option>
-                                                  </select>  
-                                                  <select   v-if="UserHabilitation"
-                                                            id="UserHabilitation" 
-                                                            name="UserHabilitation" 
+                                        </select>  
+                                        <select   v-if="UserHabilitation==1 && AdminLength"
+                                                            class="input"
+                                                            id="changedUserHabilitation" 
+                                                            name="UserHabilitation"
+                                                            @input = "checkForm"  
                                                             required="required">
                                                                       <option value=1>avec habilitation à administrer</option>
-                                                                      <option v-if="AdminLength" value=0>sans habilitation à administrer</option>  
-                                                  </select>                                                       
-                                        </div>
+                                                                      <option value=0>sans habilitation à administrer</option>  
+                                        </select>
+                                        <p  v-if="UserHabilitation==1 && !AdminLength"  class="hint input"> Vous pourrez modifier l'habilitation <br/>
+                                                       lorsqu'il y aura plus de deux autres administrateurs.</p>          
                               </div>
 
                               <div class="asterisque" style="text-align:right"> * Champs requis </div>
@@ -159,7 +176,6 @@
                                         <button type="button" class="btn" @click="goBacKToForum()" id="CancelBtn">Annuler</button>
                                         <input type="submit"  class="btn" id="UserSignupBtn" value="Mettre à jour" disabled>           
                               </div>
-       
                     </form>
 
                     <!-- A FAIRE : implementer des components modaux -->
@@ -171,10 +187,17 @@
                       <p id="erreur" > Echec de la mise à jour : {{ message }} </p>
                     </div>
 
+                    <!--effacement du compte--> 
                     <div id="no-account" class="add-div">
                       <p> Vous pouvez si vous le souhaitez, effacer ce compte ainsi que tous les partages et commentaires qui y sont liés</p>
                       <div class="btn-div"><router-link @click="deleteAccount()" class="btn" to="../deconnect">Effacer</router-link> </div>
                     </div>
+
+
+
+
+
+
 
           </div>
        </div>
@@ -193,7 +216,7 @@ export default {
     UserPresentation:"",
     UserDepartement:"", 
     UserRole:"", 
-    UserPassword:"",
+    // UserPassword:"",
     UserHabilitation:"",     
     success:"",
     message :"", //message d'erreur
@@ -201,13 +224,12 @@ export default {
     AdminLength : {
       type: Boolean,
       default : false
-    },
+      },
 
     isAdmin: {
       type: Boolean,
       default : false
-    }
-
+      }
     }
   },
 
@@ -256,7 +278,7 @@ export default {
             this.UserPresentation = res.UserPresentation;
             this.UserDepartement = res.UserDepartement;
             this.UserRole = res.UserRole;
-            this.UserPassword = res.UserPassword;
+            // this.UserPassword = res.UserPassword;
             this.UserHabilitation=res.UserHabilitation
           })
           .catch( (error) => { alert(error)
@@ -268,15 +290,23 @@ export default {
 
     checkForm() {
 
-      if (document.getElementById("UserName").checkValidity() 
-      && document.getElementById("UserFirstname").checkValidity() 
-      && document.getElementById("UserEmail").checkValidity()
-      && document.getElementById("UserPassword").checkValidity()
-      ) {
-        document.getElementById("UserSignupBtn").disabled = false
+      if (document.getElementById("UserPassword").value){
+          if (document.getElementById("UserName").checkValidity() 
+          && document.getElementById("UserFirstname").checkValidity() 
+          && document.getElementById("UserEmail").checkValidity()
+          && document.getElementById("UserPassword").checkValidity()) 
+               { document.getElementById("UserSignupBtn").disabled = false
+          }else{ document.getElementById("UserSignupBtn").disabled = true;
+          }
+      } else {
+        if (document.getElementById("UserName").checkValidity() 
+          && document.getElementById("UserFirstname").checkValidity() 
+          && document.getElementById("UserEmail").checkValidity()) 
+               { document.getElementById("UserSignupBtn").disabled = false
+          }else{ document.getElementById("UserSignupBtn").disabled = true;
+          }
       }
-      else {document.getElementById("UserSignupBtn").disabled = true;
-    }},
+    },
     
     goBacKToForum(){
       this.$router.push({ name: 'wall' })
@@ -287,19 +317,17 @@ export default {
       e.preventDefault();
 
       const Token = JSON.parse(sessionStorage.getItem("Token"));
-
       const  UserId = new URL(window.location.href).hash.split("/modifyByAdmin/")[1];
 
-      const UserName = document.getElementById("UserName").value
+       if(document.getElementById("UserPassword").value){
+        const UserName = document.getElementById("UserName").value
       const UserFirstname = document.getElementById("UserFirstname").value
-      alert('tata')
       const UserEmail = document.getElementById("UserEmail").value
-      alert('toto')
       const UserPresentation = document.getElementById("UserPresentation").value
       const UserDepartement= document.getElementById("UserDepartement").value
       const UserRole = document.getElementById("UserRole").value;
       const UserPassword = document.getElementById("UserPassword").value;
-      const UserHabilitation = document.getElementById("UserHabilitation").value;
+      const UserHabilitation = document.getElementById("changedUserHabilitation").value ? document.getElementById("changedUserHabilitation").value : document.getElementById("UserHabilitation").value
 
       const User = { "UserName": UserName,
                      "UserFirstname": UserFirstname,
@@ -307,7 +335,7 @@ export default {
                      "UserDepartement": UserDepartement,
                      "UserPresentation": UserPresentation,
                      "UserRole": UserRole,
-                      "UserPassword": UserPassword,
+                     "UserPassword": UserPassword,
                      "UserHabilitation" : UserHabilitation,
       }
 
@@ -326,8 +354,8 @@ export default {
 
                                 console.log(res);
                                     this.success= true;
-                                    this.message =  "Mise à jour effectuée"
-                                    sessionStorage.setItem("isAdmin", JSON.stringify(response.UserHabilitation));
+                                    this.message =  "mise à jour effectuée";
+                                    // sessionStorage.setItem("isAdmin", JSON.stringify(response.UserHabilitation));
                                     setTimeout(() => this.$router.push({ name: 'wall' }), 4000)
                               })
                     } else {
@@ -342,7 +370,58 @@ export default {
       .catch (() => {
               this.success= false;
               this.message = `Le serveur ne répond pas ! Veuillez réessayer ultérieurement`;
-      })         
+      }) 
+      }  else{
+        const UserName = document.getElementById("UserName").value
+      const UserFirstname = document.getElementById("UserFirstname").value
+      const UserEmail = document.getElementById("UserEmail").value
+      const UserPresentation = document.getElementById("UserPresentation").value
+      const UserDepartement= document.getElementById("UserDepartement").value
+      const UserRole = document.getElementById("UserRole").value;
+      const UserHabilitation = document.getElementById("changedUserHabilitation").value ? document.getElementById("changedUserHabilitation").value : document.getElementById("UserHabilitation").value
+
+      const User = { "UserName": UserName,
+                     "UserFirstname": UserFirstname,
+                     "UserEmail": UserEmail,
+                     "UserDepartement": UserDepartement,
+                     "UserPresentation": UserPresentation,
+                     "UserRole": UserRole,
+                     "UserHabilitation" : UserHabilitation,
+      }
+
+      fetch(`http://localhost:3000/api/auth/modifySignup/${UserId}`, {
+          method: 'PUT',
+          body: JSON.stringify(User),
+          headers: {"Content-Type": "application/json", 
+                    "Authorization": "Bearer " + Token
+           },
+           mode : "cors"
+          })
+      .then((response) => {
+                    if (response.status == 201) { 
+                              response.json()
+                              .then((res) => {
+
+                                console.log(res);
+                                    this.success= true;
+                                    this.message =  "mise à jour effectuée";
+                                    // sessionStorage.setItem("isAdmin", JSON.stringify(response.UserHabilitation));
+                                    setTimeout(() => this.$router.push({ name: 'wall' }), 4000)
+                              })
+                    } else {
+                              response.json ()
+                              .then ((json) => {
+                              this.success= false;
+                              console.log(json);
+                              this.message = json.error;
+                              })
+                    }
+       })
+      .catch (() => {
+              this.success= false;
+              this.message = `Le serveur ne répond pas ! Veuillez réessayer ultérieurement`;
+      }) 
+      }      
     },
     
     deleteAccount(){
@@ -357,7 +436,11 @@ export default {
            },
           mode :"cors"
       }).then(
-        //à faire ? retour vers le forum
+
+
+
+        alert('Compte supprimé'), 
+        setTimeout(() => this.$router.push({ name: 'wall' }), 4000)
       )
     }
   }

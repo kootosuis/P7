@@ -57,7 +57,7 @@
 
           </div>
 
-          <!--Le Role-->
+          <!--Le Rôle-->
           <div class="formLine">
             <label for="UserRole" class="label">Rôle</label>
             <textarea class="smalltextarea input" type="textarea" placeholder="Quel est votre rôle dans l'entreprise ?"
@@ -68,8 +68,13 @@
           <div class="formLine">
             <label for="UserPassword" class="label">Mot de passe <span class="asterisque">*</span></label>
 
-            <input class="input" @input="checkForm" type="text" placeholder="N'oubliez pas de noter votre mot de passe."
-              id="UserPassword" name="UserPassword" required="required" maxlength="30">
+            <input class="input" 
+                   @keydown="checkForm"
+                   @input = "checkForm"    
+                   type="password" 
+                   placeholder="N'oubliez pas de noter votre mot de passe."
+                   id="UserPassword" name="UserPassword" required="required"
+                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$">
           </div>
 
           <!-- Avertissement -->

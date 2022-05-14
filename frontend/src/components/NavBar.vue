@@ -15,6 +15,7 @@
                     <li v-show="!token"><router-link to="/signup">S'inscrire</router-link></li>
                     <li v-show="!token"><router-link to="/login">S'authentifier</router-link></li>
                     <li v-show="token" ><router-link to="/modify">Gérér son compte</router-link></li>
+                    <li v-show="token && isAdmin" ><router-link to="/list">Comptes utilisateurs</router-link></li>
                     <li v-show="token" ><router-link @click="logout()" to="/deconnect">Se déconnecter</router-link></li>
                 </ul>
 
@@ -24,7 +25,7 @@
         </div>
         <div>
                   <p v-show="token" id="authentification"> 
-                      Vous êtes authentifié en tant que {{  UserFirstname }} {{  UserName  }}
+                      Vous êtes authentifié en tant que {{  UserFirstname }} {{  UserName  }}.
                   </p>
         </div>
     </nav>
@@ -33,12 +34,18 @@
 
 <style lang="scss" scoped>
 
-#authentification {
+#authentification, #accessToList{
     font-size : 12px;
     font-style : italic;
     text-align: center;
     background-color: #fed7d7;
 }
+// #accessToList {
+//     font-size : 1rem;
+//     font-style : bold;
+//     text-align: center;
+//     background-color: #fed7d7;
+// }
 
 </style>
 
@@ -52,6 +59,10 @@ export default {
           token: "",
           UserFirstname: "",
           UserName:"",
+          isAdmin :{
+              type: Boolean,
+              default : false
+          }
     }},
     methods : {
 
@@ -70,6 +81,7 @@ export default {
             this.token = JSON.parse(sessionStorage.getItem("Token"));
             const  UserId = JSON.parse(sessionStorage.getItem("UserId"));
             const  Token = JSON.parse(sessionStorage.getItem("Token"));
+            this.isAdmin = sessionStorage.getItem("isAdmin");
 
             fetch(`http://localhost:3000/api/auth/${UserId}`, {
             method: 'GET',

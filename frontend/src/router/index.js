@@ -5,6 +5,7 @@ import UserSignUp from "../views/UserSignUp.vue";
 import UserLogin from "../views/UserLogin.vue";
 import UserModify from "../views/UserModify.vue";
 import UserModifyByAdmin from "../views/UserModifyByAdmin.vue";
+import UsersList from "../views/UsersList.vue";
 
 import UserDeconnect from "../views/UserDeconnect.vue";
 import PostedShares from "../views/PostedShares.vue";
@@ -44,6 +45,12 @@ const routes = [
         path: "/modifyByAdmin/:id",
         name: "modifyByAdmin",
         component: UserModifyByAdmin,
+    },
+
+    {
+        path: "/list",
+        name: "list",
+        component: UsersList,
     },
 
     {

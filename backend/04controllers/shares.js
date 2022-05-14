@@ -8,7 +8,7 @@ const fs = require("fs");
 
 exports.createShare = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
+    const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
 
     const SharedText = req.body.ShareText ? req.body.ShareText : "Sans commentaire";
@@ -58,7 +58,7 @@ exports.createShare = (req, res) => {
 ///--- je n'implémente pas le changement d'image... le cas échéant l'utilisateur devra effacer son post ------/////
 exports.updateShare = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
+    const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
     const paramsId = req.body.ShareId; // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
@@ -79,7 +79,7 @@ exports.updateShare = (req, res) => {
 
 exports.deleteShare = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
+    const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
     const adminId = process.env.ADMINID; // comment définir autrement le adminId
 
@@ -130,9 +130,6 @@ exports.getAllShare = (req, res) => {
         .then((users) => res.status(200).json(users))
         .catch((error) => res.status(404).json({ error }));
 };
-
-
-
 
 //---------------------- PROJET A COMPLETER--------------------------//
 //----- LIKE DISLIKE (il faudrait ajouter une colonne dans la table commentaire ou dans la table share)

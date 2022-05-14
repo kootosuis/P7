@@ -29,7 +29,7 @@
                                             <div class=card__info--complement>
                                                 <div class="card__info--complement--adress ">
                                                     <p> {{item.user.UserFirstname}} {{item.user.UserName}}</p>
-                                                    <p> Service : {{item.user.UserDepartement}} <br/> Role : {{item.user.UserRole}}</p>
+                                                    <p> Service : {{item.user.UserDepartement}} <br/> Rôle : {{item.user.UserRole}}</p>
                                                     <p hidden>{{ item.userUserId }}</p>
                                                     <p> {{item.comments.length }} commentaire<x v-if="item.comments.length>1">s</x></p>
                                                     <p>{{ formatDate(item.updatedAt) }}</p>

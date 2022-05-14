@@ -5,12 +5,11 @@ const Comment = require("../06models/comment");
 
 exports.createComment = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
+    const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
 
     if (req.body) {
         Comment.create({
-
             CommentText: req.body.CommentText,
             userUserId: loggedUserId,
             shareShareId: req.body.shareShareId,
@@ -25,7 +24,7 @@ exports.createComment = (req, res) => {
 
 exports.updateComment = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
+    const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
     const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
@@ -46,7 +45,7 @@ exports.updateComment = (req, res) => {
 
 exports.deleteComment = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
+    const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
     const adminId = process.env.ADMINID; // comment définir autrement le adminId
 
@@ -68,7 +67,6 @@ exports.deleteComment = (req, res) => {
 };
 
 exports.getAllComments = (req, res) => {
-
     const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
     Comment.findAll({ where: { shareShareId: paramsId }, include: [User], order: [["updatedAt", "DESC"]] })

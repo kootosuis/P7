@@ -30,7 +30,7 @@
                                                   class="label">Votre image, votre GIF</label>
                                         <input    class="input"
                                                   form="ShareToBePosted" 
-                                                  @input="checkForm()"
+                                                  @input="checkForm"
                                                   @change="uploadImage($event)"
                                                   type="file"
                                                   accept="image/png, image/jpg, image/jpeg, image/png, image/gif"
@@ -53,8 +53,8 @@
                                                   class="bigtextarea textarea input"
                                                   form="ShareToBePosted" 
                                                   type="input"
-                                                  @keydown="checkForm()"
-                                                  @input="checkForm()"
+                                                  @keydown="checkForm"
+                                                  @input="checkForm"
                                                   placeholder= "..."
                                                   name="ShareText"
                                                   ></textarea>

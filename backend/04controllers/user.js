@@ -46,7 +46,7 @@ exports.login = (req, res, next) => {
                     res.status(200).json({
                         UserId: inlogger.UserId,
                         UserHabilitation: inlogger.UserHabilitation,
-                        token: jwt.sign({ UserId: inlogger.UserId }, process.env.SECRET_TOKEN, { expiresIn: "12h" }),
+                        token: jwt.sign({ UserId: inlogger.UserId }, process.env.SECRET_JWT_KEY, { expiresIn: "12h" }),
                         message: "Login validé !",
                     });
                 })
@@ -57,7 +57,7 @@ exports.login = (req, res, next) => {
 ////----- MODIFY-----//
 exports.modifySignup = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
+    const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
     const RBUP = req.body.UserPassword;
 
@@ -113,7 +113,7 @@ exports.modifySignup = (req, res, next) => {
 ////---------------cette version fonctionne --------------//////
 // exports.delete = (req, res) => {
 //     const token = req.headers.authorization.split(" ")[1];
-//     const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
+//     const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
 //     const loggedUserId = decodedToken.UserId;
 //     const adminId = process.env.ADMINID; // comment définir autrement le adminId ????
 
@@ -133,7 +133,7 @@ exports.modifySignup = (req, res, next) => {
 /////---------------cette version fonctionne aussi et permet de se débarasser des média liés aux shares !!!!!!! --------------//////
 exports.delete = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
+    const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
     const adminId = process.env.ADMINID; // comment définir autrement le adminId ????
 
@@ -194,7 +194,7 @@ exports.getOneUser = (req, res) => {
 
 //----- GET ALL USERS //
 exports.getAllUsers = (req, res) => {
-    User.findAll()
+    User.findAll({order: [["UserName", "ASC"]] })
         .then((users) => {
             users.forEach((item, index) => {
                 // le password ne sera pas transmis au front
