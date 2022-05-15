@@ -3,7 +3,8 @@
       <div class="btn-div" id="ShareAccess" v-show="ShareFormHidden">
         <button type="button" 
                 class="btn" 
-                @click="displayForm()" 
+                @click="displayForm()"
+                @change="checkForm()" 
                 id="GoToShare" 
                 value="Partager">
                 Et vous,<br/> que voulez-vous partager?
@@ -29,19 +30,22 @@
                                                   for="Media" 
                                                   class="label">Votre image, votre GIF</label>
                                         <input    class="input"
-                                                  form="ShareToBePosted" 
-                                                  @input="checkForm"
-                                                  @change="uploadImage($event)"
+                                                  form="ShareToBePosted"
+                                                  @change="checkForm"
+                                                  @input="uploadImage($event)"
                                                   type="file"
                                                   accept="image/png, image/jpg, image/jpeg, image/png, image/gif"
-                                                  multiple
+                                                  
                                                   id="Media" 
                                                   name="file" 
                                                  >
                               </div>
-
+                              
+                              
                               <div id="formImagePreview">
-                                        <img v-if="file" :src="file" />
+                                        <img id="formImageLoaded" v-if="this.uploadedFile" :src="this.uploadedFile"/>
+                                        <!--la phrase suivante n'est à priori pas utile-->
+                                        <img id="formImageNotLoaded" v-else hidden/> 
                               </div>
                               
                               <!--Le Share-->
@@ -92,33 +96,37 @@
               ShareText: {
                 type: String,
                 default: "No comment"},
-              file :"",
+              uploadedFile :"",
               ShareFormHidden :{
                 type: Boolean,
                 default: true }
         }
       },
       methods: {
-
+          
           displayForm(){
             this.ShareFormHidden = false
           },
+
+          uploadImage($event) {
+            this.uploadedFile  = URL.createObjectURL($event.target.files[0]);
+          },
+          
           displayGoTo(){
+            document.getElementById("ShareToBePosted").reset();
+            this.uploadedFile ="";
             this.ShareFormHidden = true;
-            this.file = null
           },
 
           checkForm() {
-                    if (!document.getElementById("ShareText").value || !document.getElementById("Media")
+                    // if (document.getElementById("ShareText").value != "" || document.getElementById("formImagePreview").firstChild.id == 'formImageLoaded'
+                    if (document.getElementById("ShareText").value != "" || this.uploadedFile!=""
                     ) {
-                    document.getElementById("ShareBtn").disabled = true;
+                    document.getElementById("ShareBtn").disabled = false;
                     }
-                    else document.getElementById("ShareBtn").disabled = false;
-          },
+                    else {document.getElementById("ShareBtn").disabled = true;
+                    }},
 
-          uploadImage($event) {
-                    this.file = URL.createObjectURL($event.target.files[0]);
-          },
 
           Share() {
 

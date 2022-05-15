@@ -190,7 +190,7 @@
                     <!--effacement du compte--> 
                     <div id="no-account" class="add-div">
                       <p> Vous pouvez si vous le souhaitez, effacer ce compte ainsi que tous les partages et commentaires qui y sont liés</p>
-                      <div class="btn-div"><router-link @click="deleteAccount()" class="btn" to="../deconnect">Effacer</router-link> </div>
+                      <div class="btn-div"><button type="button" class="btn"><router-link @click="deleteAccount()" to="../deconnect">Effacer</router-link></button></div>
                     </div>
 
 
