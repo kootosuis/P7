@@ -23,14 +23,15 @@
                                         <label    
                                                   for="CommentText" 
                                                   class="label">Votre commentaire</label>
-                                        <textarea class="bigtextarea textarea input"
+                                        <textarea id="CommentText"
+                                                  class="bigtextarea textarea input"
                                                   form="CommentToBePosted" 
                                                   type="textarea"
+                                                  @keydown="checkForm"
                                                   @input="checkForm"
-                                                 
                                                   placeholder= "..."
-                                                  id="CommentText"
-                                                  name="CommentText"></textarea>
+                                                  name="CommentText"
+                                                  ></textarea>
                               </div>
                               
                               <div class="btn-div">
@@ -65,34 +66,35 @@ export default {
             this.ShareFormHidden = true
           },
           checkForm() {
-                    if (document.getElementById("CommentText").textContent != null) {
+                    const noblank = document.getElementById("CommentText").value.trim()
+                    if (noblank != "" && noblank.length > 2){
                       document.getElementById("CommentBtn").disabled = false;
                     } else { document.getElementById("CommentBtn").disabled = true }
           },
           Comment() {
 
                     const Token = JSON.parse(sessionStorage.getItem("Token"));
-                    const CommentText = document.getElementById("CommentText").value
-                    const shareShareId = new URL(window.location.href).hash.split("=")[1]
-
-                    // const commentCommentId = "" ? document.getElementById("CommentId") : document.getElementById("CommentId").value
+                    const CommentText = document.getElementById("CommentText").value.trim();
+                    const shareShareId = new URL(window.location.href).hash.split("=")[1];
 
                     const Comment = { "CommentText": CommentText,
                                       "shareShareId": shareShareId,
-                                      // "commentCommentId": commentCommentId,
+                                      
                     }
 
                     fetch("http://localhost:3000/api/comments", {
                               method: 'POST',
                               body: JSON.stringify(Comment),
                               headers: {
-                                  "Content-Type": "application/json",
+                                  // "Content-Type": "application/json",
                                   "Accept":"*/*",
                                   "Authorization": "Bearer " + Token,
                               },
-                              mode : "cors"})
+                              
+                              })
 
                     .then((response) => {
+                      alert('toto2')
                               if (response.status == 201) { 
                                         this.success= true;
                                         this.message = "Commentaire en ligne.";
@@ -111,6 +113,7 @@ export default {
                               }
                     })
                     .catch (() => {
+                      alert('toto3')
                               this.success= false;
                               this.message = `Le serveur ne répond pas ! Veuillez réessayer ultérieurement`;
                     })         

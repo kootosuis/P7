@@ -31,7 +31,7 @@
                                                     <p> {{item.user.UserFirstname}} {{item.user.UserName}}</p>
                                                     <p> Service : {{item.user.UserDepartement}} <br/> Rôle : {{item.user.UserRole}}</p>
                                                     <p hidden>{{ item.userUserId }}</p>
-                                                    <p> {{item.comments.length }} commentaire<x v-if="item.comments.length>1">s</x></p>
+                                                    <p> {{item.comments.length }} commentaire<span v-if="item.comments.length>1">s</span></p>
                                                     <p>{{ formatDate(item.updatedAt) }}</p>
                                                 </div>
                                             </div>

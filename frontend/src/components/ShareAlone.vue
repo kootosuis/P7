@@ -85,7 +85,7 @@
                                           <p v-if="isAdmin"><router-link :to="`/modifyByAdmin/${ userUserId }`">Accéder aux données utilisateur.</router-link></p>
                                           <p hidden>{{ userUserId }}</p>
                                           <p>{{ formatDate(updatedAt) }}</p>
-                                          <p>{{ apiLength }} commentaires</p>
+                                          <p>{{ apiLength }} commentaire<span v-if="this.apiLength>1">s</span></p>
                                           
                                         </div>
                                     </div>
