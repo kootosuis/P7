@@ -34,8 +34,8 @@
                               </div>
                                                          
                               <div class="btn-div">
-                                        <button type="button" class="btn" @click="displayGoTo()" id="CancelBtn">Annuler</button>
-                                        <button type="button" class="btn" @click="CommentOnAComment()" id="CommentOnACommentBtn" disabled>Réagir</button>
+                                        <button type="submit" class="btn" @submit="displayGoTo()" id="CancelBtn">Annuler</button>
+                                        <button type="submit" class="btn" @submit="CommentOnAComment()" id="CommentOnACommentBtn" disabled>Réagir</button>
                               </div>
                     </form>
           </div>

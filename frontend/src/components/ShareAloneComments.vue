@@ -39,8 +39,8 @@
                                                                 </div>
                                                                 
                                                                 <div class="btn-div">
-                                                                          <button type="button" class="btn" @click="doNotModify()" id="CancelBtn">Annuler</button>
-                                                                          <button type="button" class="btn" @click="correctComment()" id="CommentBtn"   >Confirmer</button>
+                                                                          <button type="submit" class="btn" @submit="doNotModify()" id="CancelBtn">Annuler</button>
+                                                                          <button type="submit" class="btn" @submit="correctComment()" id="CommentBtn"   >Confirmer</button>
                                                                 </div>
                                                       </form>
                                             </div>

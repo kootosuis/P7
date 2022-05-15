@@ -71,8 +71,8 @@
 
 
                               <div class="btn-div">
-                                        <button type="button" class="btn" @click="displayGoTo()" id="CancelBtn">Annuler</button>
-                                        <button type="button" class="btn" @click="Share()" id="ShareBtn" disabled>Partager</button>
+                                        <button type="submit" class="btn" @submit="displayGoTo()" id="CancelBtn">Annuler</button>
+                                        <button type="submit" class="btn" @submit="Share()" id="ShareBtn" disabled>Partager</button>
                               </div>
        
                     </form>

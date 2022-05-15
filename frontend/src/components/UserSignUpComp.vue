@@ -9,7 +9,6 @@
       <div class="formDiv">
         <form class="formulaire" method="POST" name="form" id="form" @submit="signUp">
 
-
           <!--Le Nom-->
           <div class="formLine">
             <label for="UserName" class="label">Nom <span class="asterisque">*</span></label>

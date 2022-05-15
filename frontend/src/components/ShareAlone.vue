@@ -68,8 +68,8 @@
                                                 </div>
 
                                                 <div class="btn-div">
-                                                          <button type="button" class="btn" @click="doNotModify()" id="CancelBtn">Annuler</button>
-                                                          <button type="button" class="btn" @click="correctShare()" id="ShareBtn">Mettre à jour</button>
+                                                          <button type="submit" class="btn" @submit="doNotModify()" id="CancelBtn">Annuler</button>
+                                                          <button type="submit" class="btn" @submit="correctShare()" id="ShareBtn">Mettre à jour</button>
                                                 </div>
                         
                                       </form>
@@ -91,7 +91,7 @@
                                     </div>
 
                                     <!-- le bouton pour modifier le texte du share  ou l'effacer quand on en est l'auteur-->
-                                    <div id="modifyOrDelete" class="btn-div">
+                                    <div id="modifyOrDelete" class="btn-div" v-show="modifyForm">
                                           <button v-if="userUserId===loggedUserId || isAdmin" type="button" class="btn" @click="GoToCorrectShare()" id="modifyShareBtn">Corriger</button>
                                           <button v-if="userUserId===loggedUserId || isAdmin" type="button" class="btn" @click="deleteShare()" id="deleteShareBtn">Effacer</button>
                                     </div>    
@@ -183,6 +183,7 @@ export default {
             },
 
             correctShare(){
+                    
                     const ShareToBeCorrected = document.getElementById("ShareToBeCorrected");
                     const ShareId = new URL(window.location.href).hash.split("=")[1];
                     const Token = JSON.parse(sessionStorage.getItem("Token"));

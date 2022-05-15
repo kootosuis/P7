@@ -14,9 +14,12 @@ module.exports = (req, res, next) => {
         } else {
             next();
         }
-    } catch {
-        res.status(401).json({
-            message: "Vous ne pouvez pas effectuer cette opération",
-        });
+    } 
+    // catch {
+    //     (error) => res.status(error).json(error.message );
+    // }
+    
+    catch {
+    res.status(401).json({ message: "Vous ne pouvez pas effectuer cette opération"});
     }
 };
