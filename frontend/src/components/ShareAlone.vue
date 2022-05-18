@@ -68,8 +68,8 @@
                                                 </div>
 
                                                 <div class="btn-div">
-                                                          <button type="submit" class="btn" @submit="doNotModify()" id="CancelBtn">Annuler</button>
-                                                          <button type="submit" class="btn" @submit="correctShare()" id="ShareBtn">Mettre à jour</button>
+                                                          <button type="button" class="btn" @click="doNoCorrect()" id="CancelBtn">Annuler</button>
+                                                          <button type="button" class="btn" @click="correctShare()" id="ShareBtn">Mettre à jour</button>
                                                 </div>
                         
                                       </form>
@@ -93,6 +93,7 @@
                                     <!-- le bouton pour modifier le texte du share  ou l'effacer quand on en est l'auteur-->
                                     <div id="modifyOrDelete" class="btn-div" v-show="modifyForm">
                                           <button v-if="userUserId===loggedUserId || isAdmin" type="button" class="btn" @click="GoToCorrectShare()" id="modifyShareBtn">Corriger</button>
+                                          <button type="button" class="btn"><router-link :to="`/wall`">Retour au forum</router-link></button>
                                           <button v-if="userUserId===loggedUserId || isAdmin" type="button" class="btn" @click="deleteShare()" id="deleteShareBtn">Effacer</button>
                                     </div>    
                                 </div>
@@ -214,7 +215,7 @@ export default {
                                         this.message = "Mise à jour effectuée.";
                                         this.modifyForm = true;
                                         this.$router.push({ name: 'wall' });
-                                        this.$router.go(0);
+                                        // this.$router.go(0);
                                         // history.go(0);
                               } else {
                                         response.json ()
@@ -325,7 +326,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-
-
 </style>

@@ -64,7 +64,7 @@
                                               <button v-show="item.userUserId==loggedUserId  || isAdmin===1" type="button" class="btn" @click="deleteComment()" id="deleteCommentBtn">Effacer</button>
                                       </div>
 
-                                      <PostACommentOnAComment v-if="item.userUserId!=loggedUserId || isAdmin===1"/>
+                                      <PostACommentOnAComment v-if="item.userUserId!=loggedUserId"/>
                             </div>
                         </div>
 
@@ -251,7 +251,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-
-
 </style>

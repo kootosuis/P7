@@ -14,7 +14,8 @@
                     <form     
                               type="multipart/form-data"
                               method="POST" 
-                              name="form" 
+                              name="form"
+                              @submit="CommentOnAComment"
                               id="CommentOnAComment"
                               class="formulaire">
                               
@@ -23,19 +24,20 @@
                                         <label    
                                                   for="CommentOnACommentText" 
                                                   class="label">Votre réaction</label>
-                                        <textarea class="bigtextarea textarea input"
+                                        <textarea id="CommentOnACommentText"
+                                                  class="bigtextarea textarea input"
                                                   form="CommentOnACommentText" 
                                                   type="textarea"
+                                                  @keydown="checkForm"
                                                   @input="checkForm"
-                                                 
                                                   placeholder= "..."
-                                                  id="CommentOnACommentText"
-                                                  name="CommentOnACommentText"></textarea>
+                                                  name="CommentOnACommentText">
+                                                  </textarea>
                               </div>
                                                          
                               <div class="btn-div">
-                                        <button type="submit" class="btn" @submit="displayGoTo()" id="CancelBtn">Annuler</button>
-                                        <button type="submit" class="btn" @submit="CommentOnAComment()" id="CommentOnACommentBtn" disabled>Réagir</button>
+                                        <button type="button" class="btn" @click="displayGoTo()" id="CancelBtn">Annuler</button>
+                                        <input type="button" @click ="CommentOnAComment" class="btn" id="CommentBtn" value="Réagir" disabled>
                               </div>
                     </form>
           </div>
@@ -45,7 +47,7 @@
 
 <script>
 export default {
-  name: 'PostAComment',
+  name: 'PostACommentOnAComment',
   data() {
     return {
           success: "",
@@ -65,11 +67,13 @@ export default {
             this.ShareFormHidden = true
           },
           checkForm() {
-                    if (document.getElementById("CommentOnACommentText").textContent != null) {
-                      document.getElementById("CommentOnACommentBtn").disabled = false;
-                    } else { document.getElementById("CommentOnACommentBtn").disabled = true }
+                    const noblank = document.getElementById("CommentOnACommentText").value.trim();
+                    if (noblank != "" && noblank.length > 2){
+                      document.getElementById("CommentBtn").disabled = false;
+                    } else { document.getElementById("CommentBtn").disabled = true }
           },
           CommentOnAComment() {
+
 
                     const Token = JSON.parse(sessionStorage.getItem("Token"));
                     const commentOnACommentText = document.getElementById("CommentOnACommentText").value;

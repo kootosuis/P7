@@ -4,7 +4,7 @@
         <button type="button" 
                 class="btn" 
                 @click="displayForm()"
-                @change="checkForm()" 
+                
                 id="GoToShare" 
                 value="Partager">
                 Et vous,<br/> que voulez-vous partager?
@@ -21,7 +21,7 @@
                               name="form" 
                               id="ShareToBePosted"
                               
-                              @submit = "Share"
+                              @submit ="Share"
                               class="formulaire">
 
                                <!--Le Media -->
@@ -35,7 +35,7 @@
                                                   @input="uploadImage($event)"
                                                   type="file"
                                                   accept="image/png, image/jpg, image/jpeg, image/png, image/gif"
-                                                  
+                                                  multiple
                                                   id="Media" 
                                                   name="file" 
                                                  >
@@ -43,7 +43,7 @@
                               
                               
                               <div id="formImagePreview">
-                                        <img id="formImageLoaded" v-if="this.uploadedFile" :src="this.uploadedFile"/>
+                                        <img id="formImageLoaded" v-if="this.file" :src="this.file"/>
                                         <!--la phrase suivante n'est à priori pas utile-->
                                         <img id="formImageNotLoaded" v-else hidden/> 
                               </div>
@@ -71,8 +71,9 @@
 
 
                               <div class="btn-div">
-                                        <button type="submit" class="btn" @submit="displayGoTo()" id="CancelBtn">Annuler</button>
-                                        <button type="submit" class="btn" @submit="Share()" id="ShareBtn" disabled>Partager</button>
+                                        <button type="button" class="btn" @click="displayGoTo()" id="CancelBtn">Annuler</button>
+                                        <input type="button" @click ="Share" class="btn" id="ShareBtn" value="Partager" disabled>
+
                               </div>
        
                     </form>
@@ -96,7 +97,7 @@
               ShareText: {
                 type: String,
                 default: "No comment"},
-              uploadedFile :"",
+              file :"",
               ShareFormHidden :{
                 type: Boolean,
                 default: true }
@@ -108,25 +109,24 @@
             this.ShareFormHidden = false
           },
 
-          uploadImage($event) {
-            this.uploadedFile  = URL.createObjectURL($event.target.files[0]);
-          },
-          
           displayGoTo(){
-            document.getElementById("ShareToBePosted").reset();
-            this.uploadedFile ="";
             this.ShareFormHidden = true;
-          },
+            this.file ="";
+            document.getElementById("ShareToBePosted").reset();
+          }, 
 
           checkForm() {
                     // if (document.getElementById("ShareText").value != "" || document.getElementById("formImagePreview").firstChild.id == 'formImageLoaded'
-                    if (document.getElementById("ShareText").value != "" || this.uploadedFile!=""
+                    if (document.getElementById("ShareText").value != "" || this.file!=""
                     ) {
                     document.getElementById("ShareBtn").disabled = false;
                     }
                     else {document.getElementById("ShareBtn").disabled = true;
                     }},
 
+          uploadImage($event) {
+            this.file  = URL.createObjectURL($event.target.files[0]);
+          },
 
           Share() {
 

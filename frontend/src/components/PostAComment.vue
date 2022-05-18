@@ -14,7 +14,8 @@
                     <form     
                               type="multipart/form-data"
                               method="POST" 
-                              name="form" 
+                              name="form"
+                              @submit="Comment"
                               id="CommentToBePosted"
                               class="formulaire">
                               
@@ -35,8 +36,8 @@
                               </div>
                               
                               <div class="btn-div">
-                                        <button type="submit" class="btn" @submit="displayGoTo()" id="CancelBtn">Annuler</button>
-                                        <button type="submit" class="btn" @submit="Comment()" id="CommentBtn" disabled>Commenter</button>
+                                        <button type="button" class="btn" @click="displayGoTo()" id="CancelBtn">Annuler</button>
+                                        <input type="button" @click ="Comment" class="btn" id="CommentBtn" value="Commenter" disabled>
                               </div>
                     </form>
           </div>
@@ -76,17 +77,19 @@ export default {
                     const Token = JSON.parse(sessionStorage.getItem("Token"));
                     const CommentText = document.getElementById("CommentText").value.trim();
                     const shareShareId = new URL(window.location.href).hash.split("=")[1];
-
+                    console.log(CommentText);
+                    console.log(shareShareId)
+                  
                     const Comment = { "CommentText": CommentText,
                                       "shareShareId": shareShareId,
-                                      
                     }
+                    console.log(Comment);
 
                     fetch("http://localhost:3000/api/comments", {
                               method: 'POST',
                               body: JSON.stringify(Comment),
                               headers: {
-                                  // "Content-Type": "application/json",
+                                  "Content-Type": "application/json",
                                   "Accept":"*/*",
                                   "Authorization": "Bearer " + Token,
                               },
@@ -94,13 +97,13 @@ export default {
                               })
 
                     .then((response) => {
-                      alert('toto2')
                               if (response.status == 201) { 
                                         this.success= true;
                                         this.message = "Commentaire en ligne.";
                                         this.ShareFormHidden = true;
                                         this.$router.push({ name: 'wall' });
-                                        this.$router.go(0);
+                                        // la ligne suivante provoque des failed to fetch ( à creuser)
+                                        // this.$router.go(0);
 
                               } else {
                                         response.json ()
@@ -113,7 +116,6 @@ export default {
                               }
                     })
                     .catch (() => {
-                      alert('toto3')
                               this.success= false;
                               this.message = `Le serveur ne répond pas ! Veuillez réessayer ultérieurement`;
                     })         
