@@ -82,7 +82,7 @@
                                         <div class="card__info--complement--firstline">
                                           
                                           <p> {{ UserFirstname}} {{ UserName}} / {{ UserDepartement}} / {{ UserRole}} </p>
-                                          <p v-if="isAdmin"><router-link :to="`/modifyByAdmin/${ userUserId }`">Accéder aux données utilisateur.</router-link></p>
+                                          <p v-if="isAdmin==1"><router-link :to="`/modifyByAdmin/${ userUserId }`">Accéder aux données utilisateur.</router-link></p>
                                           <p hidden>{{ userUserId }}</p>
                                           <p>{{ formatDate(updatedAt) }}</p>
                                           <p>{{ apiLength }} commentaire<span v-if="this.apiLength>1">s</span></p>
@@ -92,9 +92,9 @@
 
                                     <!-- le bouton pour modifier le texte du share  ou l'effacer quand on en est l'auteur-->
                                     <div id="modifyOrDelete" class="btn-div" v-show="modifyForm">
-                                          <button v-if="userUserId===loggedUserId || isAdmin" type="button" class="btn" @click="GoToCorrectShare()" id="modifyShareBtn">Corriger</button>
+                                          <button v-if="this.userUserId===this.loggedUserId || isAdmin==1" type="button" class="btn" @click="GoToCorrectShare()" id="modifyShareBtn">Corriger</button>
                                           <button type="button" class="btn"><router-link :to="`/wall`">Retour au forum</router-link></button>
-                                          <button v-if="userUserId===loggedUserId || isAdmin" type="button" class="btn" @click="deleteShare()" id="deleteShareBtn">Effacer</button>
+                                          <button v-if="this.userUserId===this.loggedUserId || isAdmin==1" type="button" class="btn" @click="deleteShare()" id="deleteShareBtn">Effacer</button>
                                     </div>    
                                 </div>
 
@@ -158,9 +158,7 @@ export default {
                               type: Boolean,
                               default: true },
                             
-                            isAdmin :{
-                              type: Boolean,
-                              default: false },
+                            isAdmin :"",
 
                     }
           },
@@ -269,7 +267,6 @@ export default {
                             const loggedUserId=JSON.parse(sessionStorage.getItem("UserId"))
                             const ShareId = new URL(window.location.href).hash.split("=")[1];
 
-                             
                             this.isAdmin = sessionStorage.getItem("isAdmin");
 
                             // LE SHARE       

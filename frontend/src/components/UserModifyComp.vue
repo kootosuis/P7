@@ -226,10 +226,7 @@ export default {
       default : false
       },
 
-    isAdmin: {
-      type: Boolean,
-      default : false
-      } 
+    isAdmin:""
     }
   },
 

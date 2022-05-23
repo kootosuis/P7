@@ -14,9 +14,12 @@
                                                     <p>Prénom : {{item.UserFirstname}}</p>
                                                     <p>Nom : {{item.UserName}}</p>
                                                     <p>Service : {{item.UserDepartement}} </p>
+
                                                     <p>Rôle : {{item.UserRole}}</p>                                
                                                     <p>Membre depuis : {{ formatDate(item.createdAt) }} .</p>
                                                     <p>Compte mis à jour le : {{ formatDate(item.updatedAt) }} .</p>
+                                                    <p>Administrateur : <span v-if="item.UserHabilitation===1">OUI</span>
+                                                                        <span v-if="item.UserHabilitation===0">NON</span></p>
                                                 </div>
                                             </div>
                                     </div>  

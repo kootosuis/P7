@@ -60,8 +60,8 @@
                                       </div>
 
                                       <div class="btn-div">
-                                              <button v-show="item.userUserId==loggedUserId  || isAdmin===1" type="button" class="btn" @click="modifyComment()" id="modifyCommentBtn">Corriger</button>
-                                              <button v-show="item.userUserId==loggedUserId  || isAdmin===1" type="button" class="btn" @click="deleteComment()" id="deleteCommentBtn">Effacer</button>
+                                              <button v-if="this.userUserId===this.loggedUserId || isAdmin==1" type="button" class="btn" @click="modifyComment()" id="modifyCommentBtn">Corriger</button>
+                                              <button v-if="this.userUserId===this.loggedUserId || isAdmin==1" type="button" class="btn" @click="deleteComment()" id="deleteCommentBtn">Effacer</button>
                                       </div>
 
                                       <PostACommentOnAComment v-if="item.userUserId!=loggedUserId"/>
@@ -110,9 +110,7 @@ export default {
                               type: Boolean,
                               default: true },
 
-                            isAdmin :{
-                              type: Boolean,
-                              default: false },
+                            isAdmin :"",
 
                     }
           },

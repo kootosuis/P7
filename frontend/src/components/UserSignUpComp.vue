@@ -154,10 +154,7 @@ export default {
         "UserPresentation": UserPresentation,
         "UserRole": UserRole,
         "UserPassword": UserPassword,
-        //--- la ligne suivante permet de remplir le modèle ----//
-        //--- c'est le premier administrateur qui autorisera le second à le devenir----///
         "UserHabilitation": false,
-
       }
 
       fetch("http://localhost:3000/api/auth/signup", {

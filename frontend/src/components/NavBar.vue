@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar">
         <div class="navbar-container container">
-            <input type="checkbox" name="main-nav">
+            <input type="checkbox" name="main-nav" id="check">
             
                 <div class="hamburger-lines">
                     <span class="line line1"></span>
@@ -11,11 +11,11 @@
 
                 <ul class="navbar__items">
                     
-                    <li v-show="token"><router-link to="/wall">Le Forum</router-link></li>
-                    <li v-show="!token"><router-link to="/signup">S'inscrire</router-link></li>
-                    <li v-show="!token"><router-link to="/login">S'authentifier</router-link></li>
-                    <li v-show="token" ><router-link to="/modify">Gérér son compte</router-link></li>
-                    <li v-show="token && isAdmin" ><router-link to="/list">Comptes utilisateurs</router-link></li>
+                    <li v-show="token" ><router-link @click="toggleMenu" to="/wall">Le Forum</router-link></li>
+                    <li v-show="!token"><router-link @click="toggleMenu" to="/signup">S'inscrire</router-link></li>
+                    <li v-show="!token"><router-link @click="toggleMenu" to="/login">S'authentifier</router-link></li>
+                    <li v-show="token" ><router-link @click="toggleMenu" to="/modify">Gérér son compte</router-link></li>
+                    <li v-show="token && isAdmin==1" ><router-link @click="toggleMenu" to="/list">Comptes utilisateurs</router-link></li>
                     <li v-show="token" ><router-link @click="logout()" to="/deconnect">Se déconnecter</router-link></li>
                 </ul>
 
@@ -59,10 +59,7 @@ export default {
           token: "",
           UserFirstname: "",
           UserName:"",
-          isAdmin :{
-              type: Boolean,
-              default : false
-          }
+          isAdmin :""
     }},
     methods : {
 
@@ -71,6 +68,11 @@ export default {
             sessionStorage.clear();
             this.$router.push({ name: 'enter'});
         },
+
+        toggleMenu(){
+             const input = document.getElementById('check');
+             input.checked = false;
+        }
     },
     
     //-------- la NavBar change en fonction de l'existence ou pas d'un Token d'authentification -------///

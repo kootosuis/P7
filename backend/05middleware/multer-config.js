@@ -18,7 +18,8 @@ const storage = multer.diskStorage({
         callback(null, "07media");
     },
     filename: (req, file, callback) => {
-        const name = file.originalname.split(" ").join("_");
+        //le slice limite la longueur du nom qui du fait de la limite posée dans la DB faisait bugger l'app
+        const name = file.originalname.slice(0, 30).split(" ").join("_");
         const extension = MIME_TYPES[file.mimetype];
         callback(null, name + Date.now() + "." + extension);
     },
