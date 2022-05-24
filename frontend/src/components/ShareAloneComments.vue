@@ -1,252 +1,244 @@
 <template>
+    <section class="mainshares shares">
+        <div class="card" id="shareAloneComments">
+            <div id="commentDiv" v-for="item in apiCommentsResponse" :key="item.shareShareId" class="card card__info card__info--2">
+                <div v-if="item.CommentId">
+                    <!--- le commentaire original -->
+                    <div v-if="modifyCommentBox">
+                        <p class="card__info--text card__info--sharetext">{{ item.CommentText }}</p>
+                        <p class="card__info--text card__info--sharetext">{{ item.userUserId }}</p>
+                    </div>
 
-                    <section class="mainshares shares">
+                    <!--- le commentaire tel qu'il va être modifié -->
+                    <div v-else class="formSection" id="CommentForm">
+                        <div class="formDiv">
+                            <form type="multipart/form-data" method="PUT" name="form" id="CommentToBeCorrected" class="formulaire">
+                                <!--Le Comment-->
+                                <div class="formLine">
+                                    <label for="CommentText" class="label">Votre commentaire</label>
+                                    <textarea
+                                        class="bigtextarea textarea input"
+                                        form="CommentToBeCorrected"
+                                        type="textarea"
+                                        v-model="item.CommentText"
+                                        placeholder="..."
+                                        id="CommentText"
+                                        name="CommentText"
+                                    ></textarea>
+                                </div>
 
-                          <div class="card" id="shareAloneComments" >
-                              <div  id="commentDiv" 
-                                v-for="item in apiCommentsResponse"
-                                :key="item.shareShareId"
-                                class="card card__info card__info--2">
-                                      <div v-if="item.CommentId" >
-
-                                        <!--- le commentaire original -->
-                                        <div v-if="modifyCommentBox">
-                                          <p class="card__info--text card__info--sharetext">{{ item.CommentText }}</p>
-                                        </div>
-                                        
-                                        <!--- le commentaire tel qu'il va être modifié -->
-                                        <div v-else class="formSection" id="ShareForm" >
-                                            <div class = "formDiv">
-                                                      <form     
-                                                                type="multipart/form-data"
-                                                                method="PUT" 
-                                                                name="form" 
-                                                                id="CommentToBeCorrected"
-                                                                class="formulaire">
-                                                                
-                                                                <!--Le Comment-->
-                                                                <div class="formLine">
-                                                                          <label    
-                                                                                    for="CommentText" 
-                                                                                    class="label">Votre commentaire</label>
-                                                                          <textarea class="bigtextarea textarea input"
-                                                                                    form="CommentToBeCorrected" 
-                                                                                    type="textarea"
-                                                                                    v-model="item.CommentText" 
-                                                                                    placeholder= "..."
-                                                                                    id="CommentText"
-                                                                                    name="CommentText"></textarea>
-                                                                </div>
-                                                                
-                                                                <div class="btn-div">
-                                                                          <button type="submit" class="btn" @submit="doNotModify()" id="CancelBtn">Annuler</button>
-                                                                          <button type="submit" class="btn" @submit="correctComment()" id="CommentBtn"   >Confirmer</button>
-                                                                </div>
-                                                      </form>
-                                            </div>
-                                        </div>
-
-                                        <div class="separator"></div>
-
-                                        <div class="card__info--complement">
-                                          <div>
-                                            <p> {{ item.user.UserFirstname }} {{ item.user.UserName }} / {{ item.user.UserDepartement }} / {{ item.user.UserRole }}</p>
-                                            <p>{{ formatDate(item.updatedAt) }}</p> <!-- le commentateur du Share -->
-                                            <p hidden>{{ item.commentCommentId }} </p>
-                                            <p  id="CommentOnACommentId">{{ item.CommentId }}</p>
-                                          </div>
-                                        </div>
-      
-                                      </div>
-
-                                      <div class="btn-div">
-                                              <button v-if="this.userUserId===this.loggedUserId || isAdmin==1" type="button" class="btn" @click="modifyComment()" id="modifyCommentBtn">Corriger</button>
-                                              <button v-if="this.userUserId===this.loggedUserId || isAdmin==1" type="button" class="btn" @click="deleteComment()" id="deleteCommentBtn">Effacer</button>
-                                      </div>
-
-                                      <PostACommentOnAComment v-if="item.userUserId!=loggedUserId"/>
-                            </div>
+                                <div class="btn-div">
+                                    <button type="button" class="btn" @click="doNotModify()" id="CancelBtn">Annuler</button>
+                                    <input type="button" class="btn" @click="correctComment()" id="CommentBtn" value="Confirmer" />
+                                </div>
+                            </form>
                         </div>
+                    </div>
 
-                      
-                        
-    
-                    </section>
+                    <div class="separator"></div>
 
-                    
-                    
+                    <div class="card__info--complement">
+                        <div>
+                            <p>{{ item.user.UserFirstname }} {{ item.user.UserName }} / {{ item.user.UserDepartement }} / {{ item.user.UserRole }}</p>
+                            <p>{{ formatDate(item.updatedAt) }}</p>
+                            <p hidden>{{ item.commentCommentId }}</p>
+                        </div>
+                    </div>
+                </div>
 
-          
+                <div class="btn-div" v-show="modifying">
+                    <button
+                        v-if="item.userUserId === this.loggedUserId || isAdmin == 1"
+                        type="button"
+                        class="btn"
+                        @click="modifyComment()"
+                        id="modifyCommentBtn"
+                    >
+                        Corriger
+                    </button>
+                    <button
+                        v-if="item.userUserId === this.loggedUserId || isAdmin == 1"
+                        type="button"
+                        class="btn"
+                        @click="deleteComment()"
+                        id="deleteCommentBtn"
+                    >
+                        Effacer
+                    </button>
+                </div>
+                <div>
+                    <!--ma ligne suivante sert à cibler le commentaire sur lequel est réagi -->
+                    <p hidden id="CommentId">{{ item.CommentId }}</p>
+                    <PostACommentOnAComment v-if="item.userUserId != loggedUserId" />
+                </div>
+            </div>
+        </div>
+    </section>
 </template>
 
 <script>
-import PostACommentOnAComment from "@/components/PostACommentOnAComment.vue"
-import dayjs from 'dayjs'
-require('dayjs/locale/fr')
-dayjs.locale('fr')
+    import PostACommentOnAComment from "@/components/PostACommentOnAComment.vue";
+    import dayjs from "dayjs";
+    require("dayjs/locale/fr");
+    dayjs.locale("fr");
 
-export default {
-          name : 'ShareAlone',
-          components: {
-                              PostACommentOnAComment
-          },
+    export default {
+        name: "ShareAloneComments",
+        components: {
+            PostACommentOnAComment,
+        },
 
-          
+        data() {
+            return {
+                loggedUserId: "",
+                apiCommentsResponse: Array,
+                apiLength: Number,
 
-          data(){
-                    return{
+                userUserId: "",
+                CommentId: "",
+                CommentText: "",
+                CommentcreatedAt: "",
+                CommentupdatedAt: "",
+                CommentuserUserId: "",
 
-                            loggedUserId: "",
-                            apiCommentsResponse : Array,
-                            apiLength : Number,
+                modifyCommentBox: {
+                    type: Boolean,
+                    default: true,
+                },
 
-                            CommentId : "",
-                            CommentText : "",
-                            CommentcreatedAt : "",
-                            CommentupdatedAt : "",
-                            CommentuserUserId : "", 
+                modifying: {
+                    type: Boolean,
+                    default: false,
+                },
 
-                            modifyCommentBox :{
-                              type: Boolean,
-                              default: true },
+                isAdmin: "",
+            };
+        },
 
-                            isAdmin :"",
-
-                    }
-          },
-
-          methods : {
-
+        methods: {
             formatDate(dateString) {
-                            const date = dayjs(dateString);
-                                // Then specify how you want your dates to be formatted
-                            return date.format('dddd D MMMM YYYY , HH:mm');
-                      },
+                const date = dayjs(dateString);
+                // Then specify how you want your dates to be formatted
+                return date.format("dddd D MMMM YYYY , HH:mm");
+            },
 
             modifyComment() {
-                  this.modifyCommentBox = false;
+                this.modifyCommentBox = false;
+                this.modifying = false;
             },
-            doNotModify(){
-                  this.modifyCommentBox = true;
+            doNotModify() {
+                this.modifyCommentBox = true;
+                this.modifying = true;
             },
 
-            correctComment(){
-                    
-                    const CommentToBeCorrected = document.getElementById("CommentToBeCorrected");
-                    console.log(CommentToBeCorrected)
-                    const CommentId = document.getElementById("CommentOnACommentId").textContent;
-                    
-                    const Token = JSON.parse(sessionStorage.getItem("Token"));
-                    const Modify = new FormData(CommentToBeCorrected);
+            correctComment() {
+                const CommentToBeCorrected = document.getElementById("CommentToBeCorrected");
+                console.log(CommentToBeCorrected);
+                const CommentId = document.getElementById("CommentOnACommentId").textContent;
 
-                    Modify.append('CommentId',CommentId)
+                const Token = JSON.parse(sessionStorage.getItem("Token"));
+                const Modify = new FormData(CommentToBeCorrected);
 
+                Modify.append("CommentId", CommentId);
 
-                    //--- TEST ---- ///
-                    for(var pair of Modify.entries()) {
-                      console.log(pair[0]+ ', '+ pair[1]);
-                    }
+                //--- TEST ---- ///
+                // for(var pair of Modify.entries()) {
+                //   console.log(pair[0]+ ', '+ pair[1]);
+                // }
 
-                    fetch(`http://localhost:3000/api/comments/${CommentId}`, {
-                              method: 'PUT',
-                              headers: {
-                                  "Accept":"*/*",
-                                  // "Content-Type": "multipart/form-data", 
-                                  "Authorization": "Bearer " + Token
-                              },
-                              body: Modify,
-                              mode : "cors"})
-
+                fetch(`http://localhost:3000/api/comments/${CommentId}`, {
+                    method: "PUT",
+                    headers: {
+                        Accept: "*/*",
+                        // "Content-Type": "multipart/form-data",
+                        Authorization: "Bearer " + Token,
+                    },
+                    body: Modify,
+                    mode: "cors",
+                })
                     .then((response) => {
-                              
-                              console.log(Modify)
+                        console.log(Modify);
 
-                              if (response.status == 201) { 
-                                        this.success= true;
-                                        this.message = "Correction effectuée.";
-                                        this.modifyForm = true;
-                                        this.$router.push({ name: 'wall' });
-                                        this.$router.go(0);
-                                        // history.go(0);
-                              } else {
-                                        response.json ()
-                                        .then ((json) => {
-                                        this.success= false;
-                                        console.log(json);
-                                        this.message = json.error ||  json.message ;
-                                        return this.message
-                                        })
-                              }
+                        if (response.status == 201) {
+                            this.success = true;
+                            this.message = "Correction effectuée.";
+                            this.modifyForm = true;
+                            this.$router.push({ name: "wall" });
+                            this.$router.go(0);
+                            // history.go(0);
+                        } else {
+                            response.json().then((json) => {
+                                this.success = false;
+                                console.log(json);
+                                this.message = json.error || json.message;
+                                return this.message;
+                            });
+                        }
                     })
-                    .catch (() => {
-                              this.success= false;
-                              this.message = `Le serveur ne répond pas ! Veuillez réessayer ultérieurement`;
-                    })         
-
+                    .catch(() => {
+                        this.success = false;
+                        this.message = `Le serveur ne répond pas ! Veuillez réessayer ultérieurement`;
+                    });
             },
             deleteComment() {
+                const Token = JSON.parse(sessionStorage.getItem("Token"));
+                // const loggedUserId=JSON.parse(sessionStorage.getItem("UserId"))
+                const CommentId = document.getElementById("CommentOnACommentId").textContent;
+                const Comment = {
+                    CommentId: CommentId,
+                };
 
-                          const  Token = JSON.parse(sessionStorage.getItem("Token"));
-                          // const loggedUserId=JSON.parse(sessionStorage.getItem("UserId"))
-                          const CommentId = document.getElementById("CommentOnACommentId").textContent;
-                          const Comment = {
-                            "CommentId" : CommentId
-                          }
+                const deleteComment = confirm("Le commentaire et tous les commentaires associés vont être effacés");
 
-                          const deleteComment = confirm("Le commentaire et tous les commentaires associés vont être effacés")
-
-                          if (deleteComment){
-                            fetch(`http://localhost:3000/api/comments/${CommentId}`, {
-                              method: 'DELETE',
-                              headers: {"Content-Type": "application/json", 
-                                        "Authorization": "Bearer " + Token
-                              },
-                              body: JSON.stringify(Comment),
-                              mode : "cors"
-                            })
-                            .then(() => {
-                              alert("Commentaire effacé !");
-                              setTimeout(this.$router.push({ name: 'wall' }), 3000);
-                              this.$router.go(0);
-                            })
-                            .catch( (error) => { alert(error);
-                            })
-                          }else{
-                             this.$router.push({ name: 'wall' });
-                             this.$router.go(0);
-                          }
+                if (deleteComment) {
+                    fetch(`http://localhost:3000/api/comments/${CommentId}`, {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
+                        body: JSON.stringify(Comment),
+                        mode: "cors",
+                    })
+                        .then(() => {
+                            alert("Commentaire effacé !");
+                            setTimeout(this.$router.push({ name: "wall" }), 3000);
+                            this.$router.go(0);
+                        })
+                        .catch((error) => {
+                            alert(error);
+                        });
+                } else {
+                    this.$router.push({ name: "wall" });
+                    this.$router.go(0);
+                }
             },
-          },
+        },
 
-          beforeMount () {
-                            const  Token = JSON.parse(sessionStorage.getItem("Token"));
-                            const loggedUserId=JSON.parse(sessionStorage.getItem("UserId"))
-                            const ShareId = new URL(window.location.href).hash.split("=")[1];
+        beforeMount() {
+            const Token = JSON.parse(sessionStorage.getItem("Token"));
+            const loggedUserId = JSON.parse(sessionStorage.getItem("UserId"));
+            const ShareId = new URL(window.location.href).hash.split("=")[1];
 
-                            this.isAdmin = sessionStorage.getItem("isAdmin");
-                           
-                           // LES COMMENTAIRES    
+            this.isAdmin = sessionStorage.getItem("isAdmin");
 
-                            fetch(`http://localhost:3000/api/comments/${ShareId}`, {
-                            method: 'GET',
-                            headers: {"Content-Type": "application/json", 
-                                      "Authorization": "Bearer " + Token
-                            },
-                            mode : "cors"
-                            })
-                            .then((res) => {
-                              return res.json();
-                            })
-                            .then((res) =>{
-                              this.loggedUserId = loggedUserId;
-                              this.apiCommentsResponse=res
-                              this.apiLength = res.length
-                            })
-                            .catch( (error) => { alert(error);
-                            });
-          },
-}
+            // LES COMMENTAIRES
+
+            fetch(`http://localhost:3000/api/comments/${ShareId}`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
+                mode: "cors",
+            })
+                .then((res) => {
+                    return res.json();
+                })
+                .then((res) => {
+                    this.loggedUserId = loggedUserId;
+                    this.apiCommentsResponse = res;
+                    this.apiLength = res.length;
+                })
+                .catch((error) => {
+                    alert(error);
+                });
+        },
+    };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -10,6 +10,7 @@ router.put("/:id", auth, commentsCrtl.updateComment);
 router.delete("/:id", auth, commentsCrtl.deleteComment);
 // router.post("/:id/like", auth, commentsCrtl.likeOrDislikeComment);
 
+// l'id dont il est ici question est celle du share qui est commenté
 router.get("/:id", auth, commentsCrtl.getAllComments);
 
 module.exports = router;
