@@ -1,58 +1,70 @@
 <template>
     <section class="mainshares shares">
         <div class="card" id="shareAloneComments">
-            <div id="commentDiv" v-for="item in apiCommentsResponse" :key="item.shareShareId" class="card card__info card__info--2">
-                <div v-if="item.CommentId">
-                    <!--- le commentaire original -->
-                    <div v-if="modifyCommentBox">
-                        <p class="card__info--text card__info--sharetext">{{ item.CommentText }}</p>
-                        <p class="card__info--text card__info--sharetext">{{ item.userUserId }}</p>
-                    </div>
+            <div
+                v-for="item in apiCommentsResponse"
+                v-bind:id="`commentDiv-${item.CommentId}`"
+                :key="item.shareShareId"
+                class="card card__info card__info--2"
+            >
+                <!--- le commentaire original -->
+                <div v-show="modifyCommentBox" :id="`OriginalCommentText-${item.CommentId}`">
+                    <p class="card__info--text card__info--sharetext">{{ item.CommentText }}</p>
+                </div>
 
-                    <!--- le commentaire tel qu'il va être modifié -->
-                    <div v-else class="formSection" id="CommentForm">
-                        <div class="formDiv">
-                            <form type="multipart/form-data" method="PUT" name="form" id="CommentToBeCorrected" class="formulaire">
-                                <!--Le Comment-->
-                                <div class="formLine">
-                                    <label for="CommentText" class="label">Votre commentaire</label>
-                                    <textarea
-                                        class="bigtextarea textarea input"
-                                        form="CommentToBeCorrected"
-                                        type="textarea"
-                                        v-model="item.CommentText"
-                                        placeholder="..."
-                                        id="CommentText"
-                                        name="CommentText"
-                                    ></textarea>
-                                </div>
-
-                                <div class="btn-div">
-                                    <button type="button" class="btn" @click="doNotModify()" id="CancelBtn">Annuler</button>
-                                    <input type="button" class="btn" @click="correctComment()" id="CommentBtn" value="Confirmer" />
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="separator"></div>
-
-                    <div class="card__info--complement">
-                        <div>
-                            <p>{{ item.user.UserFirstname }} {{ item.user.UserName }} / {{ item.user.UserDepartement }} / {{ item.user.UserRole }}</p>
-                            <p>{{ formatDate(item.updatedAt) }}</p>
-                            <p hidden>{{ item.commentCommentId }}</p>
-                        </div>
+                <!--- un formulaire contenant le commentaire original, à modifier-->
+                <div v-show="!modifyCommentBox" class="formSection" :id="`CommentForm-${item.CommentId}`">
+                    <div class="formDiv">
+                        <form
+                            type="multipart/form-data"
+                            method="PUT"
+                            name="form"
+                            :id="`CommentToBeCorrectedForm-${item.CommentId}`"
+                            class="formulaire"
+                        >
+                            <!--La ligne de formulaire correspondant au commentaire-->
+                            <div class="formLine">
+                                <label for="CommentToBeCorrectedText" class="label">Votre commentaire</label>
+                                <textarea
+                                    class="bigtextarea textarea input"
+                                    form="CommentToBeCorrected"
+                                    type="textarea"
+                                    v-model="item.CommentText"
+                                    placeholder="..."
+                                    :id="`CommentToBeCorrectedText-${item.CommentId}`"
+                                    name="CommentToBeCorrectedText"
+                                ></textarea>
+                            </div>
+                            <!--Les boutons permettant d'annuler ou de confirmer la modification-->
+                            <div class="btn-div">
+                                <button type="button" class="btn" @click="doNotModify()" :id="`CancelBtn-${item.CommentId}`">Annuler</button>
+                                <input type="button" class="btn" @click="correctComment()" :id="`CommentBtn-${item.CommentId}`" value="Confirmer" />
+                            </div>
+                        </form>
                     </div>
                 </div>
 
+                <!--- un séparateur -->
+                <div class="separator"></div>
+
+                <!--- les informations sur l'auteur du commentaire -->
+                <div class="card__info--complement">
+                    <div>
+                        <p>{{ item.user.UserFirstname }} {{ item.user.UserName }} / {{ item.user.UserDepartement }} / {{ item.user.UserRole }}</p>
+                        <p>{{ formatDate(item.updatedAt) }}</p>
+                        <!-- ajouter hidden qd composant au point-->
+                        <p>{{ item.CommentId }}</p>
+                    </div>
+                </div>
+
+                <!--- les boutons qui permettent à l'auteur du commentaire (ou à un admin) de le corriger ou de l'effacer-->
                 <div class="btn-div" v-show="modifying">
                     <button
                         v-if="item.userUserId === this.loggedUserId || isAdmin == 1"
                         type="button"
                         class="btn"
                         @click="modifyComment()"
-                        id="modifyCommentBtn"
+                        :id="`modifyCommentBtn-${item.CommentId}`"
                     >
                         Corriger
                     </button>
@@ -61,16 +73,19 @@
                         type="button"
                         class="btn"
                         @click="deleteComment()"
-                        id="deleteCommentBtn"
+                        :id="`deleteCommentBtn${item.CommentId}`"
                     >
                         Effacer
                     </button>
                 </div>
-                <div>
-                    <!--ma ligne suivante sert à cibler le commentaire sur lequel est réagi -->
-                    <p hidden id="CommentId">{{ item.CommentId }}</p>
-                    <PostACommentOnAComment v-if="item.userUserId != loggedUserId" />
-                </div>
+
+                <!--le CommentId sert à identifier de manière unique les id des templates du composant PostACommentOnAComment-->
+                <!-- <p id="CommentId">{{ item.CommentId }}</p> -->
+                <PostACommentOnAComment v-show="item.userUserId != loggedUserId" v-bind:commentid="item.CommentId" />
+                <ShareAloneReactions
+                    v-if="apiReactionsResponse.find((x) => x.commentCommentId === item.CommentId)"
+                    v-bind:commentcommentid="item.CommentId"
+                />
             </div>
         </div>
     </section>
@@ -78,6 +93,8 @@
 
 <script>
     import PostACommentOnAComment from "@/components/PostACommentOnAComment.vue";
+    import ShareAloneReactions from "@/components/ShareAloneReactions.vue";
+
     import dayjs from "dayjs";
     require("dayjs/locale/fr");
     dayjs.locale("fr");
@@ -86,20 +103,20 @@
         name: "ShareAloneComments",
         components: {
             PostACommentOnAComment,
+            ShareAloneReactions,
         },
+
+        props: ["shareid"],
 
         data() {
             return {
                 loggedUserId: "",
                 apiCommentsResponse: Array,
-                apiLength: Number,
+                apiReactionsResponse: Array,
+                apiLengthComments: Number,
+                apiLengthReactions: Number,
 
-                userUserId: "",
-                CommentId: "",
-                CommentText: "",
-                CommentcreatedAt: "",
-                CommentupdatedAt: "",
-                CommentuserUserId: "",
+                // data envoyée au composant enfant dans la déclaration du composant PostACommentOnAComment
 
                 modifyCommentBox: {
                     type: Boolean,
@@ -123,18 +140,20 @@
             },
 
             modifyComment() {
-                this.modifyCommentBox = false;
-                this.modifying = false;
+                // this.modifyCommentBox = false;
+                document.getElementById(`CommentToBeCorrectedForm-${this.CommentId}`).hidden = true;
+                // this.modifying = false;
             },
             doNotModify() {
-                this.modifyCommentBox = true;
-                this.modifying = true;
+                // this.modifyCommentBox = true;
+                document.getElementById(`CommentToBeCorrectedForm-${this.CommentId}`).hidden = false;
+                document.getElementById(`CommentToBeCorrectedForm-${this.CommentId}`).reset();
+                // this.modifying = true;
             },
 
             correctComment() {
-                const CommentToBeCorrected = document.getElementById("CommentToBeCorrected");
-                console.log(CommentToBeCorrected);
-                const CommentId = document.getElementById("CommentOnACommentId").textContent;
+                const CommentToBeCorrected = document.getElementById(`CommentToBeCorrectedForm-${this.CommentId}`);
+                const CommentId = document.getElementById(`CommentId-${this.CommentId}`).outerText;
 
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
                 const Modify = new FormData(CommentToBeCorrected);
@@ -150,15 +169,13 @@
                     method: "PUT",
                     headers: {
                         Accept: "*/*",
-                        // "Content-Type": "multipart/form-data",
+                        "Content-Type": "multipart/form-data",
                         Authorization: "Bearer " + Token,
                     },
                     body: Modify,
                     mode: "cors",
                 })
                     .then((response) => {
-                        console.log(Modify);
-
                         if (response.status == 201) {
                             this.success = true;
                             this.message = "Correction effectuée.";
@@ -183,7 +200,7 @@
             deleteComment() {
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
                 // const loggedUserId=JSON.parse(sessionStorage.getItem("UserId"))
-                const CommentId = document.getElementById("CommentOnACommentId").textContent;
+                const CommentId = document.getElementById(`CommentOnACommentId-${this.CommentId}`).textContent;
                 const Comment = {
                     CommentId: CommentId,
                 };
@@ -231,8 +248,24 @@
                 })
                 .then((res) => {
                     this.loggedUserId = loggedUserId;
-                    this.apiCommentsResponse = res;
-                    this.apiLength = res.length;
+                    this.apiCommentsResponse = res.filter((item) => item.commentCommentId === null);
+                    this.apiReactionsResponse = res.filter((item) => item.commentCommentId != null);
+
+                    this.apiLengthComments = this.apiCommentsResponse.length;
+                    this.apiLengthReactions = this.apiReactionsResponse.length;
+
+                    // const apiReactionsResponse = this.apiReactionsResponse;
+                    // apiReactionsResponse.forEach((item) => document.getElementById(`OriginalCommentText-${item.CommentId}`).insertAdjacentHTML("afterend", "<div id=`OriginalCommentText-${item.commentCommentId}`>TOTO</div>"));
+
+                    // apiReactionsResponse.forEach(
+                    //     (item) => console.log(item.CommentId),
+                    //     (item) => console.log(document.getElementById(`OriginalCommentText-${item.commentCommentId}`)),
+                    //     (item) => document.getElementById(`OriginalCommentText-${item.commentCommentId}`).insertAdjacentHTML("afterend", "<div id=`OriginalCommentText-${item.commentCommentId}`>TOTO</div>")
+                    // );
+
+                    // apiReactionsResponse.forEach((item) => console.log(document.getElementById(`OriginalCommentText-${item.commentCommentId}`)));
+
+                    this.CommentId = res.CommentId;
                 })
                 .catch((error) => {
                     alert(error);

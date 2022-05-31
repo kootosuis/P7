@@ -1,16 +1,16 @@
 <template>
     <section class="container">
-        <div class="btn-div" id="CommentOnACommentAccess" v-show="CommentOnACommentFormHidden">
-            <button type="button" class="btn" @click="displayCommentOnCommentForm()" id="GoToCommentOnAComment">Une réaction ?</button>
+        <div class="btn-div" :id="`CommentOnACommentAccess-${commentid}`" v-show="CommentOnACommentFormHidden">
+            <button type="button" class="btn" @click="displayCommentOnCommentForm()" :id="`GoToCommentOnAComment-${commentid}`">Une réaction ?</button>
         </div>
-        <div class="formSection" id="CommentOnACommentForm" v-show="!CommentOnACommentFormHidden">
+        <div class="formSection" :id="`CommentOnACommentForm-${commentid}`" v-show="!CommentOnACommentFormHidden">
             <div class="formDiv">
-                <form type="multipart/form-data" method="POST" name="form" @submit="CommentOnAComment" id="CommentOnAComment" class="formulaire">
+                <form type="multipart/form-data" method="POST" name="form" @submit="CommentOnAComment" :id="`CommentOnAComment-${commentid}`" class="formulaire">
                     <!--Le Comment-->
                     <div class="formLine">
                         <label for="CommentOnACommentText" class="label">Votre réaction</label>
                         <textarea
-                            id="CommentOnACommentText"
+                            :id="`CommentOnACommentText-${commentid}`"
                             class="bigtextarea textarea input"
                             form="CommentOnACommentText"
                             type="textarea"
@@ -22,8 +22,8 @@
                     </div>
 
                     <div class="btn-div">
-                        <button type="button" class="btn" @click="displayGoTo()" id="CancelBtn">Annuler</button>
-                        <input type="button" @click="CommentOnAComment" class="btn" id="CommentOnACommentBtn" value="Réagir" disabled />
+                        <button type="button" class="btn" @click="displayGoTo()" :id="`CancelBtn-${commentid}`">Annuler</button>
+                        <input type="button" @click="CommentOnAComment" class="btn" :id="`CommentOnACommentBtn-${commentid}`" value="Réagir" disabled />
                     </div>
                 </form>
             </div>
@@ -45,6 +45,8 @@
                 },
             };
         },
+        // prop reçue du composant parent ShareAloneComments
+        props:['commentid'],
 
         methods: {
             displayCommentOnCommentForm() {
@@ -52,29 +54,25 @@
             },
             displayGoTo() {
                 this.CommentOnACommentFormHidden = true;
+                document.getElementById(`CommentOnAComment-${this.commentid}`).reset();
             },
             checkCommentOnCommentForm() {
-                const noblank = document.getElementById("CommentOnACommentText").value.trim();
+                const noblank = document.getElementById(`CommentOnACommentText-${this.commentid}`).value.trim();
                 if (noblank != "" && noblank.length > 2) {
-                    document.getElementById("CommentOnACommentBtn").disabled = false;
+                    document.getElementById(`CommentOnACommentBtn-${this.commentid}`).disabled = false;
                 } else {
-                    document.getElementById("CommentOnACommentBtn").disabled = true;
+                    document.getElementById(`CommentOnACommentBtn-${this.commentid}`).disabled = true;
                 }
             },
             CommentOnAComment() {
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
-                const commentOnACommentText = document.getElementById("CommentOnACommentText").value;
+                const commentOnACommentText = document.getElementById(`CommentOnACommentText-${this.commentid}`).value;
                 const shareShareId = new URL(window.location.href).hash.split("=")[1];
-                console.log(Token);
-                console.log(commentOnACommentText);
-                console.log(shareShareId);
 
                 const commentCommentId =
-                    document.getElementById("CommentOnACommentText").parentElement.parentNode.parentElement.parentElement.parentElement.parentElement
-                        .childNodes[0].outerText;
-                console.log(commentCommentId);
+                    document.getElementById(`CommentOnACommentText-${this.commentid}`).outerText;
+
                 const commentOnAComment = { CommentText: commentOnACommentText, shareShareId: shareShareId, commentCommentId: commentCommentId };
-                console.log(commentOnAComment);
 
                 fetch("http://localhost:3000/api/comments", {
                     method: "POST",
@@ -96,7 +94,6 @@
                         } else {
                             response.json().then((json) => {
                                 this.success = false;
-                                console.log(json);
                                 this.message = json.error || json.message;
                                 return this.message;
                             });

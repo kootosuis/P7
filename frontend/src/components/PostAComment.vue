@@ -52,6 +52,7 @@
             },
             displayGoTo() {
                 this.CommentFormHidden = true;
+                document.getElementById("CommentToBePosted").reset();
             },
             checkCommentForm() {
                 const noblank = document.getElementById("CommentText").value.trim();
@@ -67,9 +68,6 @@
                 const shareShareId = new URL(window.location.href).hash.split("=")[1];
 
                 const Comment = { CommentText: CommentText, shareShareId: shareShareId };
-
-
-
 
                 fetch("http://localhost:3000/api/comments", {
                     method: "POST",

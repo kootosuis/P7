@@ -70,7 +70,10 @@
                         <p v-if="isAdmin == 1"><router-link :to="`/modifyByAdmin/${userUserId}`">Accéder aux données utilisateur.</router-link></p>
                         <p hidden>{{ userUserId }}</p>
                         <p>{{ formatDate(updatedAt) }}</p>
-                        <p>{{ apiLength }} commentaire<span v-if="this.apiLength > 1">s</span></p>
+                        <p>
+                            {{ apiLengthComments }} commentaire<span v-if="this.apiLengthComments > 1">s</span> et
+                            {{ apiLengthReactions }} réaction<span v-if="this.apiLengthReactions > 1">s</span>.
+                        </p>
                     </div>
                 </div>
 
@@ -105,7 +108,7 @@
 
         <!-- LES COMMENTAIRES -->
 
-        <ShareAloneComments />
+        <ShareAloneComments v-bind:shareid="ShareId" />
     </section>
 </template>
 
@@ -144,8 +147,11 @@
 
                 MediaUrl: "", // le Media du Share
                 MediaDescription: "",
+
                 apiCommentsResponse: Array,
-                apiLength: Number,
+                apiReactionsResponse: Array,
+                apiLengthComments: Number,
+                apiLengthReactions: Number,
 
                 modifyForm: {
                     type: Boolean,
@@ -293,8 +299,10 @@
                     return res.json();
                 })
                 .then((res) => {
-                    this.apiCommentsResponse = res;
-                    this.apiLength = res.length;
+                    this.apiCommentsResponse = res.filter((item) => item.commentCommentId === null);
+                    this.apiReactionsResponse = res.filter((item) => item.commentCommentId != null);
+                    this.apiLengthComments = this.apiCommentsResponse.length;
+                    this.apiLengthReactions = this.apiReactionsResponse.length;
                 })
                 .catch((error) => {
                     alert(error);
