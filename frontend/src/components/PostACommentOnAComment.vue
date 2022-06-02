@@ -69,8 +69,7 @@
                 const commentOnACommentText = document.getElementById(`CommentOnACommentText-${this.commentid}`).value;
                 const shareShareId = new URL(window.location.href).hash.split("=")[1];
 
-                const commentCommentId =
-                    document.getElementById(`CommentOnACommentText-${this.commentid}`).outerText;
+                const commentCommentId = this.commentid;
 
                 const commentOnAComment = { CommentText: commentOnACommentText, shareShareId: shareShareId, commentCommentId: commentCommentId };
 

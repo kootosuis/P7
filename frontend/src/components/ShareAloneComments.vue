@@ -37,8 +37,16 @@
                             </div>
                             <!--Les boutons permettant d'annuler ou de confirmer la modification-->
                             <div class="btn-div">
-                                <button type="button" class="btn" @click="doNotModify()" :id="`CancelBtn-${item.CommentId}`">Annuler</button>
-                                <input type="button" class="btn" @click="correctComment()" :id="`CommentBtn-${item.CommentId}`" value="Confirmer" />
+                                <button type="button" class="btn" @click="doNotModify(item.CommentId)" :id="`CancelBtn-${item.CommentId}`">
+                                    Annuler
+                                </button>
+                                <input
+                                    type="button"
+                                    class="btn"
+                                    @click="correctComment(item.CommentId)"
+                                    :id="`CommentBtn-${item.CommentId}`"
+                                    value="Confirmer"
+                                />
                             </div>
                         </form>
                     </div>
@@ -52,8 +60,6 @@
                     <div>
                         <p>{{ item.user.UserFirstname }} {{ item.user.UserName }} / {{ item.user.UserDepartement }} / {{ item.user.UserRole }}</p>
                         <p>{{ formatDate(item.updatedAt) }}</p>
-                        <!-- ajouter hidden qd composant au point-->
-                        <p>{{ item.CommentId }}</p>
                     </div>
                 </div>
 
@@ -63,7 +69,7 @@
                         v-if="item.userUserId === this.loggedUserId || isAdmin == 1"
                         type="button"
                         class="btn"
-                        @click="modifyComment()"
+                        @click="modifyComment(item.CommentId)"
                         :id="`modifyCommentBtn-${item.CommentId}`"
                     >
                         Corriger
@@ -72,8 +78,8 @@
                         v-if="item.userUserId === this.loggedUserId || isAdmin == 1"
                         type="button"
                         class="btn"
-                        @click="deleteComment()"
-                        :id="`deleteCommentBtn${item.CommentId}`"
+                        @click="deleteComment(item.CommentId)"
+                        :id="`deleteCommentBtn-${item.CommentId}`"
                     >
                         Effacer
                     </button>
@@ -139,21 +145,21 @@
                 return date.format("dddd D MMMM YYYY , HH:mm");
             },
 
-            modifyComment() {
+            modifyComment(i) {
                 // this.modifyCommentBox = false;
-                document.getElementById(`CommentToBeCorrectedForm-${this.CommentId}`).hidden = true;
+                document.getElementById(`CommentToBeCorrectedForm-` + i).style.display = "none";
                 // this.modifying = false;
             },
-            doNotModify() {
+            doNotModify(i) {
                 // this.modifyCommentBox = true;
-                document.getElementById(`CommentToBeCorrectedForm-${this.CommentId}`).hidden = false;
-                document.getElementById(`CommentToBeCorrectedForm-${this.CommentId}`).reset();
+                document.getElementById(`CommentToBeCorrectedForm-` + i).style.display = "block";
+                document.getElementById(`CommentToBeCorrectedForm-` + i).reset();
                 // this.modifying = true;
             },
 
-            correctComment() {
-                const CommentToBeCorrected = document.getElementById(`CommentToBeCorrectedForm-${this.CommentId}`);
-                const CommentId = document.getElementById(`CommentId-${this.CommentId}`).outerText;
+            correctComment(i) {
+                const CommentToBeCorrected = document.getElementById(`CommentToBeCorrectedForm-`+i);
+                const CommentId = document.getElementById(`CommentId-`+ i).outerText;
 
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
                 const Modify = new FormData(CommentToBeCorrected);
@@ -197,10 +203,10 @@
                         this.message = `Le serveur ne répond pas ! Veuillez réessayer ultérieurement`;
                     });
             },
-            deleteComment() {
+            deleteComment(i) {
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
                 // const loggedUserId=JSON.parse(sessionStorage.getItem("UserId"))
-                const CommentId = document.getElementById(`CommentOnACommentId-${this.CommentId}`).textContent;
+                const CommentId = i;
                 const Comment = {
                     CommentId: CommentId,
                 };

@@ -3,6 +3,7 @@
         <div class="card" id="shareAloneReactions">
             <div
                 v-for="item in apiReactionsResponse"
+                v-show="item.commentCommentId == this.commentcommentid"
                 v-bind:id="`commentDiv-${item.CommentId}`"
                 :key="item.shareShareId"
                 class="card card__info card__info--2"

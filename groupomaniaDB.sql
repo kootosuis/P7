@@ -53,7 +53,7 @@ DROP TABLE IF EXISTS `comments`;
 
 CREATE TABLE `comments` (
   `CommentId` int NOT NULL AUTO_INCREMENT,
-  `CommentText` varchar(255) NOT NULL,
+  `CommentText` varchar(10000) NOT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `userUserId` char(36) NOT NULL,

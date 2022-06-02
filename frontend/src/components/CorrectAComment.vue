@@ -168,7 +168,7 @@
                 return date.format("dddd D MMMM YYYY , HH:mm");
             },
 
-            modifyComment(e) {
+            modifyComment(i) {
                 // this.modifyCommentBox = false;
                 document.getElementById(`CommentToBeCorrectedForm-${e}`).style.display = "none";
                 // this.modifying = false;
