@@ -210,7 +210,7 @@
                             this.message = "Correction effectuée.";
                             this.modifyForm = true;
                             this.$router.push({ name: "wall" });
-                            this.$router.go(0);
+                            // this.$router.go(0);
                             // history.go(0);
                         } else {
                             response.json().then((json) => {

@@ -223,10 +223,12 @@
             },
             deleteShare() {
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
-                // const loggedUserId=JSON.parse(sessionStorage.getItem("UserId"))
+                const isAdmin = JSON.parse(sessionStorage.getItem("isAdmin"));
+
                 const ShareId = new URL(window.location.href).hash.split("=")[1];
                 const Share = {
                     ShareId: ShareId,
+                    isAdmin: isAdmin,
                 };
 
                 const deleteShare = confirm("Le share et tous les commentaires associés vont être effacés");

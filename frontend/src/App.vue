@@ -2,10 +2,6 @@
     // import LoaderComp from "@/components/LoaderComp.vue"
     import PageFooter from "@/components/PageFooter.vue"
 
-
-    // je ne comprends pas pourquoi cela ne marche pas
-    // console.log("TEST" + process.env.VUE_APP_ADMINID)
-
     export default {
         name: 'App',
         components :{
@@ -18,7 +14,7 @@
 <template>
     <div>
             <!-- <LoaderComp/> -->
-
+            
             <div class="main">
                 <router-view/> 
             </div>

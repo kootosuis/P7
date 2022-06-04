@@ -89,7 +89,6 @@
                         } else {
                             response.json().then((json) => {
                                 this.success = false;
-                                console.log(json);
                                 this.message = json.error || json.message;
                                 return this.message;
                             });

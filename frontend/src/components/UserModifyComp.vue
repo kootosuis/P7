@@ -7,22 +7,6 @@
 
             <div class="formDiv">
                 <form class="formulaire" method="PUT" name="form" id="form" @keydown="checkForm" @input="checkForm" @submit="modifySignup">
-                    <!--Le Nom-->
-                    <div class="formLine">
-                        <label for="UserName" class="label">Nom <span class="asterisque">*</span></label>
-                        <input
-                            class="input"
-                            v-model="UserName"
-                            @keydown="checkForm"
-                            @input="checkForm"
-                            type="text"
-                            placeholder="Entrez votre nom."
-                            id="UserName"
-                            name="UserName"
-                            required="required"
-                        />
-                    </div>
-
                     <!--Le Prénom-->
                     <div class="formLine">
                         <label for="UserFirstname" class="label">Prénom <span class="asterisque">*</span></label>
@@ -35,6 +19,22 @@
                             placeholder="Entrez votre prénom."
                             id="UserFirstname"
                             name="UserFirstname"
+                            required="required"
+                        />
+                    </div>
+
+                    <!--Le Nom-->
+                    <div class="formLine">
+                        <label for="UserName" class="label">Nom <span class="asterisque">*</span></label>
+                        <input
+                            class="input"
+                            v-model="UserName"
+                            @keydown="checkForm"
+                            @input="checkForm"
+                            type="text"
+                            placeholder="Entrez votre nom."
+                            id="UserName"
+                            name="UserName"
                             required="required"
                         />
                     </div>

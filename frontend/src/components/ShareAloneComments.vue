@@ -8,12 +8,12 @@
                 class="card card__info card__info--2"
             >
                 <!--- le commentaire original -->
-                <div v-show="modifyCommentBox" :id="`OriginalCommentText-${item.CommentId}`">
+                <div style="display: inline-block" :id="`OriginalCommentText-${item.CommentId}`">
                     <p class="card__info--text card__info--sharetext">{{ item.CommentText }}</p>
                 </div>
 
                 <!--- un formulaire contenant le commentaire original, à modifier-->
-                <div v-show="!modifyCommentBox" class="formSection" :id="`CommentForm-${item.CommentId}`">
+                <div style="display: none" class="formSection" :id="`CommentForm-${item.CommentId}`">
                     <div class="formDiv">
                         <form
                             type="multipart/form-data"
@@ -86,7 +86,6 @@
                 </div>
 
                 <!--le CommentId sert à identifier de manière unique les id des templates du composant PostACommentOnAComment-->
-                <!-- <p id="CommentId">{{ item.CommentId }}</p> -->
                 <PostACommentOnAComment v-show="item.userUserId != loggedUserId" v-bind:commentid="item.CommentId" />
                 <ShareAloneReactions
                     v-if="apiReactionsResponse.find((x) => x.commentCommentId === item.CommentId)"
@@ -124,11 +123,6 @@
 
                 // data envoyée au composant enfant dans la déclaration du composant PostACommentOnAComment
 
-                modifyCommentBox: {
-                    type: Boolean,
-                    default: true,
-                },
-
                 modifying: {
                     type: Boolean,
                     default: false,
@@ -146,20 +140,20 @@
             },
 
             modifyComment(i) {
-                // this.modifyCommentBox = false;
-                document.getElementById(`CommentToBeCorrectedForm-` + i).style.display = "none";
-                // this.modifying = false;
+                document.getElementById(`OriginalCommentText-` + i).style = "display:none";
+                document.getElementById(`CommentForm-` + i).style = "display:inline-block";
+                this.modifying = false;
             },
             doNotModify(i) {
-                // this.modifyCommentBox = true;
-                document.getElementById(`CommentToBeCorrectedForm-` + i).style.display = "block";
+                document.getElementById(`CommentForm-` + i).style = "display:none";
                 document.getElementById(`CommentToBeCorrectedForm-` + i).reset();
-                // this.modifying = true;
+                document.getElementById(`OriginalCommentText-` + i).style = "display:inline-block";
+                this.modifying = true
             },
 
             correctComment(i) {
-                const CommentToBeCorrected = document.getElementById(`CommentToBeCorrectedForm-`+i);
-                const CommentId = document.getElementById(`CommentId-`+ i).outerText;
+                const CommentToBeCorrected = document.getElementById(`CommentToBeCorrectedForm-` + i);
+                const CommentId = i;
 
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
                 const Modify = new FormData(CommentToBeCorrected);
@@ -187,7 +181,7 @@
                             this.message = "Correction effectuée.";
                             this.modifyForm = true;
                             this.$router.push({ name: "wall" });
-                            this.$router.go(0);
+                            // this.$router.go(0);
                             // history.go(0);
                         } else {
                             response.json().then((json) => {
@@ -205,10 +199,12 @@
             },
             deleteComment(i) {
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
+                const isAdmin = JSON.parse(sessionStorage.getItem("isAdmin"));
                 // const loggedUserId=JSON.parse(sessionStorage.getItem("UserId"))
                 const CommentId = i;
                 const Comment = {
                     CommentId: CommentId,
+                    isAdmin: isAdmin,
                 };
 
                 const deleteComment = confirm("Le commentaire et tous les commentaires associés vont être effacés");

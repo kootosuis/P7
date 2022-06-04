@@ -89,7 +89,8 @@
                             this.message = "Commentaire en ligne.";
                             this.CommentOnACommentFormHidden = true;
                             this.$router.push({ name: "wall" });
-                            this.$router.go(0);
+                            // la ligne suivante provoque des failed to fetch ( à creuser)
+                            // this.$router.go(0);
                         } else {
                             response.json().then((json) => {
                                 this.success = false;

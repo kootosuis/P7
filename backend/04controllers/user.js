@@ -115,12 +115,12 @@ exports.modifySignup = (req, res, next) => {
 //     const token = req.headers.authorization.split(" ")[1];
 //     const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
 //     const loggedUserId = decodedToken.UserId;
-//     const adminId = process.env.ADMINID; // comment définir autrement le adminId ????
+//     const isAdmin = process.env.isAdmin; // comment définir autrement le isAdmin ????
 
 //     const accountId = req.params.id;
 
 //     User.findOne({ where: { UserId: accountId } }).then((user) => {
-//         if (user.UserId == loggedUserId || loggedUserId == adminId) {
+//         if (user.UserId == loggedUserId || loggedUserId == isAdmin) {
 //             User.destroy({ where: { UserId: accountId } })
 //                 .then(() => res.status(200).json({ message: "Utilisateur supprimé" }))
 //                 .catch((error) => res.status(400).json({ error }));
@@ -135,17 +135,17 @@ exports.delete = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
-    const adminId = process.env.ADMINID; // comment définir autrement le adminId ????
+    const isAdmin = req.body.isAdmin;
 
     const accountId = req.params.id;
 
     User.findOne({ where: { UserId: accountId } }).then((user) => {
         if (user == null) {
             res.status(400).json({ message: " Cet utilisateur n'existe pas" });
-        } else if (!user.UserId == loggedUserId || !loggedUserId == adminId) {
+        } else if (!user.UserId == loggedUserId || isAdmin === 0) {
             //ceinture et bretelles
             res.status(401).json({ message: "Vous n'avez pas les autorisations nécéssaires pour cette opération." });
-        } else if (user.UserId == loggedUserId || loggedUserId == adminId) {
+        } else if (user.UserId == loggedUserId || isAdmin === 1) {
             Share.findAll({ raw: true, where: { userUserId: user.UserId } })
                 .then((shares) => {
                     const shareX = shares;
@@ -181,12 +181,11 @@ exports.delete = (req, res) => {
 
 //-------GET ONE ------//
 exports.getOneUser = (req, res) => {
-    const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
+    const paramsId = req.params.id;
 
     User.findOne({ where: { UserId: paramsId } })
         .then((user) => {
-            // delete user.dataValues.UserPassword, // le password ne sera pas transmis au front
-
+            // delete user.dataValues.UserPassword, // avec cela, le password ne sera pas transmis au front
             res.status(200).json(user);
         })
         .catch((error) => res.status(404).json({ error }));
@@ -194,7 +193,7 @@ exports.getOneUser = (req, res) => {
 
 //----- GET ALL USERS //
 exports.getAllUsers = (req, res) => {
-    User.findAll({order: [["UserName", "ASC"]] })
+    User.findAll({ order: [["UserName", "ASC"]] })
         .then((users) => {
             users.forEach((item, index) => {
                 // le password ne sera pas transmis au front

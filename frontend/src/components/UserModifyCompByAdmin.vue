@@ -7,22 +7,6 @@
 
             <div class="formDiv">
                 <form class="formulaire" method="PUT" name="form" id="form" @keydown="checkForm" @input="checkForm" @submit="modifySignup">
-                    <!--Le Nom-->
-                    <div class="formLine">
-                        <label for="UserName" class="label">Nom <span class="asterisque">*</span></label>
-                        <input
-                            class="input"
-                            v-model="UserName"
-                            @keydown="checkForm"
-                            @input="checkForm"
-                            type="text"
-                            placeholder="Entrez le nom de l'utilisateur."
-                            id="UserName"
-                            name="UserName"
-                            required="required"
-                        />
-                    </div>
-
                     <!--Le Prénom-->
                     <div class="formLine">
                         <label for="UserFirstname" class="label">Prénom <span class="asterisque">*</span></label>
@@ -35,6 +19,22 @@
                             placeholder="Entrez votre prénom."
                             id="UserFirstname"
                             name="UserFirstname"
+                            required="required"
+                        />
+                    </div>
+
+                    <!--Le Nom-->
+                    <div class="formLine">
+                        <label for="UserName" class="label">Nom <span class="asterisque">*</span></label>
+                        <input
+                            class="input"
+                            v-model="UserName"
+                            @keydown="checkForm"
+                            @input="checkForm"
+                            type="text"
+                            placeholder="Entrez le nom de l'utilisateur."
+                            id="UserName"
+                            name="UserName"
                             required="required"
                         />
                     </div>
@@ -133,9 +133,6 @@
                     </div>
 
                     <!--L'habilitation -->
-                    <div hidden>
-                        <p id="UserHabilitation">{{ UserHabilitation }}</p>
-                    </div>
 
                     <div class="formLine">
                         <label for="UserHabilitation" class="label">Habilitation</label>
@@ -161,7 +158,17 @@
                             <option value="1">avec habilitation à administrer</option>
                             <option value="0">sans habilitation à administrer</option>
                         </select>
-                        <p v-if="UserHabilitation == 1 && !AdminLength" class="hint input">
+                        <select
+                            v-if="UserHabilitation == 1 && !AdminLength"
+                            class="input"
+                            id="changedUserHabilitation"
+                            name="UserHabilitation"
+                            @input="checkForm"
+                            required="required"
+                        >
+                            <option value="1">avec habilitation à administrer</option>
+                        </select>
+                        <p class="hint input">
                             Vous pourrez modifier l'habilitation <br />
                             lorsqu'il y aura plus de deux autres administrateurs.
                         </p>
@@ -367,7 +374,7 @@
                     const UserRole = document.getElementById("UserRole").value;
                     const UserHabilitation = document.getElementById("changedUserHabilitation").value
                         ? document.getElementById("changedUserHabilitation").value
-                        : document.getElementById("UserHabilitation").value;
+                        : document.getElementById("UserHabilitation").textContent;
 
                     const User = {
                         UserName: UserName,

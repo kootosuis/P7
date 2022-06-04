@@ -60,16 +60,16 @@ exports.updateShare = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
-    const paramsId = req.body.ShareId; // à priori ce devrait être le bon paramètre, à ajuster avec le front
+    const ShareId = req.body.ShareId;
 
-    Share.findOne({ where: { ShareId: paramsId } })
+    Share.findOne({ where: { ShareId: ShareId } })
         .then((share) => {
             if (!share.userUserId == loggedUserId) {
                 res.status(400).json({
                     error: "Vous n'avez pas les autorisations nécéssaires pour modifier ce partage.",
                 });
             } else {
-                Share.update({ ShareText: req.body.ShareText }, { where: { ShareId: paramsId } })
+                Share.update({ ShareText: req.body.ShareText }, { where: { ShareId: ShareId } })
                     .then(() => res.status(201).json({ message: "Partage mis à jour !" }))
                     .catch((error) => res.status(404).json({ error }));
             }
@@ -81,22 +81,21 @@ exports.deleteShare = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
-    const adminId = process.env.ADMINID; // comment définir autrement le adminId
+    const isAdmin = req.body.isAdmin;
 
-    // const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
-    const paramsId = req.body.ShareId;
+    const ShareId = req.body.ShareId;
 
-    Share.findOne({ where: { ShareId: paramsId } })
+    Share.findOne({ where: { ShareId: ShareId } })
         .then((share) => {
-            if (!share.userUserId == loggedUserId || !loggedUserId == adminId) {
+            if (!share.userUserId == loggedUserId || isAdmin === 0) {
                 res.status(400).json({
                     error: "Vous n'avez pas les autorisations nécéssaires pour effacer ce partage.",
                 });
             } else {
-                Media.findOne({ where: { shareShareId: paramsId } }) //
+                Media.findOne({ where: { shareShareId: ShareId } }) //
                     .then((media) => {
                         if ((MediaUrl = `${req.protocol}://${req.get("host")}/07media/feather.png`)) {
-                            Share.destroy({ where: { ShareId: paramsId } })
+                            Share.destroy({ where: { ShareId: ShareId } })
                                 .then(() => res.status(201).json({ message: "Partage effacé !" }))
                                 .catch((error) => res.status(400).json({ error }));
                         } else if (media) {
@@ -104,7 +103,7 @@ exports.deleteShare = (req, res) => {
                             // const mediaId = media.MediaId;
                             fs.unlink(`07media/${filename}`, () => {
                                 // Media.destroy({ where: { MEDIA_id: mediaId } }),
-                                Share.destroy({ where: { ShareId: paramsId } })
+                                Share.destroy({ where: { ShareId: ShareId } })
                                     .then(() => res.status(201).json({ message: "Partage effacé !" }))
                                     .catch((error) => res.status(400).json({ error }));
                             });
@@ -117,7 +116,7 @@ exports.deleteShare = (req, res) => {
 
 //----- GET  A SPECIFIC SHARE //
 exports.getOneShare = (req, res) => {
-    const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
+    const paramsId = req.params.id;
 
     Share.findOne({ where: { ShareId: paramsId }, include: [User, Media, Comment] })
         .then((user) => res.status(200).json(user))

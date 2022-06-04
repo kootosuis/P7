@@ -47,18 +47,19 @@ exports.deleteComment = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
-    const adminId = process.env.ADMINID; // comment définir autrement le adminId
+    const isAdmin = req.body.isAdmin;
+    const CommentId = req.body.CommentId;
 
-    const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
-    Comment.findOne({ where: { CommentId: paramsId } })
-        .then((share) => {
-            if (!share.userUserId == loggedUserId || !loggedUserId == adminId) {
+    Comment.findOne({ where: { CommentId: CommentId } })
+        .then((comment) => {
+            if (!comment.userUserId == loggedUserId || isAdmin === 0) {
                 res.status(400).json({
                     error: "Vous n'avez pas les autorisations nécéssaires pour effacer ce commentaire.",
                 });
             } else {
-                Comment.destroy({ where: { CommentId: paramsId } })
+                Comment.destroy({ where: { commentCommentId: CommentId } })
+                Comment.destroy({ where: { CommentId: CommentId } })
                     .then(() => res.status(201).json({ message: "Commentaire effacé !" }))
                     .catch((error) => res.status(400).json({ error }));
             }
@@ -69,7 +70,7 @@ exports.deleteComment = (req, res) => {
 exports.getAllComments = (req, res) => {
     const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
 
-    Comment.findAll({ where: { shareShareId: paramsId }, include: [User], order: [["updatedAt", "DESC"]] })
+    Comment.findAll({ where: { shareShareId: paramsId }, include: [User], order: [["updatedAt", "ASC"]] })
         .then((user) => res.status(200).json(user))
         .catch((error) => res.status(404).json({ error }));
 };

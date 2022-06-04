@@ -7,20 +7,6 @@
 
             <div class="formDiv">
                 <form class="formulaire" method="POST" name="form" id="form" @submit="signUp">
-                    <!--Le Nom-->
-                    <div class="formLine">
-                        <label for="UserName" class="label">Nom <span class="asterisque">*</span></label>
-                        <input
-                            class="input"
-                            @input="checkForm"
-                            type="text"
-                            placeholder="Entrez votre nom."
-                            id="UserName"
-                            name="UserName"
-                            required="required"
-                        />
-                    </div>
-
                     <!--Le Prénom-->
                     <div class="formLine">
                         <label for="UserFirstname" class="label">Prénom <span class="asterisque">*</span></label>
@@ -31,6 +17,20 @@
                             placeholder="Entrez votre prénom."
                             id="UserFirstname"
                             name="UserFirstname"
+                            required="required"
+                        />
+                    </div>
+
+                    <!--Le Nom-->
+                    <div class="formLine">
+                        <label for="UserName" class="label">Nom <span class="asterisque">*</span></label>
+                        <input
+                            class="input"
+                            @input="checkForm"
+                            type="text"
+                            placeholder="Entrez votre nom."
+                            id="UserName"
+                            name="UserName"
                             required="required"
                         />
                     </div>
@@ -104,6 +104,20 @@
                             required="required"
                             pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
                         />
+                        <!--- un séparateur -->
+                        <div class="separator"></div>
+
+                        <input
+                            class="input"
+                            @keydown="checkForm"
+                            @input="checkForm"
+                            type="password"
+                            placeholder="Veuillez confirmer votre mot de pass."
+                            id="UserPasswordConfirm"
+                            name="UserPasswordConfirm"
+                            required="required"
+                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                        />
                     </div>
 
                     <!-- Avertissement -->
@@ -153,7 +167,8 @@
                     document.getElementById("UserName").checkValidity() &&
                     document.getElementById("UserFirstname").checkValidity() &&
                     document.getElementById("UserEmail").checkValidity() &&
-                    document.getElementById("UserPassword").checkValidity()
+                    document.getElementById("UserPassword").checkValidity() &&
+                    document.getElementById("UserPassword").value == document.getElementById("UserPasswordConfirm").value
                 ) {
                     document.getElementById("UserSignupBtn").disabled = false;
                 } else {
