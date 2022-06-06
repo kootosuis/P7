@@ -19,8 +19,9 @@
                             type="multipart/form-data"
                             method="PUT"
                             name="form"
-                            :id="`CommentToBeCorrectedForm-${item.CommentId}`"
+                            :id="`CommentToBeCorrected-${item.CommentId}`"
                             class="formulaire"
+                            @submit="correctComment(item.CommentId)"
                         >
                             <!--La ligne de formulaire correspondant au commentaire-->
                             <div class="formLine">
@@ -29,10 +30,10 @@
                                     class="bigtextarea textarea input"
                                     form="CommentToBeCorrected"
                                     type="textarea"
-                                    v-model="item.CommentText"
-                                    placeholder="..."
                                     :id="`CommentToBeCorrectedText-${item.CommentId}`"
                                     name="CommentToBeCorrectedText"
+                                    v-model="item.CommentText"
+                                    placeholder="..."
                                 ></textarea>
                             </div>
                             <!--Les boutons permettant d'annuler ou de confirmer la modification-->
@@ -40,13 +41,9 @@
                                 <button type="button" class="btn" @click="doNotModify(item.CommentId)" :id="`CancelBtn-${item.CommentId}`">
                                     Annuler
                                 </button>
-                                <input
-                                    type="button"
-                                    class="btn"
-                                    @click="correctComment(item.CommentId)"
-                                    :id="`CommentBtn-${item.CommentId}`"
-                                    value="Confirmer"
-                                />
+                                <button type="button" class="btn" @click="correctComment(item.CommentId)" :id="`CommentBtn-${item.CommentId}`">
+                                    Confirmer
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -146,19 +143,19 @@
             },
             doNotModify(i) {
                 document.getElementById(`CommentForm-` + i).style = "display:none";
-                document.getElementById(`CommentToBeCorrectedForm-` + i).reset();
+                document.getElementById(`CommentToBeCorrected-` + i).reset();
                 document.getElementById(`OriginalCommentText-` + i).style = "display:inline-block";
-                this.modifying = true
+                this.modifying = true;
             },
 
             correctComment(i) {
-                const CommentToBeCorrected = document.getElementById(`CommentToBeCorrectedForm-` + i);
+                const CommentToBeCorrected = document.getElementById(`CommentToBeCorrectedText-` + i).value;
                 const CommentId = i;
-
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
-                const Modify = new FormData(CommentToBeCorrected);
-
-                Modify.append("CommentId", CommentId);
+                const Modify = {
+                    CommentId: CommentId,
+                    CommentText: CommentToBeCorrected,
+                };
 
                 //--- TEST ---- ///
                 // for(var pair of Modify.entries()) {
@@ -169,10 +166,10 @@
                     method: "PUT",
                     headers: {
                         Accept: "*/*",
-                        "Content-Type": "multipart/form-data",
+                        "Content-Type": "application/json",
                         Authorization: "Bearer " + Token,
                     },
-                    body: Modify,
+                    body: JSON.stringify(Modify),
                     mode: "cors",
                 })
                     .then((response) => {

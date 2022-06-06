@@ -31,11 +31,16 @@
     cursor: pointer;
     outline: none;
     margin: 1em;
-    text-transform: uppercase;
+    color:rgba(0, 0, 0, 0.8);
     font-weight: small;
+    text-transform: uppercase;
+    &__main {
+        background-color: $color-quartiary;
+    }
 }
 .btn-div {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
 }

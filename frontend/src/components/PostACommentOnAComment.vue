@@ -1,7 +1,7 @@
 <template>
     <section class="container">
         <div class="btn-div" :id="`CommentOnACommentAccess-${commentid}`" v-show="CommentOnACommentFormHidden">
-            <button type="button" class="btn" @click="displayCommentOnCommentForm()" :id="`GoToCommentOnAComment-${commentid}`">Une réaction ?</button>
+            <button type="button" class="btn btn__main" @click="displayCommentOnCommentForm()" :id="`GoToCommentOnAComment-${commentid}`">Une réaction ?</button>
         </div>
         <div class="formSection" :id="`CommentOnACommentForm-${commentid}`" v-show="!CommentOnACommentFormHidden">
             <div class="formDiv">
