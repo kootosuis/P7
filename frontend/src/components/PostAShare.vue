@@ -17,6 +17,7 @@
                         <label for="Media" class="label">Votre image, votre GIF</label>
                         <input
                             class="input"
+                            style="padding: 0; margin-top: 5px"
                             form="ShareToBePosted"
                             @change="checkForm"
                             @input="uploadImage($event)"

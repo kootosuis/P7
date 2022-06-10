@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="footer__titlebox">
+        <!-- <div class="footer__titlebox">
             <div>
                 <img class="footer__icon" src="../assets/images/icon.png" alt="Logo Groupomania" />
             </div>
@@ -10,7 +10,7 @@
             <div>
                 <img class="footer__icon" src="../assets/images/icon.png" alt="Logo Groupomania" />
             </div>
-        </div>
+        </div> -->
 
         <div class="footer__text__box">
             <div>

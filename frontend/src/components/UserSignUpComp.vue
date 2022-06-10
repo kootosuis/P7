@@ -12,12 +12,13 @@
                         <label for="UserFirstname" class="label">Prénom <span class="asterisque">*</span></label>
                         <input
                             class="input"
+                            @keydown="checkForm"
                             @input="checkForm"
                             type="text"
                             placeholder="Entrez votre prénom."
                             id="UserFirstname"
                             name="UserFirstname"
-                            required="required"
+                            required
                         />
                     </div>
 
@@ -26,12 +27,13 @@
                         <label for="UserName" class="label">Nom <span class="asterisque">*</span></label>
                         <input
                             class="input"
+                            @keydown="checkForm"
                             @input="checkForm"
                             type="text"
                             placeholder="Entrez votre nom."
                             id="UserName"
                             name="UserName"
-                            required="required"
+                            required
                         />
                     </div>
 
@@ -40,12 +42,13 @@
                         <label for="UserEmail" class="label">Email <span class="asterisque">*</span></label>
                         <input
                             class="input"
+                            @keydown="checkForm"
                             @input="checkForm"
                             type="email"
                             placeholder="Entrez une adresse mail valide."
                             id="UserEmail"
                             name="UserEmail"
-                            required=""
+                            required
                         />
                     </div>
 
@@ -54,6 +57,8 @@
                         <label for="UserPresentation" class="label">Présentation</label>
                         <textarea
                             class="smalltextarea input"
+                            @keydown="checkForm"
+                            @input="checkForm"
                             type="textarea"
                             placeholder="Si vous le souhaitez, vous pouvez vous présenter..."
                             id="UserPresentation"
@@ -65,8 +70,11 @@
                     <div class="formLine">
                         <label for="UserDepartement" class="label">Service <span class="asterisque">*</span></label>
 
-                        <select class="input" id="UserDepartement" name="UserDepartement" required="required">
-                            <option value="...">...</option>
+                        <select class="input" id="UserDepartement" name="UserDepartement" @input="checkForm" required>
+                            <!-- <option value="...">...</option> -->
+                            <option value="" disabled selected>Où travaillez-vous?</option>
+                            <!-- <option value="" disabled selected hidden >Où travaillez-vous?</option> 
+                            hidden permet de faire disparaitre le place holder de la liste des choix-->
                             <option value="communication">communication</option>
                             <option value="administration">administration</option>
                             <option value="siège">siège</option>
@@ -80,59 +88,68 @@
                     <!--Le Rôle-->
                     <div class="formLine">
                         <label for="UserRole" class="label">Rôle</label>
-                        <textarea
+                        <input
                             class="smalltextarea input"
-                            type="textarea"
-                            placeholder="Quel est votre rôle dans l'entreprise ?"
+                            @keydown="checkForm"
+                            @input="checkForm"
+                            type="text"
+                            placeholder="En deux mots, votre rôle dans l'entreprise..."
                             id="UserRole"
                             name="UserRole"
-                        ></textarea>
+                        />
                     </div>
 
                     <!--Le Mot de passe -->
                     <div class="formLine">
                         <label for="UserPassword" class="label">Mot de passe <span class="asterisque">*</span></label>
 
-                        <input
-                            class="input"
-                            @keydown="checkForm"
-                            @input="checkForm"
-                            type="password"
-                            placeholder="N'oubliez pas de noter votre mot de passe."
-                            id="UserPassword"
-                            name="UserPassword"
-                            required="required"
-                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-                        />
-                        <!--- un séparateur -->
-                        <div class="separator"></div>
-
-                        <input
-                            class="input"
-                            @keydown="checkForm"
-                            @input="checkForm"
-                            type="password"
-                            placeholder="Veuillez confirmer votre mot de pass."
-                            id="UserPasswordConfirm"
-                            name="UserPasswordConfirm"
-                            required="required"
-                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-                        />
+                        <div class="input">
+                            <input
+                                class="passwordinput"
+                                @keydown="checkForm"
+                                @input="checkForm"
+                                v-bind:type="[showPassword ? 'text' : 'password']"
+                                placeholder="N'oubliez pas de noter votre mot de passe."
+                                id="UserPassword"
+                                name="UserPassword"
+                                required
+                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                            />
+                            <img id="eye" @click="showPassword = !showPassword" :src="[showPassword ? 'nosee.png' : 'see.png']" />
+                        </div>
                     </div>
-
                     <!-- Avertissement -->
-                    <div class="formLine">
+                    <div class="formLineHint">
                         <div class="label"></div>
-                        <p class="hint input">
+                        <p class="inputhint">
                             Le mot de passe doit contenir au minimum 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère
                             spécial.
                         </p>
                     </div>
 
-                    <div class="asterisque" style="text-align: right">* Champs requis</div>
+                    <!-- Confirmation -->
+                    <div class="formLine">
+                        <label for="UserPassword" class="label">Confirmation <span class="asterisque">*</span></label>
+                        <div class="input">
+                            <input
+                                class="passwordinput"
+                                @keydown="checkForm"
+                                @input="checkForm"
+                                v-bind:type="[showPassword ? 'text' : 'password']"
+                                placeholder="Veuillez confirmer votre mot de passe."
+                                id="UserPasswordConfirm"
+                                name="UserPasswordConfirm"
+                                required
+                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                            />
+                            <img id="eye" @click="showPassword = !showPassword" :src="[showPassword ? 'nosee.png' : 'see.png']" />
+                        </div>
+                    </div>
+
+                    <div class="asterisque champs" style="text-align: right">* Champs requis</div>
 
                     <div class="btn-div">
-                        <button type="button" class="btn" @click="goBacKToForum()" id="CancelBtn">Annuler</button>
+                        <button type="button" class="btn" @click="goBacKToEnter()" id="CancelBtn">Annuler</button>
                         <input type="submit" class="btn" id="UserSignupBtn" value="S'inscrire" disabled />
                     </div>
                 </form>
@@ -158,6 +175,7 @@
         name: "UserSignUpComp",
         data() {
             return {
+                showPassword: false,
                 message: "", //message d'erreur
             };
         },
@@ -176,8 +194,8 @@
                 }
             },
 
-            goBacKToForum() {
-                this.$router.push({ name: "wall" });
+            goBacKToEnter() {
+                this.$router.push({ name: "enter" });
             },
 
             signUp(e) {
@@ -192,8 +210,8 @@
                 const UserRole = document.getElementById("UserRole").value;
 
                 const User = {
-                    UserName: UserName,
-                    UserFirstname: UserFirstname,
+                    UserName: UserName.toUpperCase(),
+                    UserFirstname: UserFirstname.toUpperCase(),
                     UserEmail: UserEmail,
                     UserDepartement: UserDepartement,
                     UserPresentation: UserPresentation,
@@ -278,5 +296,9 @@
     .no-account-link {
         font-weight: 500;
         font-size: 2rem;
+    }
+
+    select:invalid {
+        color: grey;
     }
 </style>

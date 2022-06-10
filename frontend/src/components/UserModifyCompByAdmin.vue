@@ -19,7 +19,7 @@
                             placeholder="Entrez votre prénom."
                             id="UserFirstname"
                             name="UserFirstname"
-                            required="required"
+                            required
                         />
                     </div>
 
@@ -35,7 +35,7 @@
                             placeholder="Entrez le nom de l'utilisateur."
                             id="UserName"
                             name="UserName"
-                            required="required"
+                            required
                         />
                     </div>
 
@@ -51,7 +51,7 @@
                             placeholder="Entrez une adresse mail valide."
                             id="UserEmail"
                             name="UserEmail"
-                            required=""
+                            required
                         />
                     </div>
 
@@ -74,15 +74,11 @@
                     <div class="formLine">
                         <label for="UserDepartement" class="label">Service <span class="asterisque">*</span></label>
 
-                        <select
-                            class="input"
-                            id="UserDepartement"
-                            name="UserDepartement"
-                            v-model="UserDepartement"
-                            @input="checkForm"
-                            required="required"
-                        >
-                            <option value="...">...</option>
+                        <select class="input" id="UserDepartement" name="UserDepartement" v-model="UserDepartement" @input="checkForm" required>
+                            <!-- <option value="...">...</option> -->
+                            <option value="" disabled selected>Où travaillez-vous?</option>
+                            <!-- <option value="" disabled selected hidden >Où travaillez-vous?</option> 
+                            hidden permet de faire disparaitre le place holder de la liste des choix-->
                             <option value="communication">communication</option>
                             <option value="administration">administration</option>
                             <option value="siège">siège</option>
@@ -96,44 +92,64 @@
                     <!--Le Rôle-->
                     <div class="formLine">
                         <label for="UserRole" class="label">Rôle</label>
-                        <textarea
-                            class="smalltextarea input"
+                        <input
+                            class="input"
                             v-model="UserRole"
                             @keydown="checkForm"
                             @input="checkForm"
-                            type="textarea"
-                            placeholder="Quel est votre rôle dans l'entreprise ?"
+                            type="text"
+                            placeholder="En deux mots, votre rôle dans l'entreprise..."
                             id="UserRole"
                             name="UserRole"
-                        ></textarea>
+                        />
                     </div>
 
                     <!--Le Mot de passe -->
                     <div class="formLine">
-                        <label for="UserPassword" class="label">Mot de passe <span class="asterisque">*</span></label>
-                        <input
-                            class="input"
-                            placeholder=""
-                            @keydown="checkForm"
-                            @input="checkForm"
-                            type="password"
-                            id="UserPassword"
-                            name="UserPassword"
-                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-                        />
-                    </div>
+                        <label for="UserPassword" class="label">Mot de passe</label>
 
-                    <div class="formLine formLineTop">
+                        <div class="input">
+                            <input
+                                class="passwordinput"
+                                @keydown="checkForm"
+                                @input="checkForm"
+                                v-bind:type="[showPassword ? 'text' : 'password']"
+                                placeholder="Si vous changez le mot de passe, n'oubliez pas de le noter."
+                                id="UserPassword"
+                                name="UserPassword"
+                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                            />
+                            <img id="eye" @click="showPassword = !showPassword" :src="[showPassword ? 'nosee.png' : 'see.png']" />
+                        </div>
+                    </div>
+                    <!-- Avertissement -->
+                    <div class="formLineHint">
                         <div class="label"></div>
-                        <p class="hint input">
-                            N'oubliez pas de transmettre le mot de passe à l'utilisateur<br /><br />
+                        <p class="inputhint">
                             Le mot de passe doit contenir au minimum 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère
                             spécial.
                         </p>
                     </div>
 
-                    <!--L'habilitation -->
+                    <!-- Confirmation -->
+                    <div class="formLine">
+                        <label for="UserPassword" class="label">Confirmation</label>
+                        <div class="input">
+                            <input
+                                class="passwordinput"
+                                @keydown="checkForm"
+                                @input="checkForm"
+                                v-bind:type="[showPassword ? 'text' : 'password']"
+                                placeholder="Veuillez confirmer votre mot de passe."
+                                id="UserPasswordConfirm"
+                                name="UserPasswordConfirm"
+                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                            />
+                            <img id="eye" @click="showPassword = !showPassword" :src="[showPassword ? 'see.png' : 'nosee.png']" />
+                        </div>
+                    </div>
 
+                    <!--L'habilitation -->
                     <div class="formLine">
                         <label for="UserHabilitation" class="label">Habilitation</label>
                         <select
@@ -142,7 +158,7 @@
                             id="changedUserHabilitation"
                             name="UserHabilitation"
                             @input="checkForm"
-                            required="required"
+                            required
                         >
                             <option value="0">sans habilitation à administrer</option>
                             <option value="1">avec habilitation à administrer</option>
@@ -153,7 +169,7 @@
                             id="changedUserHabilitation"
                             name="UserHabilitation"
                             @input="checkForm"
-                            required="required"
+                            required
                         >
                             <option value="1">avec habilitation à administrer</option>
                             <option value="0">sans habilitation à administrer</option>
@@ -164,25 +180,23 @@
                             id="changedUserHabilitation"
                             name="UserHabilitation"
                             @input="checkForm"
-                            required="required"
+                            required
                         >
                             <option value="1">avec habilitation à administrer</option>
+                            <p class="hint inputhint">
+                                Vous pourrez modifier l'habilitation <br />
+                                lorsqu'il y aura plus de deux administrateurs.
+                            </p>
                         </select>
-                        <p class="hint input">
-                            Vous pourrez modifier l'habilitation <br />
-                            lorsqu'il y aura plus de deux autres administrateurs.
-                        </p>
                     </div>
 
-                    <div class="asterisque" style="text-align: right">* Champs requis</div>
+                    <div class="asterisque champs" style="text-align: right">* Champs requis</div>
 
                     <div class="btn-div">
                         <button type="button" class="btn" @click="goBacKToForum()" id="CancelBtn">Annuler</button>
                         <input type="submit" class="btn" id="UserSignupBtn" value="Mettre à jour" disabled />
                     </div>
                 </form>
-
-                <!-- A FAIRE : implementer des components modaux -->
 
                 <div class="add-div" v-show="success === true">
                     <p id="erreur">Tout va bien : {{ message }}</p>
@@ -209,6 +223,8 @@
 
         data() {
             return {
+                showPassword: false,
+
                 UserName: "",
                 UserFirstname: "",
                 UserEmail: "",
@@ -286,7 +302,8 @@
                         document.getElementById("UserName").checkValidity() &&
                         document.getElementById("UserFirstname").checkValidity() &&
                         document.getElementById("UserEmail").checkValidity() &&
-                        document.getElementById("UserPassword").checkValidity()
+                        document.getElementById("UserPassword").checkValidity() &&
+                        document.getElementById("UserPassword").value == document.getElementById("UserPasswordConfirm").value
                     ) {
                         document.getElementById("UserSignupBtn").disabled = false;
                     } else {
@@ -323,9 +340,7 @@
                     const UserDepartement = document.getElementById("UserDepartement").value;
                     const UserRole = document.getElementById("UserRole").value;
                     const UserPassword = document.getElementById("UserPassword").value;
-                    const UserHabilitation = document.getElementById("changedUserHabilitation").value
-                        ? document.getElementById("changedUserHabilitation").value
-                        : document.getElementById("UserHabilitation").value;
+                    const UserHabilitation = document.getElementById("changedUserHabilitation").value;
 
                     const User = {
                         UserName: UserName,
@@ -372,9 +387,7 @@
                     const UserPresentation = document.getElementById("UserPresentation").value;
                     const UserDepartement = document.getElementById("UserDepartement").value;
                     const UserRole = document.getElementById("UserRole").value;
-                    const UserHabilitation = document.getElementById("changedUserHabilitation").value
-                        ? document.getElementById("changedUserHabilitation").value
-                        : document.getElementById("UserHabilitation").textContent;
+                    const UserHabilitation = document.getElementById("changedUserHabilitation").value;
 
                     const User = {
                         UserName: UserName,

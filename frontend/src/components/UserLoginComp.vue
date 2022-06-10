@@ -10,21 +10,13 @@
                     <!--L'Email'-->
                     <div class="formLine">
                         <label for="UserEmail" class="label">Email</label>
-                        <input class="input" @input="checkForm" type="email" id="UserEmail" name="UserEmail" required="" />
+                        <input class="input" @input="checkForm" type="email" id="UserEmail" name="UserEmail" required />
                     </div>
 
                     <!--Le Mot de passe -->
                     <div class="formLine">
                         <label for="UserPassword" class="label">Mot de passe</label>
-                        <input
-                            class="input"
-                            @input="checkForm"
-                            type="text"
-                            id="UserPassword"
-                            name="UserPassword"
-                            required="required"
-                            maxlength="30"
-                        />
+                        <input class="input" @input="checkForm" type="text" id="UserPassword" name="UserPassword" required maxlength="30" />
                     </div>
 
                     <div class="btn-div">

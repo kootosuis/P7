@@ -3,9 +3,11 @@
     position: relative;
     margin: auto;
     background-color: $color-tertiary;
+
     & * {
         color: $color-footer;
     }
+
     padding: 20px 0 35px;
 
     &__titlebox {
@@ -21,6 +23,7 @@
 
     &__text__box {
         padding: 10px;
+
         & p {
             padding: 10px;
             text-align: center;

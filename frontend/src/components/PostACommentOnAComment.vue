@@ -1,14 +1,24 @@
 <template>
     <section class="container">
         <div class="btn-div" :id="`CommentOnACommentAccess-${commentid}`" v-show="CommentOnACommentFormHidden">
-            <button type="button" class="btn btn__main" @click="displayCommentOnCommentForm()" :id="`GoToCommentOnAComment-${commentid}`">Une réaction ?</button>
+            <button type="button" class="btn btn__main" @click="displayCommentOnCommentForm()" :id="`GoToCommentOnAComment-${commentid}`">
+                Une réaction ?
+            </button>
         </div>
         <div class="formSection" :id="`CommentOnACommentForm-${commentid}`" v-show="!CommentOnACommentFormHidden">
             <div class="formDiv">
-                <form type="multipart/form-data" method="POST" name="form" @submit="CommentOnAComment" :id="`CommentOnAComment-${commentid}`" class="formulaire">
+                <form
+                    type="multipart/form-data"
+                    method="POST"
+                    name="form"
+                    @submit="CommentOnAComment"
+                    :id="`CommentOnAComment-${commentid}`"
+                    class="formulaire"
+                >
                     <!--Le Comment-->
                     <div class="formLine">
                         <label for="CommentOnACommentText" class="label">Votre réaction</label>
+
                         <textarea
                             :id="`CommentOnACommentText-${commentid}`"
                             class="bigtextarea textarea input"
@@ -23,7 +33,14 @@
 
                     <div class="btn-div">
                         <button type="button" class="btn" @click="displayGoTo()" :id="`CancelBtn-${commentid}`">Annuler</button>
-                        <input type="button" @click="CommentOnAComment" class="btn" :id="`CommentOnACommentBtn-${commentid}`" value="Réagir" disabled />
+                        <input
+                            type="button"
+                            @click="CommentOnAComment"
+                            class="btn"
+                            :id="`CommentOnACommentBtn-${commentid}`"
+                            value="Réagir"
+                            disabled
+                        />
                     </div>
                 </form>
             </div>
@@ -46,7 +63,7 @@
             };
         },
         // prop reçue du composant parent ShareAloneComments
-        props:['commentid'],
+        props: ["commentid"],
 
         methods: {
             displayCommentOnCommentForm() {

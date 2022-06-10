@@ -1,6 +1,6 @@
-.formSection {
-    min-height: 724px;
-}
+// .formSection {
+//     min-height: 724px;
+// }
 
 .formulaire {
     color: white;
@@ -20,29 +20,67 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    // text-align: center;
-    margin-left: 0;
-    @media (max-width : 600px){
+
+    @media (max-width : 600px) {
+        padding: 1rem 2rem;
         @include flexcolumn
     }
 }
 
-.formLineTop{
+.formLineHint {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 2rem;
+    margin-top: -1.2rem;
+
+    @media (max-width : 600px) {
+        margin-top: 0.2rem;
+        @include flexcolumn
+    }
+}
+
+.formLineTop {
     margin-top: 0;
     padding-top: 0
 }
 
 .input {
     font-family: "Poppins", "Roboto", sans-serif;
+    background-color: white;
     flex: 2;
-    padding-left:0.5 rem;
+    padding-left: 0.5 rem;
     display: inline-flex;
     border-style: none;
-    padding : 0 0.5rem;
-    border  : none;
-    margin  : 0;
- 
+    padding: 0 0.5rem;
+    border: none;
+    margin: 0;
 }
+
+.passwordinput {
+    font-family: "Poppins", "Roboto", sans-serif;
+    flex: 2;
+    display: inline-flex;
+    border-style: none;
+    border: none;
+    margin: 0;
+}
+
+.inputhint {
+    font-family: "Poppins", "Roboto", sans-serif;
+    flex: 2;
+    display: inline-flex;
+    border-style: none;
+    border: none;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: rgb(34, 30, 30);
+    background-color: none;
+    margin: 0
+}
+
 .label {
     flex: 1;
     text-align: right;
@@ -51,7 +89,7 @@
 
 .formSection .formDiv {
     // min-width: 375px;
-    max-width: 640px;
+    // max-width: 640px;
     margin: 0 auto 5rem;
 }
 
@@ -70,43 +108,62 @@ textarea {
     display: block;
     width: 100%;
     overflow: hidden;
-    resize: both;
+    // resize: both;
     min-height: 40px;
     line-height: 20px;
-
-    border: 2px solid #ccc;
+    // border: 2px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-    
-  }
+
+}
 
 .smalltextarea {
     width: 100%;
 }
 
-.bigtextarea{
+.bigtextarea {
     display: flex;
+    min-height: 40px;
     width: 100%;
-    
-}
 
+}
 
 .asterisque {
     font-size: 1rem;
     font-weight: 400;
     color: rgb(34, 30, 30);
 }
-.hint {
-    font-size: 1.2rem;
-    font-weight: 400;
-    color: rgb(34, 30, 30);
+
+// .hint {
+//     font-size: 1.2rem;
+//     font-weight: 400;
+//     color: rgb(34, 30, 30);
+//     background-color: none;
+//     margin :0
+// }
+
+.champs {
+    padding-right: 2rem;
 }
 
 .please {
     height: 100px;
     padding: 25px;
     font-size: 1.25rem;
+
     h2 {
         text-align: center;
     }
 }
+
+input[type=file]::file-selector-button {
+
+    font-family: "Poppins", "Roboto", sans-serif;
+    width: 100%;
+}
+
+//   input[type=file]::file-selector-button:hover {
+//     background: white;
+//     border : white;
+
+//   }

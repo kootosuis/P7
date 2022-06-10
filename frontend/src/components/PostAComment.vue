@@ -9,7 +9,10 @@
                     <!--Le Comment-->
                     <div class="formLine">
                         <label for="CommentText" class="label">Votre commentaire</label>
-                        <textarea
+
+                        <AutoTextarea v-model="inputValue"></AutoTextarea>
+
+                        <!-- <textarea
                             id="CommentText"
                             class="bigtextarea textarea input"
                             form="CommentToBePosted"
@@ -18,7 +21,7 @@
                             @input="checkCommentForm"
                             placeholder="..."
                             name="CommentText"
-                        ></textarea>
+                        ></textarea> -->
                     </div>
 
                     <div class="btn-div">
@@ -32,8 +35,11 @@
 </template>
 
 <script>
+    import AutoTextarea from "@/components/AutoTextarea.vue";
+
     export default {
         name: "PostAComment",
+        components: { AutoTextarea },
         data() {
             return {
                 success: "",
@@ -43,6 +49,7 @@
                     type: Boolean,
                     default: true,
                 },
+                inputValue: "",
             };
         },
 
@@ -54,14 +61,14 @@
                 this.CommentFormHidden = true;
                 document.getElementById("CommentToBePosted").reset();
             },
-            checkCommentForm() {
-                const noblank = document.getElementById("CommentText").value.trim();
-                if (noblank != "" && noblank.length > 2) {
-                    document.getElementById("CommentBtn").disabled = false;
-                } else {
-                    document.getElementById("CommentBtn").disabled = true;
-                }
-            },
+            // checkCommentForm() {
+            //     const noblank = document.getElementById("CommentText").value.trim();
+            //     if (noblank != "" && noblank.length > 2) {
+            //         document.getElementById("CommentBtn").disabled = false;
+            //     } else {
+            //         document.getElementById("CommentBtn").disabled = true;
+            //     }
+            // },
             Comment() {
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
                 const CommentText = document.getElementById("CommentText").value.trim();

@@ -15,13 +15,12 @@
     <div>
         <!-- <LoaderComp/> -->
 
-        <div class="main">
+        <div class="main vh">
             <router-view />
+            <footer class="footer">
+                <PageFooter />
+            </footer>
         </div>
-
-        <footer class="footer">
-            <PageFooter />
-        </footer>
     </div>
 </template>
 
@@ -31,4 +30,7 @@
     //     border: solid 1px rgb(204, 121, 42)
     //   }
     // }
+    .vh {
+        min-height: 100vh;
+    }
 </style>
