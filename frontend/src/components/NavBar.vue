@@ -1,7 +1,8 @@
 <template>
     <nav class="navbar">
         <div class="navbar-container container">
-            <input type="checkbox" name="main-nav" id="check" />
+            
+            <input type="checkbox" name="main-nav" class="check"/>
 
             <div class="hamburger-lines">
                 <span class="line line1"></span>
@@ -34,14 +35,8 @@
         font-size: 12px;
         font-style: italic;
         text-align: center;
-        background-color: #fed7d7;
+        background-color: #fed7d7
     }
-    // #accessToList {
-    //     font-size : 1rem;
-    //     font-style : bold;
-    //     text-align: center;
-    //     background-color: #fed7d7;
-    // }
 </style>
 
 <script>
