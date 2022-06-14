@@ -185,6 +185,7 @@
                     document.getElementById("UserName").checkValidity() &&
                     document.getElementById("UserFirstname").checkValidity() &&
                     document.getElementById("UserEmail").checkValidity() &&
+                    document.getElementById("UserDepartement").value != "" &&
                     document.getElementById("UserPassword").checkValidity() &&
                     document.getElementById("UserPassword").value == document.getElementById("UserPasswordConfirm").value
                 ) {
