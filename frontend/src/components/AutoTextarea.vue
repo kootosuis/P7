@@ -46,7 +46,7 @@
         },
         methods: {
             resize() {
-                this.inputHeight = `${this.$refs.shadow.scrollHeight}px`;
+                this.inputHeight = `${this.$refs.shadow.scrollHeight + 40}px`;
             },
 
             checkCommentForm() {
@@ -63,17 +63,25 @@
 
 <style scoped lang="scss">
     .textarea {
+        display: flex;
+        flex-direction:column;
         textarea {
-            padding: 8px;
+            width: 100%;
+            padding: 20px;
             //   border: 1px solid #aeaeae;
             resize: none;
             overflow: hidden;
             font-size: 16px;
-            height: 0;
+            height: 40;
+            border-radius:6px;
 
             &.shadow {
+                margin: 0;
+                padding:0;
+                border: none;
                 max-height: 0;
                 pointer-events: none;
+                visibility :hidden;
                 opacity: 0;
                 margin: 0;
             }
