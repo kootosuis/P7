@@ -1,48 +1,37 @@
 <template>
-<div>
-  <header class="header">
-			<NavBar/>
-		</header>
+    <div>
+        <header class="header">
+            <NavBar />
+        </header>
 
-    <section class="fond2">
-                <div class="container">
-
-                        <div class="message__principal">
-                          <h2 >Au revoir et à bientôt sur LeRezo, le réseau social de Groupomania</h2>
-                        </div>
-
-                        <div class="message__secondaire">
-                          <h3>Attention</h3>
-                          <p >
-                            <br>L'usage de ce réseau est strictement réservé 
-                            <br>aux membres des équipes de Groupomania.
-                          </p>
+        <section class="fond2">
+            <div class="container">
+                <div class="message__principal">
+                    <h2>Au revoir et à bientôt sur LeRezo, le réseau social de Groupomania</h2>
                 </div>
-           </div>
-    </section>
-</div>
-          
+
+                <div class="message__secondaire">
+                    <h3>Attention</h3>
+                    <p><br />L'usage de ce réseau est strictement réservé <br />aux membres des équipes de Groupomania.</p>
+                </div>
+            </div>
+        </section>
+    </div>
 </template>
 
 <script>
-    import NavBar from "@/components/NavBar.vue"
+    import NavBar from "@/components/NavBar.vue";
 
     export default {
         name: "UserDeconnect",
-        components:{
-          NavBar
+        components: {
+            NavBar,
         },
-        methods: {
+        methods: {},
+        created() {
+            setTimeout(() => this.$router.push({ name: "enter" }), 3000);
         },
-        created()  {
-            setTimeout(() => this.$router.push({ name: 'enter' }), 3000)
-        }
-          
-    }
+    };
 </script>
 
-
-
-<style scoped>
-
-</style>
+<style scoped></style>
