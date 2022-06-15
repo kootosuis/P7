@@ -83,7 +83,7 @@
                         sessionStorage.setItem("UserId", JSON.stringify(response.UserId));
                         sessionStorage.setItem("Token", JSON.stringify(response.token));
                         sessionStorage.setItem("isAdmin", JSON.stringify(response.UserHabilitation));
-                        this.$router.push({ name: "wall" });
+                        setTimeout(() => this.$router.push({ name: "wall" }), 4000);
                     })
 
                     .catch(() => {
