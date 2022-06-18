@@ -70,7 +70,6 @@
                 this.token = JSON.parse(sessionStorage.getItem("Token"));
                 const UserId = JSON.parse(sessionStorage.getItem("UserId"));
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
-                this.isAdmin = sessionStorage.getItem("isAdmin");
 
                 fetch(`http://localhost:3000/api/auth/${UserId}`, {
                     method: "GET",
@@ -83,6 +82,7 @@
                     .then((res) => {
                         this.UserName = res.UserName;
                         this.UserFirstname = res.UserFirstname;
+                        this.isAdmin = res.UserHabilitation
                     })
                     .catch((error) => {
                         alert(error);
