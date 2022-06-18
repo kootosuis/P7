@@ -62,12 +62,11 @@
 
             formatDate(dateString) {
                 const date = dayjs(dateString);
-                // Then specify how you want your dates to be formatted
                 return date.format("dddd D MMMM YYYY , HH:mm");
             },
         },
 
-        beforeCreate() {
+        mounted() {
             const Token = JSON.parse(sessionStorage.getItem("Token"));
             fetch(`http://localhost:3000/api/shares`, {
                 method: "GET",
