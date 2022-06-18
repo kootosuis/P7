@@ -91,13 +91,11 @@
             displayForm() {
                 this.ShareFormHidden = false;
             },
-
             displayGoTo() {
                 this.ShareFormHidden = true;
                 this.file = "";
                 document.getElementById("ShareToBePosted").reset();
             },
-
             checkForm() {
                 // if (document.getElementById("ShareText").value != "" || document.getElementById("formImagePreview").firstChild.id == 'formImageLoaded'
                 if (document.getElementById("ShareText").value != "" || this.file != "") {
@@ -106,11 +104,9 @@
                     document.getElementById("ShareBtn").disabled = true;
                 }
             },
-
             uploadImage($event) {
                 this.file = URL.createObjectURL($event.target.files[0]);
             },
-
             Share() {
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
                 const ShareToBePosted = document.getElementById("ShareToBePosted");
