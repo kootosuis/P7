@@ -3,22 +3,23 @@
         <textarea
             v-model="currentValue"
             :style="inputStyle"
-            id="CommentText"
+            id="ShareText"
             class="bigtextarea input"
-            form="CommentToBePosted"
+            form="ShareToBePosted"
             type="textarea"
-            @keydown="checkCommentForm"
-            @input="checkCommentForm"
+            @keydown="checkShareForm"
+            @input="checkShareForm"
             placeholder="..."
-            name="CommentText"
+            name="ShareText"
         ></textarea>
+
         <textarea class="shadow" v-model="currentValue" ref="shadow" tabindex="0"></textarea>
     </div>
 </template>
 
 <script>
     export default {
-        name: "AutoTextarea",
+        name: "AutoTextareaShare",
         props: {
             value: String,
         },
@@ -49,12 +50,12 @@
                 this.inputHeight = `${this.$refs.shadow.scrollHeight + 40}px`;
             },
 
-            checkCommentForm() {
-                const noblank = document.getElementById("CommentText").value.trim();
+            checkShareForm() {
+                const noblank = document.getElementById("ShareText").value.trim();
                 if (noblank != "" && noblank.length > 2) {
-                    document.getElementById("CommentBtn").disabled = false;
+                    document.getElementById("ShareBtn").disabled = false;
                 } else {
-                    document.getElementById("CommentBtn").disabled = true;
+                    document.getElementById("ShareBtn").disabled = true;
                 }
             },
         },
@@ -64,7 +65,7 @@
 <style scoped lang="scss">
     .textarea {
         display: flex;
-        flex-direction:column;
+        flex-direction: column;
         textarea {
             width: 100%;
             padding: 20px;
@@ -73,15 +74,15 @@
             overflow: hidden;
             font-size: 16px;
             height: 40;
-            border-radius:6px;
+            border-radius: 6px;
 
             &.shadow {
                 margin: 0;
-                padding:0;
+                padding: 0;
                 border: none;
                 max-height: 0;
                 pointer-events: none;
-                visibility :hidden;
+                visibility: hidden;
                 opacity: 0;
                 margin: 0;
             }

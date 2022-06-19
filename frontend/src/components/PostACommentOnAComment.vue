@@ -18,17 +18,7 @@
                     <!--Le Comment-->
                     <div class="formLine">
                         <label for="CommentOnACommentText" class="label">Votre réaction</label>
-
-                        <textarea
-                            :id="`CommentOnACommentText-${commentid}`"
-                            class="bigtextarea textarea input"
-                            form="CommentOnACommentText"
-                            type="textarea"
-                            @keydown="checkCommentOnCommentForm"
-                            @input="checkCommentOnCommentForm"
-                            placeholder="..."
-                            name="CommentOnACommentText"
-                        ></textarea>
+                        <AutoTextareaCommentOnAComment v-model="inputValue" v-bind:commentid="commentid"></AutoTextareaCommentOnAComment>
                     </div>
 
                     <div class="btn-div">
@@ -49,8 +39,11 @@
 </template>
 
 <script>
+    import AutoTextareaCommentOnAComment from "@/components/AutoTextareaCommentOnAComment.vue";
+
     export default {
         name: "PostACommentOnAComment",
+        components: { AutoTextareaCommentOnAComment },
         data() {
             return {
                 success: "",
@@ -60,6 +53,7 @@
                     type: Boolean,
                     default: true,
                 },
+                inputValue: "",
             };
         },
         // prop reçue du composant parent ShareAloneComments
@@ -73,14 +67,7 @@
                 this.CommentOnACommentFormHidden = true;
                 document.getElementById(`CommentOnAComment-${this.commentid}`).reset();
             },
-            checkCommentOnCommentForm() {
-                const noblank = document.getElementById(`CommentOnACommentText-${this.commentid}`).value.trim();
-                if (noblank != "" && noblank.length > 2) {
-                    document.getElementById(`CommentOnACommentBtn-${this.commentid}`).disabled = false;
-                } else {
-                    document.getElementById(`CommentOnACommentBtn-${this.commentid}`).disabled = true;
-                }
-            },
+
             CommentOnAComment() {
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
                 const commentOnACommentText = document.getElementById(`CommentOnACommentText-${this.commentid}`).value;
@@ -105,7 +92,7 @@
                             this.success = true;
                             this.message = "Commentaire en ligne.";
                             this.CommentOnACommentFormHidden = true;
-                            this.$router.push({ name: "wall" });
+                            setTimeout(() => this.$router.push({ name: "wallAlone", id: `${this.shareShareId}` }), 1000);
                             // la ligne suivante provoque des failed to fetch ( à creuser)
                             // this.$router.go(0);
                         } else {

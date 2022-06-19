@@ -1,8 +1,6 @@
-// .formSection {
-//     min-height: 724px;
-// }
 
 .formulaire {
+    flex-grow: 1;
     color: white;
     padding: 1rem;
     font-weight: 700;
@@ -87,10 +85,16 @@
     padding-right: 1rem;
 }
 
-.formSection .formDiv {
-    // min-width: 375px;
-    // max-width: 640px;
-    margin: 0 auto 5rem;
+.formSection  {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+}
+.formDiv {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: auto;
 }
 
 .add-div {

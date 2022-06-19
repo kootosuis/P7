@@ -38,16 +38,7 @@
                     <!--Le Share-->
                     <div class="formLine">
                         <label for="ShareText" class="label">Votre texte</label>
-                        <textarea
-                            id="ShareText"
-                            class="bigtextarea textarea input"
-                            form="ShareToBePosted"
-                            type="input"
-                            @keydown="checkForm"
-                            @input="checkForm"
-                            placeholder="..."
-                            name="ShareText"
-                        ></textarea>
+                        <AutoTextareaShare v-model="inputValue"></AutoTextareaShare>
                     </div>
 
                     <!-- A ÉTUDIER -->
@@ -70,8 +61,10 @@
 </template>
 
 <script>
+    import AutoTextareaShare from "@/components/AutoTextareaShare.vue";
     export default {
         name: "PostAShare",
+        components: { AutoTextareaShare },
         data() {
             return {
                 success: "",
@@ -81,6 +74,7 @@
                     default: "No comment",
                 },
                 file: "",
+                inputValue: "",
                 ShareFormHidden: {
                     type: Boolean,
                     default: true,

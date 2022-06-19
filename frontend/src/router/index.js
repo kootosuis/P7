@@ -12,7 +12,6 @@ import PostedShares from "../views/PostedShares.vue";
 import OnePostedShare from "../views/OnePostedShare.vue";
 
 const routes = [
-    
     {
         path: "/",
         name: "enter",
@@ -66,12 +65,10 @@ const routes = [
     },
 
     {
-        path: "/wall/?id=:id",
+        path: "/wallAlone/?id=:id",
         name: "wallAlone",
         component: OnePostedShare,
-    }
-    
-
+    },
 ];
 
 const router = createRouter({

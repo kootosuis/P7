@@ -81,28 +81,33 @@ exports.deleteShare = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
-    const isAdmin = req.body.isAdmin;
+
+    this.isAdmin = "";
+
+    User.findOne({ where: { UserId: loggedUserId } })
+        .then((loggedUser) => {
+            this.isAdmin = loggedUser.UserHabilitation;
+        })
+        .catch((error) => res.status(error).json(error));
 
     const ShareId = req.body.ShareId;
 
     Share.findOne({ where: { ShareId: ShareId } })
         .then((share) => {
-            if (!share.userUserId == loggedUserId || isAdmin === 0) {
+            if (!share.userUserId == loggedUserId || isAdmin == 0) {
                 res.status(400).json({
                     error: "Vous n'avez pas les autorisations nécéssaires pour effacer ce partage.",
                 });
             } else {
                 Media.findOne({ where: { shareShareId: ShareId } }) //
                     .then((media) => {
-                        if ((MediaUrl = `${req.protocol}://${req.get("host")}/07media/feather.png`)) {
+                        if (media.MediaUrl == `${req.protocol}://${req.get("host")}/07media/feather.png`) {
                             Share.destroy({ where: { ShareId: ShareId } })
                                 .then(() => res.status(201).json({ message: "Partage effacé !" }))
                                 .catch((error) => res.status(400).json({ error }));
-                        } else if (media) {
+                        } else {
                             const filename = media.MediaUrl.split("/07media/")[1];
-                            // const mediaId = media.MediaId;
                             fs.unlink(`07media/${filename}`, () => {
-                                // Media.destroy({ where: { MEDIA_id: mediaId } }),
                                 Share.destroy({ where: { ShareId: ShareId } })
                                     .then(() => res.status(201).json({ message: "Partage effacé !" }))
                                     .catch((error) => res.status(400).json({ error }));
@@ -126,6 +131,7 @@ exports.getOneShare = (req, res) => {
 //----- GET ALL SHARES //
 exports.getAllShare = (req, res) => {
     Share.findAll({ include: [User, Media, Comment], order: [["updatedAt", "DESC"]] })
+        // [`comments.updatedAt`, "DESC"],
         .then((users) => res.status(200).json(users))
         .catch((error) => res.status(404).json({ error }));
 };

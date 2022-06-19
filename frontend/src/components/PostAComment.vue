@@ -9,24 +9,12 @@
                     <!--Le Comment-->
                     <div class="formLine">
                         <label for="CommentText" class="label">Votre commentaire</label>
-
-                        <AutoTextarea v-model="inputValue"></AutoTextarea>
-
-                        <!-- <textarea
-                            id="CommentText"
-                            class="bigtextarea textarea input"
-                            form="CommentToBePosted"
-                            type="textarea"
-                            @keydown="checkCommentForm"
-                            @input="checkCommentForm"
-                            placeholder="..."
-                            name="CommentText"
-                        ></textarea> -->
+                        <AutoTextareaComment v-model="inputValue"></AutoTextareaComment>
                     </div>
 
                     <div class="btn-div">
                         <button type="button" class="btn" @click="displayGoTo()" id="CancelBtn">Annuler</button>
-                        <input type="button" @click="Comment" class="btn" id="CommentBtn" value="Commenter" disabled />
+                        <button type="button" @click="Comment" class="btn" id="CommentBtn" disabled>Commenter</button>
                     </div>
                 </form>
             </div>
@@ -35,11 +23,11 @@
 </template>
 
 <script>
-    import AutoTextarea from "@/components/AutoTextarea.vue";
+    import AutoTextareaComment from "@/components/AutoTextareaComment.vue";
 
     export default {
         name: "PostAComment",
-        components: { AutoTextarea },
+        components: { AutoTextareaComment },
         data() {
             return {
                 success: "",
@@ -50,6 +38,8 @@
                     default: true,
                 },
                 inputValue: "",
+                Token: JSON.parse(sessionStorage.getItem("Token")),
+                ShareId: new URL(window.location.href).hash.split("=")[1],
             };
         },
 
@@ -61,20 +51,14 @@
                 this.CommentFormHidden = true;
                 document.getElementById("CommentToBePosted").reset();
             },
-            // checkCommentForm() {
-            //     const noblank = document.getElementById("CommentText").value.trim();
-            //     if (noblank != "" && noblank.length > 2) {
-            //         document.getElementById("CommentBtn").disabled = false;
-            //     } else {
-            //         document.getElementById("CommentBtn").disabled = true;
-            //     }
-            // },
-            Comment() {
-                const Token = JSON.parse(sessionStorage.getItem("Token"));
-                const CommentText = document.getElementById("CommentText").value.trim();
-                const shareShareId = new URL(window.location.href).hash.split("=")[1];
 
-                const Comment = { CommentText: CommentText, shareShareId: shareShareId };
+            // displayOneShare(id) {
+            //     this.$router.push({ name: "wallAlone", params: { id: id } });
+            // },
+
+            Comment() {
+                const CommentText = document.getElementById("CommentText").value.trim();
+                const Comment = { CommentText: CommentText, shareShareId: this.ShareId };
 
                 fetch("http://localhost:3000/api/comments", {
                     method: "POST",
@@ -82,7 +66,7 @@
                     headers: {
                         "Content-Type": "application/json",
                         Accept: "*/*",
-                        Authorization: "Bearer " + Token,
+                        Authorization: "Bearer " + this.Token,
                     },
                 })
                     .then((response) => {
@@ -90,15 +74,19 @@
                             this.success = true;
                             this.message = "Commentaire en ligne.";
                             this.CommentFormHidden = true;
-                            this.$router.push({ name: "wall" });
-                            // la ligne suivante provoque des failed to fetch ( à creuser)
-                            // this.$router.go(0);
+
+                            this.$router.push({ name: "wallAlone", params: { id: `${this.ShareId}` } });
+
+                            // this.displayOneShare(`${this.ShareId}`)
+
+                            // this.$router.push({ name: "wallAlone", id: this.ShareId });
+                            // this.$router.go({ name: "wallAlone", params :{id : shareShareId} });
+                            // this.$router.push({ name: "wallAlone", params: { id: this.ShareId } });
                         } else {
-                            response.json().then((json) => {
-                                this.success = false;
-                                this.message = json.error || json.message;
-                                return this.message;
-                            });
+                            this.success = false;
+                            this.message = "Ooops, il y a un problème !";
+                            console.log(this.message);
+                            return this.message;
                         }
                     })
                     .catch(() => {

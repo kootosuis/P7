@@ -14,8 +14,17 @@ exports.createComment = (req, res) => {
             userUserId: loggedUserId,
             shareShareId: req.body.shareShareId,
             commentCommentId: req.body.commentCommentId,
-        }) //
+        })
             .then(() => res.status(201).json({ message: "Commentaire publié !" }))
+            //----A VERIFIER------//
+            .then(() => {
+                Share.findOne({ where: { ShareId: req.body.shareShareId } }).then((res) => {
+                    Share.update({ updatedAt: new Date().toISOString().slice(0, 19).replace('T', ' ') }, { where: { ShareId: req.body.shareShareId } })
+                        .then(() => res.status(201).json({ message: "Partage mis à jour" }))
+                        .catch((err) => res.status(400).json(err));
+                });
+            })
+
             .catch((error) => res.status(400).json({ error }));
     } else {
         res.status(500).json({ error });
@@ -47,18 +56,25 @@ exports.deleteComment = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
-    const isAdmin = req.body.isAdmin;
+
     const CommentId = req.body.CommentId;
 
+    this.isAdmin = "";
+
+    User.findOne({ where: { UserId: loggedUserId } })
+        .then((loggedUser) => {
+            this.isAdmin = loggedUser.UserHabilitation;
+        })
+        .catch((error) => res.status(error).json(error));
 
     Comment.findOne({ where: { CommentId: CommentId } })
         .then((comment) => {
-            if (!comment.userUserId == loggedUserId || isAdmin === 0) {
+            if (!comment.userUserId == loggedUserId || isAdmin == 0) {
                 res.status(400).json({
                     error: "Vous n'avez pas les autorisations nécéssaires pour effacer ce commentaire.",
                 });
             } else {
-                Comment.destroy({ where: { commentCommentId: CommentId } })
+                Comment.destroy({ where: { commentCommentId: CommentId } });
                 Comment.destroy({ where: { CommentId: CommentId } })
                     .then(() => res.status(201).json({ message: "Commentaire effacé !" }))
                     .catch((error) => res.status(400).json({ error }));

@@ -253,10 +253,10 @@
                                             response.json().then((response) => {
                                                 this.success = true;
                                                 this.message = "Authentification effectuée.";
-                                                sessionStorage.setItem("UserId", JSON.stringify(response.UserId));
+                                                sessionStorage.setItem("UserEmail", JSON.stringify(response.UserEmail));
                                                 sessionStorage.setItem("Token", JSON.stringify(response.token));
-                                                sessionStorage.setItem("isAdmin", JSON.stringify(response.UserHabilitation));
-                                                setTimeout(() => this.$router.push({ name: "wall" }), 4000);
+                                                // sessionStorage.setItem("isAdmin", JSON.stringify(response.UserHabilitation));
+                                                setTimeout(() => this.$router.push({ name: "wall" }), 1000);
                                             });
                                         } else {
                                             response.json().then((json) => {

@@ -231,7 +231,6 @@
                 UserPresentation: "",
                 UserDepartement: "",
                 UserRole: "",
-                // UserPassword:"",
                 UserHabilitation: "",
                 success: "",
                 message: "", //message d'erreur
@@ -245,9 +244,8 @@
             };
         },
 
-        beforeMount() {
-            this.isAdmin = sessionStorage.getItem("isAdmin");
-            const UserId = new URL(window.location.href).hash.split("/modifyByAdmin/")[1];
+        mounted() {
+            const UserEmail = new URL(window.location.href).hash.split("/modifyByAdmin/")[1];
             const Token = JSON.parse(sessionStorage.getItem("Token"));
 
             ///----- on vérifie d'abord qu'il y a au minimum deux administrateurs ----///
@@ -271,7 +269,7 @@
                 });
 
             ///----on peut ensuite accèder au profil User------///
-            fetch(`http://localhost:3000/api/auth/${UserId}`, {
+            fetch(`http://localhost:3000/api/auth/${UserEmail}`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
                 mode: "cors",
@@ -286,7 +284,6 @@
                     this.UserPresentation = res.UserPresentation;
                     this.UserDepartement = res.UserDepartement;
                     this.UserRole = res.UserRole;
-                    // this.UserPassword = res.UserPassword;
                     this.UserHabilitation = res.UserHabilitation;
                 })
                 .catch((error) => {
@@ -330,7 +327,7 @@
                 e.preventDefault();
 
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
-                const UserId = new URL(window.location.href).hash.split("/modifyByAdmin/")[1];
+                const cardUserEmail = new URL(window.location.href).hash.split("/modifyByAdmin/")[1];
 
                 if (document.getElementById("UserPassword").value) {
                     const UserName = document.getElementById("UserName").value;
@@ -353,7 +350,7 @@
                         UserHabilitation: UserHabilitation,
                     };
 
-                    fetch(`http://localhost:3000/api/auth/modifySignup/${UserId}`, {
+                    fetch(`http://localhost:3000/api/auth/modifySignup/${cardUserEmail}`, {
                         method: "PUT",
                         body: JSON.stringify(User),
                         headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
@@ -365,7 +362,6 @@
                                     console.log(res);
                                     this.success = true;
                                     this.message = "mise à jour effectuée";
-                                    // sessionStorage.setItem("isAdmin", JSON.stringify(response.UserHabilitation));
                                     setTimeout(() => this.$router.push({ name: "wall" }), 4000);
                                 });
                             } else {
@@ -399,7 +395,7 @@
                         UserHabilitation: UserHabilitation,
                     };
 
-                    fetch(`http://localhost:3000/api/auth/modifySignup/${UserId}`, {
+                    fetch(`http://localhost:3000/api/auth/modifySignup/${cardUserEmail}`, {
                         method: "PUT",
                         body: JSON.stringify(User),
                         headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
@@ -411,7 +407,6 @@
                                     console.log(res);
                                     this.success = true;
                                     this.message = "mise à jour effectuée";
-                                    // sessionStorage.setItem("isAdmin", JSON.stringify(response.UserHabilitation));
                                     setTimeout(() => this.$router.push({ name: "wall" }), 4000);
                                 });
                             } else {
@@ -430,17 +425,14 @@
             },
 
             deleteAccount() {
-                const UserId = new URL(window.location.href).hash.split("/modifyByAdmin/")[1];
+                const cardUserEmail = new URL(window.location.href).hash.split("/modifyByAdmin/")[1];
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
 
-                fetch(`http://localhost:3000/api/auth/delete/${UserId}`, {
+                fetch(`http://localhost:3000/api/auth/delete/${cardUserEmail}`, {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
                     mode: "cors",
-                }).then(
-                    alert("Compte supprimé"),
-                    setTimeout(() => this.$router.push({ name: "wall" }), 4000)
-                );
+                }).then(alert("Compte supprimé"), this.$router.push({ name: "wall" }));
             },
         },
     };

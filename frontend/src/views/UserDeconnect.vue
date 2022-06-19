@@ -28,7 +28,7 @@
             NavBar,
         },
         methods: {},
-        created() {
+        mounted() {
             setTimeout(() => this.$router.push({ name: "enter" }), 3000);
         },
     };

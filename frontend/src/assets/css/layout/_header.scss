@@ -15,9 +15,14 @@
 
 .navbar-container {
     display: flex;
+
     justify-content: space-between;
     height: 120px;
     align-items: center;
+    text-align: center;
+    width: 89%;
+    max-width: 1200px;
+    margin: auto;
 }
 
 .navbar {

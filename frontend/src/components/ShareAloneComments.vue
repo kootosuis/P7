@@ -63,7 +63,7 @@
                 <!--- les boutons qui permettent à l'auteur du commentaire (ou à un admin) de le corriger ou de l'effacer-->
                 <div class="btn-div" v-show="modifying">
                     <button
-                        v-if="item.userUserId === this.loggedUserId || isAdmin == 1"
+                        v-if="item.user.UserEmail === this.loggedUserEmail || isAdmin == 1"
                         type="button"
                         class="btn"
                         @click="modifyComment(item.CommentId)"
@@ -72,7 +72,7 @@
                         Corriger
                     </button>
                     <button
-                        v-if="item.userUserId === this.loggedUserId || isAdmin == 1"
+                        v-if="item.user.UserEmail === this.loggedUserEmail || isAdmin == 1"
                         type="button"
                         class="btn"
                         @click="deleteComment(item.CommentId)"
@@ -83,7 +83,7 @@
                 </div>
 
                 <!--le CommentId sert à identifier de manière unique les id des templates du composant PostACommentOnAComment-->
-                <PostACommentOnAComment v-show="item.userUserId != loggedUserId" v-bind:commentid="item.CommentId" />
+                <PostACommentOnAComment v-show="item.user.UserEmail != loggedUserEmail" v-bind:commentid="item.CommentId" />
                 <ShareAloneReactions
                     v-if="apiReactionsResponse.find((x) => x.commentCommentId === item.CommentId)"
                     v-bind:commentcommentid="item.CommentId"
@@ -112,7 +112,7 @@
 
         data() {
             return {
-                loggedUserId: "",
+                loggedUserEmail: "",
                 apiCommentsResponse: Array,
                 apiReactionsResponse: Array,
                 apiLengthComments: Number,
@@ -132,10 +132,8 @@
         methods: {
             formatDate(dateString) {
                 const date = dayjs(dateString);
-                // Then specify how you want your dates to be formatted
                 return date.format("dddd D MMMM YYYY , HH:mm");
             },
-
             modifyComment(i) {
                 document.getElementById(`OriginalCommentText-` + i).style = "display:none";
                 document.getElementById(`CommentForm-` + i).style = "display:inline-block";
@@ -147,7 +145,6 @@
                 document.getElementById(`OriginalCommentText-` + i).style = "display:inline-block";
                 this.modifying = true;
             },
-
             correctComment(i) {
                 const CommentToBeCorrected = document.getElementById(`CommentToBeCorrectedText-` + i).value;
                 const CommentId = i;
@@ -177,7 +174,8 @@
                             this.success = true;
                             this.message = "Correction effectuée.";
                             this.modifyForm = true;
-                            this.$router.push({ name: "wall" });
+                            // this.$router.push({ name: "wall" });
+                            this.$router.push({ name: "wallAlone", params: { id: "shareid" } });
                             // this.$router.go(0);
                             // history.go(0);
                         } else {
@@ -196,12 +194,11 @@
             },
             deleteComment(i) {
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
-                const isAdmin = JSON.parse(sessionStorage.getItem("isAdmin"));
-                // const loggedUserId=JSON.parse(sessionStorage.getItem("UserId"))
+
                 const CommentId = i;
                 const Comment = {
                     CommentId: CommentId,
-                    isAdmin: isAdmin,
+                    isAdmin: this.isAdmin,
                 };
 
                 const deleteComment = confirm("Le commentaire et tous les commentaires associés vont être effacés");
@@ -215,28 +212,41 @@
                     })
                         .then(() => {
                             alert("Commentaire effacé !");
-                            setTimeout(this.$router.push({ name: "wall" }), 3000);
-                            this.$router.go(0);
+                            setTimeout(() => this.$router.push({ name: "wallAlone", params: { id: this.shareid } }), 3000);
+                            // this.$router.go(0);
                         })
                         .catch((error) => {
                             alert(error);
                         });
                 } else {
                     this.$router.push({ name: "wall" });
-                    this.$router.go(0);
+                    // this.$router.go(0);
                 }
             },
         },
 
-        beforeMount() {
+        mounted() {
             const Token = JSON.parse(sessionStorage.getItem("Token"));
-            const loggedUserId = JSON.parse(sessionStorage.getItem("UserId"));
+            const loggedUserEmail = JSON.parse(sessionStorage.getItem("UserEmail"));
             const ShareId = new URL(window.location.href).hash.split("=")[1];
 
-            this.isAdmin = sessionStorage.getItem("isAdmin");
+            // ISADMIN
+            fetch(`http://localhost:3000/api/auth/${loggedUserEmail}`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
+                mode: "cors",
+            })
+                .then((res) => {
+                    return res.json();
+                })
+                .then((res) => {
+                    this.isAdmin = res.UserHabilitation;
+                })
+                .catch((error) => {
+                    alert(error);
+                });
 
             // LES COMMENTAIRES
-
             fetch(`http://localhost:3000/api/comments/${ShareId}`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
@@ -246,7 +256,8 @@
                     return res.json();
                 })
                 .then((res) => {
-                    this.loggedUserId = loggedUserId;
+                    this.loggedUserEmail = loggedUserEmail;
+
                     this.apiCommentsResponse = res.filter((item) => item.commentCommentId === null);
                     this.apiReactionsResponse = res.filter((item) => item.commentCommentId != null);
 

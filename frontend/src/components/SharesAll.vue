@@ -68,6 +68,7 @@
 
         mounted() {
             const Token = JSON.parse(sessionStorage.getItem("Token"));
+            
             fetch(`http://localhost:3000/api/shares`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },

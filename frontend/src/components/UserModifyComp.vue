@@ -229,9 +229,8 @@
             };
         },
 
-        beforeMount() {
-            this.isAdmin = sessionStorage.getItem("isAdmin");
-            const UserId = JSON.parse(sessionStorage.getItem("UserId"));
+        mounted() {
+            const loggedUserEmail = JSON.parse(sessionStorage.getItem("UserEmail"));
             const Token = JSON.parse(sessionStorage.getItem("Token"));
 
             ///----- on vérifie d'abord qu'il y a au minimum deux administrateurs ----///
@@ -255,7 +254,7 @@
                 });
 
             ///----on peut ensuite accèder au profil User------///
-            fetch(`http://localhost:3000/api/auth/${UserId}`, {
+            fetch(`http://localhost:3000/api/auth/${loggedUserEmail}`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
                 mode: "cors",
@@ -270,7 +269,6 @@
                     this.UserPresentation = res.UserPresentation;
                     this.UserDepartement = res.UserDepartement;
                     this.UserRole = res.UserRole;
-                    // this.UserPassword = res.UserPassword;
                     this.UserHabilitation = res.UserHabilitation;
                 })
                 .catch((error) => {
@@ -314,9 +312,10 @@
                 e.preventDefault();
 
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
-                const UserId = JSON.parse(sessionStorage.getItem("UserId"));
+                const loggedUserEmail = JSON.parse(sessionStorage.getItem("UserEmail"));
 
                 if (document.getElementById("UserPassword").value) {
+                    //----- si on change de mot de passe
                     const UserName = document.getElementById("UserName").value;
                     const UserFirstname = document.getElementById("UserFirstname").value;
                     const UserEmail = document.getElementById("UserEmail").value;
@@ -339,7 +338,7 @@
                         UserHabilitation: UserHabilitation,
                     };
 
-                    fetch(`http://localhost:3000/api/auth/modifySignup/${UserId}`, {
+                    fetch(`http://localhost:3000/api/auth/modifySignup/${loggedUserEmail}`, {
                         method: "PUT",
                         body: JSON.stringify(User),
                         headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
@@ -351,7 +350,7 @@
                                     console.log(res);
                                     this.success = true;
                                     this.message = "mise à jour effectuée";
-                                    sessionStorage.setItem("isAdmin", JSON.stringify(response.UserHabilitation));
+                                    sessionStorage.setItem("UserEmail", JSON.stringify(User.UserEmail));
                                     setTimeout(() => this.$router.push({ name: "wall" }), 4000);
                                 });
                             } else {
@@ -387,7 +386,7 @@
                         UserHabilitation: UserHabilitation,
                     };
 
-                    fetch(`http://localhost:3000/api/auth/modifySignup/${UserId}`, {
+                    fetch(`http://localhost:3000/api/auth/modifySignup/${loggedUserEmail}`, {
                         method: "PUT",
                         body: JSON.stringify(User),
                         headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
@@ -399,7 +398,7 @@
                                     console.log(res);
                                     this.success = true;
                                     this.message = "mise à jour effectuée";
-                                    sessionStorage.setItem("isAdmin", JSON.stringify(response.UserHabilitation));
+                                    sessionStorage.setItem("UserEmail", JSON.stringify(User.UserEmail));
                                     setTimeout(() => this.$router.push({ name: "wall" }), 4000);
                                 });
                             } else {
@@ -418,20 +417,23 @@
             },
 
             deleteAccount() {
-                const UserId = JSON.parse(sessionStorage.getItem("UserId"));
+                const loggedUserEmail = JSON.parse(sessionStorage.getItem("UserEmail"));
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
 
-                fetch(`http://localhost:3000/api/auth/delete/${UserId}`, {
+                fetch(`http://localhost:3000/api/auth/delete/${loggedUserEmail}`, {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
                     mode: "cors",
-                }).then(
-                    sessionStorage.removeItem("UserId"),
-                    sessionStorage.removeItem("Token"),
-                    sessionStorage.removeItem("isAdmin"),
-                    alert("Compte supprimé"),
-                    setTimeout(() => this.$router.push({ name: "wall" }), 4000)
-                );
+                })
+                    .then(
+                        sessionStorage.removeItem("UserEmail"),
+                        sessionStorage.removeItem("Token"),
+                        alert("Compte supprimé"),
+                        setTimeout(() => this.$router.push({ name: "wall" }), 4000)
+                    )
+                    .catch((error) => {
+                        alert(error);
+                    });
             },
         },
     };

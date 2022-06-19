@@ -1,14 +1,7 @@
 <template>
     <nav class="navbar">
-        <div class="navbar-container container">
-            
-            <input type="checkbox" name="main-nav" class="check"/>
-
-            <div class="hamburger-lines">
-                <span class="line line1"></span>
-                <span class="line line2"></span>
-                <span class="line line3"></span>
-            </div>
+        <div class="navbar-container">
+            <input type="checkbox" name="main-nav" id="check" />
 
             <ul class="navbar__items">
                 <li v-show="token"><router-link @click="toggleMenu" to="/wall">Le Forum</router-link></li>
@@ -18,6 +11,11 @@
                 <li v-show="token && isAdmin == 1"><router-link @click="toggleMenu" to="/list">Comptes utilisateurs</router-link></li>
                 <li v-show="token"><router-link @click="logout()" to="/deconnect">Se déconnecter</router-link></li>
             </ul>
+            <div class="hamburger-lines">
+                <span class="line line1"></span>
+                <span class="line line2"></span>
+                <span class="line line3"></span>
+            </div>
 
             <div class="logo">
                 <img src="../assets/images/icon-above-font.svg" alt="Logo Groupomania" id="lelogogroupomania" />
@@ -35,7 +33,7 @@
         font-size: 12px;
         font-style: italic;
         text-align: center;
-        background-color: #fed7d7
+        background-color: #fed7d7;
     }
 </style>
 
@@ -68,12 +66,11 @@
         mounted() {
             if (sessionStorage.getItem("Token")) {
                 this.token = JSON.parse(sessionStorage.getItem("Token"));
-                const UserId = JSON.parse(sessionStorage.getItem("UserId"));
-                const Token = JSON.parse(sessionStorage.getItem("Token"));
+                const UserEmail = JSON.parse(sessionStorage.getItem("UserEmail"));
 
-                fetch(`http://localhost:3000/api/auth/${UserId}`, {
+                fetch(`http://localhost:3000/api/auth/${UserEmail}`, {
                     method: "GET",
-                    headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
+                    headers: { "Content-Type": "application/json", Authorization: "Bearer " + this.token },
                     mode: "cors",
                 })
                     .then((res) => {
@@ -82,7 +79,7 @@
                     .then((res) => {
                         this.UserName = res.UserName;
                         this.UserFirstname = res.UserFirstname;
-                        this.isAdmin = res.UserHabilitation
+                        this.isAdmin = res.UserHabilitation;
                     })
                     .catch((error) => {
                         alert(error);

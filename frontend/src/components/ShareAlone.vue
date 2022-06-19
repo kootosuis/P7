@@ -67,7 +67,7 @@
                 <div class="card__info--complement">
                     <div class="card__info--complement--firstline">
                         <p>{{ UserFirstname }} {{ UserName }} / {{ UserDepartement }} / {{ UserRole }}</p>
-                        <p v-if="isAdmin == 1"><router-link :to="`/modifyByAdmin/${userUserId}`">Accéder aux données utilisateur.</router-link></p>
+                        <p v-if="isAdmin == 1"><router-link :to="`/modifyByAdmin/${UserEmail}`">Accéder aux données utilisateur.</router-link></p>
                         <p hidden>{{ userUserId }}</p>
                         <p>{{ formatDate(updatedAt) }}</p>
                         <p>
@@ -80,7 +80,7 @@
                 <!-- le bouton pour modifier le texte du share  ou l'effacer quand on en est l'auteur-->
                 <div id="modifyOrDelete" class="btn-div" v-show="modifyForm">
                     <button
-                        v-if="this.userUserId === this.loggedUserId || isAdmin == 1"
+                        v-if="this.UserEmail === this.loggedUserEmail || isAdmin == 1"
                         type="button"
                         class="btn"
                         @click="GoToCorrectShare()"
@@ -90,7 +90,7 @@
                     </button>
                     <button type="button" class="btn"><router-link :to="`/wall`">Retour au forum</router-link></button>
                     <button
-                        v-if="this.userUserId === this.loggedUserId || isAdmin == 1"
+                        v-if="this.UserEmail === this.loggedUserEmail || isAdmin == 1"
                         type="button"
                         class="btn"
                         @click="deleteShare()"
@@ -104,7 +104,7 @@
 
         <!-- LE BOUTON (et la section) POUR COMMENTER -->
         <!-- n'apparait que si l'auteur du share n'est pas le user loggé -->
-        <PostAComment v-if="loggedUserId != userUserId" />
+        <PostAComment v-if="loggedUserEmail != UserEmail" />
 
         <!-- LES COMMENTAIRES -->
 
@@ -128,7 +128,8 @@
 
         data() {
             return {
-                loggedUserId: "",
+                loggedUserEmail: "",
+
                 ShareId: "", // Le Share
                 ShareText: "",
                 createdAt: "",
@@ -169,14 +170,12 @@
                 // formatage
                 return date.format("dddd D MMMM YYYY , HH:mm");
             },
-
             GoToCorrectShare() {
                 this.modifyForm = false;
             },
             doNoCorrect() {
                 this.modifyForm = true;
             },
-
             correctShare() {
                 const ShareToBeCorrected = document.getElementById("ShareToBeCorrected");
                 const ShareId = new URL(window.location.href).hash.split("=")[1];
@@ -205,9 +204,7 @@
                             this.success = true;
                             this.message = "Mise à jour effectuée.";
                             this.modifyForm = true;
-                            this.$router.push({ name: "wall" });
-                            // this.$router.go(0);
-                            // history.go(0);
+                            setTimeout(() => this.$router.push({ name: "wallAlone", id: `${this.ShareId}` }), 3000);
                         } else {
                             response.json().then((json) => {
                                 this.success = false;
@@ -223,12 +220,11 @@
             },
             deleteShare() {
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
-                const isAdmin = JSON.parse(sessionStorage.getItem("isAdmin"));
 
                 const ShareId = new URL(window.location.href).hash.split("=")[1];
                 const Share = {
                     ShareId: ShareId,
-                    isAdmin: isAdmin,
+                    isAdmin: this.isAdmin,
                 };
 
                 const deleteShare = confirm("Le share et tous les commentaires associés vont être effacés");
@@ -242,7 +238,7 @@
                     })
                         .then(() => {
                             alert("Share effacé !");
-                            setTimeout(this.$router.push({ name: "wall" }), 3000);
+                            setTimeout(() => this.$router.push({ name: "wall" }));
                         })
                         .catch((error) => {
                             alert(error);
@@ -253,12 +249,26 @@
             },
         },
 
-        beforeMount() {
+        mounted() {
             const Token = JSON.parse(sessionStorage.getItem("Token"));
-            const loggedUserId = JSON.parse(sessionStorage.getItem("UserId"));
+            const loggedUserEmail = JSON.parse(sessionStorage.getItem("UserEmail"));
             const ShareId = new URL(window.location.href).hash.split("=")[1];
 
-            this.isAdmin = sessionStorage.getItem("isAdmin");
+            // ISADMIN
+            fetch(`http://localhost:3000/api/auth/${loggedUserEmail}`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
+                mode: "cors",
+            })
+                .then((res) => {
+                    return res.json();
+                })
+                .then((res) => {
+                    this.isAdmin = res.UserHabilitation;
+                })
+                .catch((error) => {
+                    alert(error);
+                });
 
             // LE SHARE
             fetch(`http://localhost:3000/api/shares/${ShareId}`, {
@@ -270,12 +280,12 @@
                     return res.json();
                 })
                 .then((res) => {
-                    this.loggedUserId = loggedUserId;
-                    this.ShareId = res.ShareId; //stocker cela qqpart
+                    this.loggedUserEmail = loggedUserEmail;
+
+                    this.ShareId = res.ShareId;
                     this.ShareText = res.ShareText;
                     this.createdAt = res.createdAt;
                     this.updatedAt = res.updatedAt;
-                    this.userUserId = res.userUserId; //stocker cela qqpart
 
                     this.UserName = res.user.UserName;
                     this.UserFirstname = res.user.UserFirstname;
@@ -291,7 +301,6 @@
                 });
 
             // LES COMMENTAIRES
-
             fetch(`http://localhost:3000/api/comments/${ShareId}`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },

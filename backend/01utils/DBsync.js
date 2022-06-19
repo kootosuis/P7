@@ -40,7 +40,7 @@ Share.hasOne(Media, {
 
 Media.belongsTo(Share);
 
-//--------modification des colonnes
+// //--------modification des colonnes
 // sequelize
 //     //     .sync()
 //     .sync({ alter: true })
@@ -51,7 +51,7 @@ Media.belongsTo(Share);
 //         console.log(err);
 //     });
 
-// ------------remise à zéro
+// //------------remise à zéro
 // sequelize
 //     //     .sync()
 //     .sync({ force: true })

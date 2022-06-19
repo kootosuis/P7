@@ -6,7 +6,7 @@
             </div>
 
             <div class="formDiv">
-                <form class="formulaire" method="POST" name="form" id="form" @submit="LogIn">
+                <form class="formulaire" method="POST" name="form" id="form" @submit="logIn">
                     <!--L'Email'-->
                     <div class="formLine">
                         <label for="UserEmail" class="label">Email</label>
@@ -44,6 +44,7 @@
             return {
                 success: "",
                 message: "", //message d'erreur ou pas
+                isAdmin: "",
             };
         },
         methods: {
@@ -53,7 +54,7 @@
                 } else document.getElementById("UserSignupBtn").disabled = true;
             },
 
-            LogIn(e) {
+            logIn(e) {
                 e.preventDefault();
 
                 const UserEmail = document.getElementById("UserEmail").value;
@@ -80,10 +81,10 @@
                     .then((response) => {
                         this.success = true;
                         this.message = response.message;
-                        sessionStorage.setItem("UserId", JSON.stringify(response.UserId));
+                        this.isAdmin = response.UserHabilitation;
+                        sessionStorage.setItem("UserEmail", JSON.stringify(response.UserEmail));
                         sessionStorage.setItem("Token", JSON.stringify(response.token));
-                        sessionStorage.setItem("isAdmin", JSON.stringify(response.UserHabilitation));
-                        setTimeout(() => this.$router.push({ name: "wall" }), 4000);
+                        setTimeout(() => this.$router.push({ name: "wall" }), 1000);
                     })
 
                     .catch(() => {

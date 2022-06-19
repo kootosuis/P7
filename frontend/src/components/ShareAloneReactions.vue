@@ -41,9 +41,9 @@
 
         data() {
             return {
-                loggedUserId: "",
+                // loggedUserId: "",
                 apiReactionsResponse: Array,
-                isAdmin: "",
+                isAdmin: "", // ici cela ne sert à rien sauf si un jour on implémente une possibilité de corriger ou d'effacer une réaction
             };
         },
 
@@ -54,12 +54,26 @@
             },
         },
 
-        beforeMount() {
+        mounted() {
             const Token = JSON.parse(sessionStorage.getItem("Token"));
-            const loggedUserId = JSON.parse(sessionStorage.getItem("UserId"));
+            const loggedUserEmail = JSON.parse(sessionStorage.getItem("loggedUserEmail"));
             const ShareId = new URL(window.location.href).hash.split("=")[1];
 
-            this.isAdmin = sessionStorage.getItem("isAdmin");
+            // ISADMIN
+            fetch(`http://localhost:3000/api/auth/${loggedUserEmail}`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
+                mode: "cors",
+            })
+                .then((res) => {
+                    return res.json();
+                })
+                .then((res) => {
+                    this.isAdmin = res.UserHabilitation;
+                })
+                .catch((error) => {
+                    alert(error);
+                });
 
             fetch(`http://localhost:3000/api/comments/${ShareId}`, {
                 method: "GET",
@@ -70,7 +84,7 @@
                     return res.json();
                 })
                 .then((res) => {
-                    this.loggedUserId = loggedUserId;
+                    // this.loggedUserId = loggedUserId;
                     this.apiReactionsResponse = res.filter((item) => item.commentCommentId != null);
 
                     this.apiLengthReactions = this.apiReactionsResponse.length;

@@ -44,8 +44,7 @@ exports.login = (req, res, next) => {
                         return res.status(401).json({ error: "Mot de passe incorrect !" });
                     }
                     res.status(200).json({
-                        UserId: inlogger.UserId,
-                        UserHabilitation: inlogger.UserHabilitation,
+                        UserEmail: inlogger.UserEmail,
                         token: jwt.sign({ UserId: inlogger.UserId }, process.env.SECRET_JWT_KEY, { expiresIn: "12h" }),
                         message: "Login validé !",
                     });
@@ -54,23 +53,24 @@ exports.login = (req, res, next) => {
         })
         .catch((error) => res.status(500).json({ error }));
 };
-////----- MODIFY-----//
+////-----    MODIFY    -----//
 exports.modifySignup = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
-    const RBUP = req.body.UserPassword;
 
-    const accountId = req.params.id;
+    const RBUP = req.body.UserPassword; // pour l'éventualité d'un changement de mot de passe
+
+    const loggedUserEmail = req.params.id;
 
     if (!RBUP) {
-        User.findOne({ where: { UserId: accountId } })
+        User.findOne({ where: { UserEmail: loggedUserEmail } })
             .then((oldInfo) => {
                 User.update(
                     {
                         ...req.body,
                     },
-                    { where: { UserId: accountId } }
+                    { where: { UserEmail: loggedUserEmail } }
                 )
                     .then(() => res.status(201).json({ message: "Informations mises à jour" }))
                     .catch((err) => res.status(400).json(err));
@@ -81,7 +81,7 @@ exports.modifySignup = (req, res, next) => {
             error: "Le mot de passe doit contenir au minimum 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial",
         });
     } else if (RBUP && validator.isStrongPassword(RBUP)) {
-        User.findOne({ where: { UserId: accountId } })
+        User.findOne({ where: { UserEmail: loggedUserEmail } })
             .then((oldInfo) => {
                 bcrypt.compare(RBUP, oldInfo.UserPassword).then((valid) => {
                     if (valid) {
@@ -95,7 +95,7 @@ exports.modifySignup = (req, res, next) => {
                                         ...req.body,
                                         UserPassword: hash,
                                     },
-                                    { where: { UserId: accountId } }
+                                    { where: { UserEmail: loggedUserEmail } }
                                 )
                                     .then(() => res.status(201).json({ message: "Mot de passe modifié avec succès" }))
                                     .catch((err) => res.status(400).json(err));
@@ -109,43 +109,30 @@ exports.modifySignup = (req, res, next) => {
     }
 };
 
-////----- DELETE-----//
-////---------------cette version fonctionne --------------//////
-// exports.delete = (req, res) => {
-//     const token = req.headers.authorization.split(" ")[1];
-//     const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
-//     const loggedUserId = decodedToken.UserId;
-//     const isAdmin = process.env.isAdmin; // comment définir autrement le isAdmin ????
-
-//     const accountId = req.params.id;
-
-//     User.findOne({ where: { UserId: accountId } }).then((user) => {
-//         if (user.UserId == loggedUserId || loggedUserId == isAdmin) {
-//             User.destroy({ where: { UserId: accountId } })
-//                 .then(() => res.status(200).json({ message: "Utilisateur supprimé" }))
-//                 .catch((error) => res.status(400).json({ error }));
-//         } else {
-//             throw new Error(res.status(401).json({ error: "Vous n'avez pas les autorisations nécéssaires pour cette opération." }));
-//         }
-//     });
-// };
-
-/////---------------cette version fonctionne aussi et permet de se débarasser des média liés aux shares !!!!!!! --------------//////
+////-----     DELETE   -----//
+////------cette version fonctionne et permet de se débarasser des média liés aux shares !-------//////
 exports.delete = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
-    const isAdmin = req.body.isAdmin;
 
-    const accountId = req.params.id;
+    const cardUserEmail = req.params.id;
 
-    User.findOne({ where: { UserId: accountId } }).then((user) => {
+    this.isAdmin = "";
+
+    User.findOne({ where: { UserId: loggedUserId } })
+        .then((loggedUser) => {
+            this.isAdmin = loggedUser.UserHabilitation;
+        })
+        .catch((error) => res.status(error).json(error));
+
+    User.findOne({ where: { UserEmail: cardUserEmail } }).then((user) => {
         if (user == null) {
             res.status(400).json({ message: " Cet utilisateur n'existe pas" });
-        } else if (!user.UserId == loggedUserId || isAdmin === 0) {
+        } else if (!user.UserId == loggedUserId || this.isAdmin == 0) {
             //ceinture et bretelles
             res.status(401).json({ message: "Vous n'avez pas les autorisations nécéssaires pour cette opération." });
-        } else if (user.UserId == loggedUserId || isAdmin === 1) {
+        } else if (user.UserId == loggedUserId || this.isAdmin == 1) {
             Share.findAll({ raw: true, where: { userUserId: user.UserId } })
                 .then((shares) => {
                     const shareX = shares;
@@ -169,7 +156,7 @@ exports.delete = (req, res) => {
                     });
                 })
                 .then(() => {
-                    User.destroy({ where: { UserId: accountId } })
+                    User.destroy({ where: { UserEmail: cardUserEmail } })
                         .then(() => res.status(200).json({ message: "Utilisateur supprimé" }))
                         .catch((error) => res.status(400).json({ error }));
                 });
@@ -179,11 +166,11 @@ exports.delete = (req, res) => {
     });
 };
 
-//-------GET ONE ------//
+//-------GET ONE USER  ------//
 exports.getOneUser = (req, res) => {
     const paramsId = req.params.id;
 
-    User.findOne({ where: { UserId: paramsId } })
+    User.findOne({ where: { UserEmail: paramsId } })
         .then((user) => {
             // delete user.dataValues.UserPassword, // avec cela, le password ne sera pas transmis au front
             res.status(200).json(user);
@@ -191,7 +178,7 @@ exports.getOneUser = (req, res) => {
         .catch((error) => res.status(404).json({ error }));
 };
 
-//----- GET ALL USERS //
+//----- GET ALL USERS ------//
 exports.getAllUsers = (req, res) => {
     User.findAll({ order: [["UserName", "ASC"]] })
         .then((users) => {
@@ -204,8 +191,7 @@ exports.getAllUsers = (req, res) => {
         .catch((error) => res.status(404).json({ error }));
 };
 
-// //----- GET ALL ADMINs//
-
+//----- GET ALL ADMINs ----//
 exports.getAdmins = (req, res) => {
     User.findAll({ where: { UserHabilitation: 1 } })
         .then((users) => {
