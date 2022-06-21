@@ -45,6 +45,7 @@
                         <!--Le Share-->
                         <div class="formLine">
                             <label for="ShareText" class="label">Votre nouveau texte</label>
+
                             <textarea
                                 class="bigtextarea textarea input"
                                 form="ShareToBeCorrected"
@@ -53,6 +54,8 @@
                                 name="ShareText"
                                 v-model="ShareText"
                             ></textarea>
+
+                            <!-- <AutoTextareaShareCorr v-model="inputValue"></AutoTextareaShareCorr> -->
                         </div>
 
                         <div class="btn-div">
@@ -115,6 +118,8 @@
 <script>
     import PostAComment from "@/components/PostAComment.vue";
     import ShareAloneComments from "@/components/ShareAloneComments.vue";
+    // import AutoTextareaShareCorr from "@/components/AutoTextareaShareCorr.vue";
+
     import dayjs from "dayjs";
     require("dayjs/locale/fr");
     dayjs.locale("fr");
@@ -124,6 +129,7 @@
         components: {
             PostAComment,
             ShareAloneComments,
+            // AutoTextareaShareCorr
         },
 
         data() {
@@ -160,6 +166,7 @@
                 },
 
                 isAdmin: "",
+                // inputValue: "",
             };
         },
 
@@ -178,7 +185,7 @@
             },
             correctShare() {
                 const ShareToBeCorrected = document.getElementById("ShareToBeCorrected");
-                const ShareId = new URL(window.location.href).hash.split("=")[1];
+                const ShareId = new URL(window.location.href).hash.split("/wallAlone/")[1];
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
                 const Modify = new FormData(ShareToBeCorrected);
 
@@ -204,7 +211,8 @@
                             this.success = true;
                             this.message = "Mise à jour effectuée.";
                             this.modifyForm = true;
-                            setTimeout(() => this.$router.push({ name: "wallAlone", id: `${this.ShareId}` }), 3000);
+                            // setTimeout(() => this.$router.push({ name: "wallAlone", id: `${this.ShareId}` }), 3000);
+                            setTimeout(() => this.$router.push({ name: "wall" }));
                         } else {
                             response.json().then((json) => {
                                 this.success = false;
@@ -221,10 +229,9 @@
             deleteShare() {
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
 
-                const ShareId = new URL(window.location.href).hash.split("=")[1];
+                const ShareId = new URL(window.location.href).hash.split("/wallAlone/")[1];
                 const Share = {
                     ShareId: ShareId,
-                    isAdmin: this.isAdmin,
                 };
 
                 const deleteShare = confirm("Le share et tous les commentaires associés vont être effacés");
@@ -238,7 +245,7 @@
                     })
                         .then(() => {
                             alert("Share effacé !");
-                            setTimeout(() => this.$router.push({ name: "wall" }));
+                            setTimeout(() => this.$router.push({ name: "wall" }), 1000);
                         })
                         .catch((error) => {
                             alert(error);
@@ -252,7 +259,7 @@
         mounted() {
             const Token = JSON.parse(sessionStorage.getItem("Token"));
             const loggedUserEmail = JSON.parse(sessionStorage.getItem("UserEmail"));
-            const ShareId = new URL(window.location.href).hash.split("=")[1];
+            const ShareId = new URL(window.location.href).hash.split("/wallAlone/")[1];
 
             // ISADMIN
             fetch(`http://localhost:3000/api/auth/${loggedUserEmail}`, {
@@ -322,4 +329,6 @@
     };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+</style>

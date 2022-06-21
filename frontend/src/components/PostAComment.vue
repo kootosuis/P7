@@ -39,7 +39,7 @@
                 },
                 inputValue: "",
                 Token: JSON.parse(sessionStorage.getItem("Token")),
-                ShareId: new URL(window.location.href).hash.split("=")[1],
+                ShareId: new URL(window.location.href).hash.split("/wallAlone/")[1],
             };
         },
 
@@ -52,6 +52,7 @@
                 document.getElementById("CommentToBePosted").reset();
             },
 
+            //--TENTATIVE DE RELOAD (cf. Comment())
             // displayOneShare(id) {
             //     this.$router.push({ name: "wallAlone", params: { id: id } });
             // },
@@ -69,26 +70,23 @@
                         Authorization: "Bearer " + this.Token,
                     },
                 })
-                    .then((response) => {
-                        if (response.status == 201) {
-                            this.success = true;
-                            this.message = "Commentaire en ligne.";
-                            this.CommentFormHidden = true;
+                    .then(() => {
+                        this.success = true;
+                        this.message = "Commentaire en ligne.";
+                        this.CommentFormHidden = true;
 
-                            this.$router.push({ name: "wallAlone", params: { id: `${this.ShareId}` } });
+                        setTimeout(() => this.$router.push({ name: "wall" }), 1000);
 
-                            // this.displayOneShare(`${this.ShareId}`)
 
-                            // this.$router.push({ name: "wallAlone", id: this.ShareId });
-                            // this.$router.go({ name: "wallAlone", params :{id : shareShareId} });
-                            // this.$router.push({ name: "wallAlone", params: { id: this.ShareId } });
-                        } else {
-                            this.success = false;
-                            this.message = "Ooops, il y a un problème !";
-                            console.log(this.message);
-                            return this.message;
-                        }
+                        // TENTATIVES DIVERSES
+                        // window.location.reload();
+                        // this.displayOneShare(`${this.ShareId}`)
+                        // this.$router.push({ name: "wallAlone", id: this.ShareId });
+                        // this.$router.go({ name: "wallAlone", params :{id : shareShareId} });
+                        // this.$router.push({ name: "wallAlone", params: { id: this.ShareId } });
+                        // this.$router.push({ name: "wallAlone", params: { id: `${this.ShareId}` } });
                     })
+
                     .catch(() => {
                         this.success = false;
                         this.message = `Le serveur ne répond pas ! Veuillez réessayer ultérieurement`;

@@ -56,8 +56,8 @@
 
         mounted() {
             const Token = JSON.parse(sessionStorage.getItem("Token"));
-            const loggedUserEmail = JSON.parse(sessionStorage.getItem("loggedUserEmail"));
-            const ShareId = new URL(window.location.href).hash.split("=")[1];
+            const loggedUserEmail = JSON.parse(sessionStorage.getItem("UserEmail"));
+            const ShareId = new URL(window.location.href).hash.split("/wallAlone/")[1];
 
             // ISADMIN
             fetch(`http://localhost:3000/api/auth/${loggedUserEmail}`, {

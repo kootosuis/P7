@@ -22,7 +22,7 @@
                     </div>
 
                     <div class="btn-div">
-                        <button type="button" class="btn" @click="displayGoTo()" :id="`CancelBtn-${commentid}`">Annuler</button>
+                        <button type="button" class="btn" @click="displayGoTo(this.commentid)" :id="`CancelBtn-${commentid}`">Annuler</button>
                         <input
                             type="button"
                             @click="CommentOnAComment"
@@ -63,15 +63,15 @@
             displayCommentOnCommentForm() {
                 this.CommentOnACommentFormHidden = false;
             },
-            displayGoTo() {
+            displayGoTo(i) {
                 this.CommentOnACommentFormHidden = true;
-                document.getElementById(`CommentOnAComment-${this.commentid}`).reset();
+                document.getElementById(`CommentOnAComment-` + i).reset();
             },
 
             CommentOnAComment() {
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
                 const commentOnACommentText = document.getElementById(`CommentOnACommentText-${this.commentid}`).value;
-                const shareShareId = new URL(window.location.href).hash.split("=")[1];
+                const shareShareId = new URL(window.location.href).hash.split("/wallAlone/")[1];
 
                 const commentCommentId = this.commentid;
 
@@ -92,9 +92,7 @@
                             this.success = true;
                             this.message = "Commentaire en ligne.";
                             this.CommentOnACommentFormHidden = true;
-                            setTimeout(() => this.$router.push({ name: "wallAlone", id: `${this.shareShareId}` }), 1000);
-                            // la ligne suivante provoque des failed to fetch ( à creuser)
-                            // this.$router.go(0);
+                            setTimeout(() => this.$router.push({ name: "wall" }), 1000);
                         } else {
                             response.json().then((json) => {
                                 this.success = false;

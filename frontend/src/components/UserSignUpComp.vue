@@ -150,7 +150,7 @@
 
                     <div class="btn-div">
                         <button type="button" class="btn" @click="goBacKToEnter()" id="CancelBtn">Annuler</button>
-                        <input type="submit" class="btn" id="UserSignupBtn" value="S'inscrire" disabled />
+                        <button type="button" class="btn" id="UserSignupBtn" disabled>S'inscrire</button>
                     </div>
                 </form>
 
@@ -261,7 +261,6 @@
                                         } else {
                                             response.json().then((json) => {
                                                 this.success = false;
-                                                console.log(json);
                                                 this.message = json.error;
                                             });
                                         }
@@ -274,7 +273,6 @@
                         } else {
                             response.json().then((json) => {
                                 this.success = false;
-                                console.log(json);
                                 this.message = json.error.errors[0].message;
                             });
                         }

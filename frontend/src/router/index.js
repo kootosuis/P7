@@ -65,7 +65,7 @@ const routes = [
     },
 
     {
-        path: "/wallAlone/?id=:id",
+        path: "/wallAlone/:id",
         name: "wallAlone",
         component: OnePostedShare,
     },

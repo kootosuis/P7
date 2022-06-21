@@ -174,8 +174,8 @@
                             this.success = true;
                             this.message = "Correction effectuée.";
                             this.modifyForm = true;
-                            // this.$router.push({ name: "wall" });
-                            this.$router.push({ name: "wallAlone", params: { id: "shareid" } });
+                            this.$router.push({ name: "wall" });
+                            // this.$router.push({ name: "wallAlone", params: { id: "shareid" } });
                             // this.$router.go(0);
                             // history.go(0);
                         } else {
@@ -198,7 +198,6 @@
                 const CommentId = i;
                 const Comment = {
                     CommentId: CommentId,
-                    isAdmin: this.isAdmin,
                 };
 
                 const deleteComment = confirm("Le commentaire et tous les commentaires associés vont être effacés");
@@ -210,9 +209,12 @@
                         body: JSON.stringify(Comment),
                         mode: "cors",
                     })
+                        
+                        
                         .then(() => {
-                            alert("Commentaire effacé !");
-                            setTimeout(() => this.$router.push({ name: "wallAlone", params: { id: this.shareid } }), 3000);
+                            setTimeout(() => this.$router.push({ name: "wall" }), 1000);
+                            //---TENTATIVES
+                            // setTimeout(() => this.$router.push({ name: "wallAlone", params: { id: this.shareid } }), 1000);
                             // this.$router.go(0);
                         })
                         .catch((error) => {
@@ -228,7 +230,7 @@
         mounted() {
             const Token = JSON.parse(sessionStorage.getItem("Token"));
             const loggedUserEmail = JSON.parse(sessionStorage.getItem("UserEmail"));
-            const ShareId = new URL(window.location.href).hash.split("=")[1];
+            const ShareId = new URL(window.location.href).hash.split("/wallAlone/")[1];
 
             // ISADMIN
             fetch(`http://localhost:3000/api/auth/${loggedUserEmail}`, {
@@ -263,17 +265,6 @@
 
                     this.apiLengthComments = this.apiCommentsResponse.length;
                     this.apiLengthReactions = this.apiReactionsResponse.length;
-
-                    // const apiReactionsResponse = this.apiReactionsResponse;
-                    // apiReactionsResponse.forEach((item) => document.getElementById(`OriginalCommentText-${item.CommentId}`).insertAdjacentHTML("afterend", "<div id=`OriginalCommentText-${item.commentCommentId}`>TOTO</div>"));
-
-                    // apiReactionsResponse.forEach(
-                    //     (item) => console.log(item.CommentId),
-                    //     (item) => console.log(document.getElementById(`OriginalCommentText-${item.commentCommentId}`)),
-                    //     (item) => document.getElementById(`OriginalCommentText-${item.commentCommentId}`).insertAdjacentHTML("afterend", "<div id=`OriginalCommentText-${item.commentCommentId}`>TOTO</div>")
-                    // );
-
-                    // apiReactionsResponse.forEach((item) => console.log(document.getElementById(`OriginalCommentText-${item.commentCommentId}`)));
 
                     this.CommentId = res.CommentId;
                 })

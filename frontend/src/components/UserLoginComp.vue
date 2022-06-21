@@ -16,11 +16,14 @@
                     <!--Le Mot de passe -->
                     <div class="formLine">
                         <label for="UserPassword" class="label">Mot de passe</label>
-                        <input class="input" @input="checkForm" type="text" id="UserPassword" name="UserPassword" required maxlength="30" />
+                        <div class="input">
+                            <input class="input" @input="checkForm" v-bind:type="[showPassword ? 'text' : 'password']" id="UserPassword" name="UserPassword" required maxlength="30" />
+                            <img id="eye" @click="showPassword = !showPassword" :src="[showPassword ? 'nosee.png' : 'see.png']" />
+                        </div>
                     </div>
 
                     <div class="btn-div">
-                        <input type="submit" class="btn" id="UserSignupBtn" value="S'authentifier" disabled />
+                        <button type="submit" class="btn" id="UserSignupBtn" disabled>S'authentifier</button>
                         <!-- rajouter un bouton "mot de passe oublié"-->
                     </div>
                 </form>
@@ -42,6 +45,7 @@
         name: "UserLogin",
         data() {
             return {
+                showPassword: false,
                 success: "",
                 message: "", //message d'erreur ou pas
                 isAdmin: "",

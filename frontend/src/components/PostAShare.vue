@@ -48,7 +48,7 @@
 
                     <div class="btn-div">
                         <button type="button" class="btn" @click="displayGoTo()" id="CancelBtn">Annuler</button>
-                        <input type="button" @click="Share" class="btn" id="ShareBtn" value="Partager" disabled />
+                        <button type="button" @click="Share" class="btn" id="ShareBtn" disabled>Partager</button>
                     </div>
                 </form>
 
@@ -128,7 +128,6 @@
                         } else {
                             response.json().then((json) => {
                                 this.success = false;
-                                console.log(json);
                                 this.message = json.error || json.message;
                                 return this.message;
                             });

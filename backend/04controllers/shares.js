@@ -82,15 +82,18 @@ exports.deleteShare = (req, res) => {
     const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
 
-    this.isAdmin = "";
+    const ShareId = req.body.ShareId;
 
+    const isAdmin = Number;
     User.findOne({ where: { UserId: loggedUserId } })
         .then((loggedUser) => {
             this.isAdmin = loggedUser.UserHabilitation;
+            alert(this.isAdmin)
+            return this.isAdmin
         })
         .catch((error) => res.status(error).json(error));
 
-    const ShareId = req.body.ShareId;
+
 
     Share.findOne({ where: { ShareId: ShareId } })
         .then((share) => {

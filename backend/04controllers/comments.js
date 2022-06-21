@@ -19,7 +19,10 @@ exports.createComment = (req, res) => {
             //----A VERIFIER------//
             .then(() => {
                 Share.findOne({ where: { ShareId: req.body.shareShareId } }).then((res) => {
-                    Share.update({ updatedAt: new Date().toISOString().slice(0, 19).replace('T', ' ') }, { where: { ShareId: req.body.shareShareId } })
+                    Share.update(
+                        { updatedAt: new Date().toISOString().slice(0, 19).replace("T", " ") },
+                        { where: { ShareId: req.body.shareShareId } }
+                    )
                         .then(() => res.status(201).json({ message: "Partage mis à jour" }))
                         .catch((err) => res.status(400).json(err));
                 });
@@ -35,7 +38,7 @@ exports.updateComment = (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.SECRET_JWT_KEY);
     const loggedUserId = decodedToken.UserId;
-    const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
+    const paramsId = req.params.id;
 
     Comment.findOne({ where: { CommentId: paramsId } })
         .then((comment) => {
@@ -59,11 +62,13 @@ exports.deleteComment = (req, res) => {
 
     const CommentId = req.body.CommentId;
 
-    this.isAdmin = "";
+    const isAdmin = Number;
 
     User.findOne({ where: { UserId: loggedUserId } })
         .then((loggedUser) => {
             this.isAdmin = loggedUser.UserHabilitation;
+            alert(this.isAdmin)
+            return this.isAdmin
         })
         .catch((error) => res.status(error).json(error));
 
@@ -84,7 +89,7 @@ exports.deleteComment = (req, res) => {
 };
 
 exports.getAllComments = (req, res) => {
-    const paramsId = req.params.id; // à priori ce devrait être le bon paramètre, à ajuster avec le front
+    const paramsId = req.params.id;
 
     Comment.findAll({ where: { shareShareId: paramsId }, include: [User], order: [["updatedAt", "ASC"]] })
         .then((user) => res.status(200).json(user))

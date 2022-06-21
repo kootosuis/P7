@@ -64,7 +64,6 @@
                     return res.json();
                 })
                 .then((res) => {
-                    console.log(res)
                     this.apiResponse = res;
                 })
                 .catch((error) => {

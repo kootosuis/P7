@@ -1,26 +1,25 @@
 .mainshares {
 
     @include flexcolumn;
-    padding-top:2rem;
-    padding-bottom:2rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
 }
 
-.shares{
-    
+.shares {
+
     @include wauto;
     @include flexrow;
     column-gap: 3rem;
     row-gap: 3rem;
-    justify-content: center;
-    align-items:flex-end;
+    justify-content: space-around;
+    align-items: flex-end;
 
     //je choisis d'imposer une largeur max pour ne pas avoir de rangées trop large
     //je pense qu'il vaut mieux scroller!
     max-width: 140rem;
-    
-    &__title{
+
+    &__title {
         @include title;
         padding-bottom: 25px;
     }
 }
-

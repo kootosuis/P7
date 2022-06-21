@@ -56,8 +56,8 @@
         },
 
         methods: {
-            displayOneShare(id) {
-                this.$router.push({ name: "wallAlone", params: { id: id } });
+            displayOneShare(i) {
+                this.$router.push({ name: "wallAlone", params: { id: i } });
             },
 
             formatDate(dateString) {
