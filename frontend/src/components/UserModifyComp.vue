@@ -351,7 +351,7 @@
                                     this.success = true;
                                     this.message = "mise à jour effectuée";
                                     sessionStorage.setItem("UserEmail", JSON.stringify(User.UserEmail));
-                                    setTimeout(() => this.$router.push({ name: "wall" }), 4000);
+                                    setTimeout(() => this.$router.push({ name: "wall" }), 1000);
                                 });
                             } else {
                                 response.json().then((json) => {
@@ -399,7 +399,7 @@
                                     this.success = true;
                                     this.message = "mise à jour effectuée";
                                     sessionStorage.setItem("UserEmail", JSON.stringify(User.UserEmail));
-                                    setTimeout(() => this.$router.push({ name: "wall" }), 4000);
+                                    setTimeout(() => this.$router.push({ name: "wall" }), 1000);
                                 });
                             } else {
                                 response.json().then((json) => {
@@ -429,7 +429,7 @@
                         sessionStorage.removeItem("UserEmail"),
                         sessionStorage.removeItem("Token"),
                         alert("Compte supprimé"),
-                        setTimeout(() => this.$router.push({ name: "wall" }), 4000)
+                        setTimeout(() => this.$router.push({ name: "wall" }), 1000),
                     )
                     .catch((error) => {
                         alert(error);

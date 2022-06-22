@@ -88,7 +88,7 @@
                         this.isAdmin = response.UserHabilitation;
                         sessionStorage.setItem("UserEmail", JSON.stringify(response.UserEmail));
                         sessionStorage.setItem("Token", JSON.stringify(response.token));
-                        setTimeout(() => this.$router.push({ name: "wall" }), 1000);
+                        setTimeout(() => this.$router.push({ name: "wall" }), 3000);
                     })
 
                     .catch(() => {

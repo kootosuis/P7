@@ -212,7 +212,7 @@
                             this.message = "Mise à jour effectuée.";
                             this.modifyForm = true;
                             // setTimeout(() => this.$router.push({ name: "wallAlone", id: `${this.ShareId}` }), 3000);
-                            setTimeout(() => this.$router.push({ name: "wall" }));
+                            setTimeout(() => this.$router.push({ name: "wall" }), 1000);
                         } else {
                             response.json().then((json) => {
                                 this.success = false;

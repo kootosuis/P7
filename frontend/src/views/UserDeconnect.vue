@@ -29,7 +29,7 @@
         },
         methods: {},
         mounted() {
-            setTimeout(() => this.$router.push({ name: "enter" }), 3000);
+            setTimeout(() => this.$router.push({ name: "enter" }), 1000);
         },
     };
 </script>

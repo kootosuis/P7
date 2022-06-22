@@ -68,16 +68,36 @@
 
         mounted() {
             const Token = JSON.parse(sessionStorage.getItem("Token"));
-            
+
             fetch(`http://localhost:3000/api/shares`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
                 mode: "cors",
             })
                 .then((res) => {
+                    console.log(res);
                     return res.json();
                 })
                 .then((res) => {
+                    // ici il faut pour chaque item
+                    // regarder s'il y a un comment
+                    // et s'il y a un comment prendre la date de l'update
+                    // et la pusher dans apiResponse
+                    // qu'il s'agira alors de trier sur ce critère :
+
+                    // const unsortedArray = res
+
+                    // for each item in res
+                    // if item.updatedAt < ???(pas sûr de mon coup, là) n'importe lequel ??? item.comments.updatedAt
+                    // alors const lastUpdatedAt = item.comments.updatedAt
+                    // et
+                    // push lastUpdatedAt dans unsortedArray > updatedAt
+                    // là où ShareId = item.ShareId
+                    // puis tri
+                    // const sortedArray = methode de tri (unsortedArray, updatedAt)
+
+                    // this Apiresponse = unsortedArray
+
                     this.apiResponse = res;
                 })
                 .catch((error) => {

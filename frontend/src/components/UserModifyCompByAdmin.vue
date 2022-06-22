@@ -362,7 +362,7 @@
                                     console.log(res);
                                     this.success = true;
                                     this.message = "mise à jour effectuée";
-                                    setTimeout(() => this.$router.push({ name: "wall" }), 4000);
+                                    setTimeout(() => this.$router.push({ name: "wall" }), 1000);
                                 });
                             } else {
                                 response.json().then((json) => {
@@ -407,7 +407,7 @@
                                     console.log(res);
                                     this.success = true;
                                     this.message = "mise à jour effectuée";
-                                    setTimeout(() => this.$router.push({ name: "wall" }), 4000);
+                                    setTimeout(() => this.$router.push({ name: "wall" }), 1000);
                                 });
                             } else {
                                 response.json().then((json) => {
