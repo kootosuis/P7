@@ -79,6 +79,9 @@
                     return res.json();
                 })
                 .then((res) => {
+
+                    // JE GARDE TRACE DE CETTE REFELEXIN
+                    // MAIS LE MIEUX SERAIT DE PASSER PAR LE BACKEND OU MÊME U NIVEAU DE LA DATABASE (à travailler)
                     // ici il faut pour chaque item
                     // regarder s'il y a un comment
                     // et s'il y a un comment prendre la date de l'update

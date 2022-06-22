@@ -255,7 +255,6 @@
                                                 this.message = "Authentification effectuée.";
                                                 sessionStorage.setItem("UserEmail", JSON.stringify(response.UserEmail));
                                                 sessionStorage.setItem("Token", JSON.stringify(response.token));
-                                                // sessionStorage.setItem("isAdmin", JSON.stringify(response.UserHabilitation));
                                                 setTimeout(() => this.$router.push({ name: "wall" }), 1000);
                                             });
                                         } else {
