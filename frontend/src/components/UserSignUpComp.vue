@@ -150,7 +150,7 @@
 
                     <div class="btn-div">
                         <button type="button" class="btn" @click="goBacKToEnter()" id="CancelBtn">Annuler</button>
-                        <button type="button" class="btn" id="UserSignupBtn" disabled>S'inscrire</button>
+                        <input type="submit" class="btn" id="UserSignupBtn" value="S'inscrire" disabled />
                     </div>
                 </form>
 
