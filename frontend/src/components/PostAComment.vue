@@ -75,7 +75,11 @@
                         this.message = "Commentaire en ligne.";
                         this.CommentFormHidden = true;
 
-                        setTimeout(() => this.$router.push({ name: "wall" }), 1000);
+                        this.$emit('refreshShare');
+                        this.$router.go(0);
+                            // history.go(0);
+
+                        // setTimeout(() => this.$router.push({ name: "wall" }), 1000);
 
 
                         // TENTATIVES DIVERSES

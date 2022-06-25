@@ -75,12 +75,12 @@
                 mode: "cors",
             })
                 .then((res) => {
-                    console.log(res);
+                    // console.log(res);
                     return res.json();
                 })
                 .then((res) => {
 
-                    // JE GARDE TRACE DE CETTE REFELEXIN
+                    // JE GARDE TRACE DE CETTE REFLEXION
                     // MAIS LE MIEUX SERAIT DE PASSER PAR LE BACKEND OU MÊME U NIVEAU DE LA DATABASE (à travailler)
                     // ici il faut pour chaque item
                     // regarder s'il y a un comment

@@ -174,7 +174,9 @@
                             this.success = true;
                             this.message = "Correction effectuée.";
                             this.modifyForm = true;
-                            this.$router.push({ name: "wall" });
+                            this.$emit('refreshComment');
+                            this.$router.go(0);
+                            // this.$router.push({ name: "wall" });
                             // this.$router.push({ name: "wallAlone", params: { id: "shareid" } });
                             // this.$router.go(0);
                             // history.go(0);

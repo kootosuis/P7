@@ -93,6 +93,11 @@
                             this.message = "Commentaire en ligne.";
                             this.CommentOnACommentFormHidden = true;
                             setTimeout(() => this.$router.push({ name: "wall" }), 1000);
+
+                            this.$emit('refreshComment');
+                            this.$router.go(0);
+
+
                         } else {
                             response.json().then((json) => {
                                 this.success = false;

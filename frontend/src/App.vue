@@ -1,3 +1,16 @@
+<template>
+    <div>
+        <!-- <LoaderComp/> -->
+
+        <div class="main vh">
+            <router-view />
+            <footer class="footer">
+                <PageFooter />
+            </footer>
+        </div>
+    </div>
+</template>
+
 <script>
     // import LoaderComp from "@/components/LoaderComp.vue"
     import PageFooter from "@/components/PageFooter.vue";
@@ -11,18 +24,7 @@
     };
 </script>
 
-<template>
-    <div>
-        <!-- <LoaderComp/> -->
 
-        <div class="main vh">
-            <router-view />
-            <footer class="footer">
-                <PageFooter />
-            </footer>
-        </div>
-    </div>
-</template>
 
 <style lang="scss">
     // #app {

@@ -111,7 +111,7 @@
 
         <!-- LES COMMENTAIRES -->
 
-        <ShareAloneComments v-bind:shareid="ShareId" />
+        <ShareAloneComments @resfreshComment="mounted()" v-bind:shareid="ShareId" />
     </section>
 </template>
 
@@ -212,7 +212,9 @@
                             this.message = "Mise à jour effectuée.";
                             this.modifyForm = true;
                             // setTimeout(() => this.$router.push({ name: "wallAlone", id: `${this.ShareId}` }), 3000);
-                            setTimeout(() => this.$router.push({ name: "wall" }), 1000);
+                            // setTimeout(() => this.$router.push({ name: "wall" }), 1000);
+                            this.$emit('refreshShare');
+                            this.$router.go(0);
                         } else {
                             response.json().then((json) => {
                                 this.success = false;

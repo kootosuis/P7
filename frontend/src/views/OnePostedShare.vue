@@ -5,7 +5,7 @@
         </header>
         <div class="main">
             <PostAShare />
-            <ShareAlone />
+            <ShareAlone @resfreshShare="mounted()"/>
             <!-- <ShareAlone :key="componentKey" /> -->
         </div>
     </div>

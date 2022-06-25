@@ -44,6 +44,7 @@ const routes = [
         path: "/modifyByAdmin/:id",
         name: "modifyByAdmin",
         component: UserModifyByAdmin,
+        // props : ['id']
     },
 
     {
@@ -68,6 +69,7 @@ const routes = [
         path: "/wallAlone/:id",
         name: "wallAlone",
         component: OnePostedShare,
+        // props : ['id']
     },
 ];
 
