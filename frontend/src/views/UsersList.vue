@@ -4,7 +4,7 @@
 			<NavBar/>
 		</header>
 		<div class="main">
-		<UsersListComp/>
+		<UsersListComp @resfreshUsers="mounted()"/>
 		</div>
 		
 	</div>

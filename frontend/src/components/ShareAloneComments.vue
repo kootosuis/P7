@@ -176,10 +176,6 @@
                             this.modifyForm = true;
                             this.$emit('refreshComment');
                             this.$router.go(0);
-                            // this.$router.push({ name: "wall" });
-                            // this.$router.push({ name: "wallAlone", params: { id: "shareid" } });
-                            // this.$router.go(0);
-                            // history.go(0);
                         } else {
                             response.json().then((json) => {
                                 this.success = false;
@@ -214,10 +210,8 @@
                         
                         
                         .then(() => {
-                            setTimeout(() => this.$router.push({ name: "wall" }), 1000);
-                            //---TENTATIVES
-                            // setTimeout(() => this.$router.push({ name: "wallAlone", params: { id: this.shareid } }), 1000);
-                            // this.$router.go(0);
+                            this.$emit('refreshShare');
+                            this.$router.go(0);
                         })
                         .catch((error) => {
                             alert(error);

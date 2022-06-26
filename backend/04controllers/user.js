@@ -129,7 +129,7 @@ exports.delete = (req, res) => {
     User.findOne({ where: { UserEmail: cardUserEmail } }).then((user) => {
         if (user == null) {
             res.status(400).json({ message: " Cet utilisateur n'existe pas" });
-        } else if (!user.UserId == loggedUserId || this.isAdmin == 0) {
+        } else if (!user.UserId == loggedUserId || this.isAdmin === 0) { //quand j'écris == 0 ça ne marche pas
             //ceinture et bretelles
             res.status(401).json({ message: "Vous n'avez pas les autorisations nécéssaires pour cette opération." });
         } else if (user.UserId == loggedUserId || this.isAdmin == 1) {

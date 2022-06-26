@@ -153,7 +153,7 @@
                     <div hidden>
                         <p id="UserHabilitation">{{ UserHabilitation }}</p>
                     </div>
-                    <div class="formLine" v-if="isAdmin == 1">
+                    <div class="formLine" v-show="UserHabilitation == 1">
                         <label for="UserHabilitation" class="label">Habilitation</label>
                         <select v-if="AdminLength" class="input" id="changedUserHabilitation" name="UserHabilitation" @input="checkForm" required>
                             <option value="1">avec habilitation à administrer</option>
@@ -182,7 +182,7 @@
                 </div>
 
                 <!--effacement de son propre compte-->
-                <div v-if="!isAdmin == 1" id="no-account" class="add-div">
+                <div v-if="UserHabilitation == 0" id="no-account" class="add-div">
                     <p>Vous pouvez si vous le souhaitez, effacer votre compte ainsi que tous les partages et commentaires qui lui sont liés.</p>
                     <div class="btn-div">
                         <button type="button" class="btn"><router-link @click="deleteAccount()" to="../deconnect">Effacer</router-link></button>
@@ -225,7 +225,7 @@
                     default: false,
                 },
 
-                isAdmin: "",
+                // isAdmin: this.UserHabilitation,
             };
         },
 
@@ -328,8 +328,8 @@
                         : document.getElementById("changedUserHabilitation").value;
 
                     const User = {
-                        UserName: UserName,
-                        UserFirstname: UserFirstname,
+                        UserName: UserName.toUpperCase(),
+                        UserFirstname: UserFirstname.toUpperCase(),
                         UserEmail: UserEmail,
                         UserDepartement: UserDepartement,
                         UserPresentation: UserPresentation,
@@ -377,8 +377,8 @@
                         : document.getElementById("changedUserHabilitation").value;
 
                     const User = {
-                        UserName: UserName,
-                        UserFirstname: UserFirstname,
+                        UserName: UserName.toUpperCase(),
+                        UserFirstname: UserFirstname.toUpperCase(),
                         UserEmail: UserEmail,
                         UserDepartement: UserDepartement,
                         UserPresentation: UserPresentation,
@@ -420,20 +420,26 @@
                 const loggedUserEmail = JSON.parse(sessionStorage.getItem("UserEmail"));
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
 
-                fetch(`http://localhost:3000/api/auth/delete/${loggedUserEmail}`, {
-                    method: "DELETE",
-                    headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
-                    mode: "cors",
-                })
-                    .then(
-                        sessionStorage.removeItem("UserEmail"),
-                        sessionStorage.removeItem("Token"),
-                        alert("Compte supprimé"),
-                        setTimeout(() => this.$router.push({ name: "wall" }), 1000),
-                    )
-                    .catch((error) => {
-                        alert(error);
-                    });
+                const deleteUser = confirm("Votre compte, vos partages et vos commentaires vont être effacés");
+
+                if (deleteUser) {
+                    fetch(`http://localhost:3000/api/auth/delete/${loggedUserEmail}`, {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
+                        mode: "cors",
+                    })
+                        .then(() => {
+                            sessionStorage.removeItem("UserEmail"),
+                                sessionStorage.removeItem("Token"),
+                                alert("Compte supprimé"),
+                                setTimeout(() => this.$router.push({ name: "enter" }), 1000);
+                        })
+                        .catch((error) => {
+                            alert(error);
+                        });
+                } else {
+                    this.$router.go(0);
+                }
             },
         },
     };

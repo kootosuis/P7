@@ -340,8 +340,8 @@
                     const UserHabilitation = document.getElementById("changedUserHabilitation").value;
 
                     const User = {
-                        UserName: UserName,
-                        UserFirstname: UserFirstname,
+                        UserName: UserName.toUpperCase(),
+                        UserFirstname: UserFirstname.toUpperCase(),
                         UserEmail: UserEmail,
                         UserDepartement: UserDepartement,
                         UserPresentation: UserPresentation,
@@ -362,7 +362,9 @@
                                     console.log(res);
                                     this.success = true;
                                     this.message = "mise à jour effectuée";
-                                    setTimeout(() => this.$router.push({ name: "wall" }), 1000);
+                                    this.$emit("refreshUsers");
+                                    // this.$router.go(0);
+                                    setTimeout(() => this.$router.push({ name: "list" }), 1000);
                                 });
                             } else {
                                 response.json().then((json) => {
@@ -386,8 +388,8 @@
                     const UserHabilitation = document.getElementById("changedUserHabilitation").value;
 
                     const User = {
-                        UserName: UserName,
-                        UserFirstname: UserFirstname,
+                        UserName: UserName.toUpperCase(),
+                        UserFirstname: UserFirstname.toUpperCase(),
                         UserEmail: UserEmail,
                         UserDepartement: UserDepartement,
                         UserPresentation: UserPresentation,
@@ -407,7 +409,9 @@
                                     console.log(res);
                                     this.success = true;
                                     this.message = "mise à jour effectuée";
-                                    setTimeout(() => this.$router.push({ name: "wall" }), 1000);
+                                    this.$emit("refreshUsers");
+                                    // this.$router.go(0);
+                                    setTimeout(() => this.$router.push({ name: "list" }), 1000);
                                 });
                             } else {
                                 response.json().then((json) => {
@@ -428,11 +432,22 @@
                 const cardUserEmail = new URL(window.location.href).hash.split("/modifyByAdmin/")[1];
                 const Token = JSON.parse(sessionStorage.getItem("Token"));
 
-                fetch(`http://localhost:3000/api/auth/delete/${cardUserEmail}`, {
-                    method: "DELETE",
-                    headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
-                    mode: "cors",
-                }).then(alert("Compte supprimé"), this.$router.push({ name: "wall" }));
+                const deleteUser = confirm("Le compte et tous les partages et commentaires associés vont être effacés");
+
+                if (deleteUser) {
+                    fetch(`http://localhost:3000/api/auth/delete/${cardUserEmail}`, {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json", Authorization: "Bearer " + Token },
+                        mode: "cors",
+                    }).then(() => {
+                        alert("Compte supprimé"),
+                            this.$emit("refreshUsers"),
+                            // this.$router.go(0);
+                            setTimeout(() => this.$router.push({ name: "list" }), 1000);
+                    });
+                } else {
+                    this.$router.push({ name: "list" });
+                }
             },
         },
     };
